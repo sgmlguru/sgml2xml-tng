@@ -23,11 +23,19 @@
                 </resources>
             </schemas>
             
+            <!-- Schematron -->
+            <sch location="${modules.common}/sch/test.sch"/>
+            
             <!-- Common XSLT -->
             <xslt location="${modules.common}/xslt">
                 <unparsed location="${modules.common.xslt}/map-unparsed-entities.xsl"/>
             </xslt>
-            <xproc/>
+            
+            <!-- Pipelines -->
+            <pipelines location="${modules.common}/pipelines">
+                <manifest location="${modules.common.pipelines}/manifests/doc-example-manifest.xml"/>
+                <xproc location="${modules.common.pipelines}/xproc/doc-migration.xpl"/>
+            </pipelines>
         </common>
         
         <!-- ATA module -->
@@ -79,17 +87,17 @@
     </catalogs>
     
     <!-- Morgana -->
-    <!--<morgana>
+    <morgana>
         <home location="${repos.lib}/MorganaXProc-IIIse-1.8.3"/>
         <lib location="${morgana.home}/MorganaXProc-IIIse_lib"/>
         <jar location="${morgana.home}/MorganaXProc-IIIse.jar"/>
         <config location="${morgana.home}/config.xml"/>
         <resolver location="${morgana.lib}/xmlresolver-6.0.21.jar"/>
-    </morgana>-->
+    </morgana>
     
     <!-- Saxon -->
     <saxon>
-        <jar location="${repos.lib}/saxon/Saxon-he-12.9.jar"/>
+        <jar location="${repos.lib}/saxon/saxon-he-12.9.jar"/>
     </saxon>
     
     <!-- Debug and verbose -->
