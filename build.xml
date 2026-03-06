@@ -544,7 +544,7 @@
         
         <record name="${base.reports}/07-run-manifest.txt" action="start" append="true"/>
         
-        <echo message="Running XProc to produce valid XML"/>
+        <echo message="Running XProc ${modules.common.pipelines.xproc} to produce valid XML"/>
         <echo message="Catalog ${catalogs.catalog}"/>
         
         <local name="local.in"/>
@@ -559,18 +559,21 @@
         <makeurl property="local.tmp" file="${base.tmp}"/>
         
         <echo message="Sources in ${local.in}, saving to ${local.out}, debug is ${debug}"/>
+        <echo message="CLASSPATH ${morgana.jar}:${morgana.lib}/*:${saxon.jar}"/>
+        
+        <echo message="URIs ${local.in} ${local.out} ${local.tmp} ${local.reports}"/>
         
         <run-xproc>
             <xproc-args>
                 <!-- Pipeline -->
-                <arg value="${pipeline.ata-xml}"/>
+                <arg value="${modules.common.pipelines.xproc}"/>
                 
                 <!-- Catalog -->
                 <arg value="-catalogs=${catalogs.catalog}"/>
                 
                 <!-- Inputs -->
                 <arg value="-input:manifest="/>
-                <arg value="-input:sch=${sch}"/>
+                <arg value="-input:sch=${modules.common.sch}"/>
                 
                 <!-- Options -->
                 <arg value="-option:input-base-uri=${local.in}"/>
@@ -643,7 +646,7 @@
     <target
         name="no-unzip"
         description="Run an end to end SGML to XML conversion without unzip"
-        depends="mkdirs, prepare, preprocess-content, loop-spam, loop-sx, add-entity-declarations, loop-unparsed"/>
+        depends="mkdirs, prepare, preprocess-content, loop-spam, loop-sx, add-entity-declarations, loop-unparsed, run-manifest, copy-graphics, housekeeping"/>
     <!-- , run-manifest, copy-graphics, housekeeping -->
     
     <target
