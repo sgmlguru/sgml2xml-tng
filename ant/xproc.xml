@@ -20,14 +20,14 @@
     
     <macrodef
         name="run-xproc"
-        description="Basic XProc runner for MorganaXProc-III">
+        description="XProc runner for MorganaXProc-III">
         
         <element name="xproc-args" description="Wrap the java args into XProc"/>
         
         <sequential>
             
             <java
-                classpath="${morgana.jar}:${morgana.lib}:${saxon.jar}"
+                classpath="${morgana.jar}:${morgana.lib}/*:${saxon.jar}"
                 classname="com.xml_project.morganaxproc3.XProcEngine"
                 logerror="true"
                 failonerror="true"
