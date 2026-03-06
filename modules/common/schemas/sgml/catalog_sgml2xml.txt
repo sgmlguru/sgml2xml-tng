@@ -15,7 +15,7 @@ PUBLIC "-//CWORD//DTD DOC TEST//EN" "dtd/doc.dtd"
 
 -- XML DTD(s) --
 
-PUBLIC "-//ATA-TEXT//DTD EM-VER11-LEVEL2//EN" "rr/dtd/em.dtd"
+PUBLIC "-//CWORD//DTD XML DOC TEST//EN" "dtd/doc.dtd"
 
 
 -- NOTATIONs --
