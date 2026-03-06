@@ -1,4 +1,6 @@
 *.xpr
 build.properties.local.xml
+errspam.txt
+errsx.txt
 **/tmp
 
