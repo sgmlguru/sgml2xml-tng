@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<properties>
+    
+    <!-- Change accordingly for your repository -->
+    <repos>
+        <dir location="/home/ari/Documents/repos/cword"/>
+        <ant location="${repos.dir}/ant-tools"/>
+    </repos>
+    
+    <zip>
+        <string value=""/>
+    </zip>
+    
+    <env>
+        <src location=""/>
+    </env>
+    
+    <base>
+        <dir location="/home/ari/Documents/projects/test"/>
+        <source location="${base.dir}/${env.src}"/>
+        <tmp location="${base.source}/tmp"/>
+        <out location="${base.tmp}/out"/>
+    </base>
+    
+</properties>

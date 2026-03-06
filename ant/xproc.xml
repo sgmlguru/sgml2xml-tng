@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+    name="xproc-macros"
+    xmlns:if="ant:if"
+    xmlns:unless="ant:unless"
+    basedir=".">
+    
+    
+    <!-- XProc properties follow... -->
+    <property
+        name="args.xproc.java.fork"
+        value="true"
+        description="We need to fork java because we need to set java properties"/>
+    
+    <property
+        name="args.xproc.java.maxmemory"
+        value="8192M"
+        description="The pipelines are memory hungry so..."/>
+    
+    
+    <macrodef
+        name="run-xproc"
+        description="Basic XProc runner for MorganaXProc-III">
+        
+        <element name="xproc-args" description="Wrap the java args into XProc"/>
+        
+        <sequential>
+            
+            <java
+                classpath="${morgana.jar}:${morgana.lib}:${saxon.jar}"
+                classname="com.xml_project.morganaxproc3.XProcEngine"
+                logerror="true"
+                failonerror="true"
+                fork="${args.xproc.java.fork}"
+                maxmemory="${args.xproc.java.maxmemory}">
+                
+                <arg value="-config=${morgana.config}"/>
+                
+                <xproc-args/>
+                
+            </java>
+        </sequential>
+        
+    </macrodef>
+    
+</project>

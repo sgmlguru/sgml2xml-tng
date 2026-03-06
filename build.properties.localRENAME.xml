@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<properties>
+    
+    <!-- Debug and verbose -->
+    <debug value="true"/>
+    <verbose value="true"/>
+    
+    
+    <!-- Change accordingly for repository path -->
+    <repos>
+        <dir location="/home/ari/Documents/repos"/>
+        <sgm2xml location="${repos.dir}/sgml2xml-tng"/>
+    </repos>
+    
+    
+    <!-- Project environment; ${env.src} is a folder path
+         inside your main project as given by ${base.dir} -->
+    <env>
+        <src value="one"/>
+    </env>
+    
+    <!-- ${base.dir} should be the conversion's base location, 
+         minus the ${env.src}/data part set by the conversion. -->
+    <base>
+        <dir location="/home/ari/Documents/projects/tng-sgml2xml"/>
+    </base>
+    
+</properties>

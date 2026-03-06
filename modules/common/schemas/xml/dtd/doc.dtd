@@ -1,0 +1,20 @@
+<!-- XML Test DTD, "-//CWORD//DTD XML DOC TEST//EN" -->
+
+<!ENTITY % id.att   "id ID #IMPLIED" >
+
+<!ELEMENT doc   (title, chapter+) >
+<!ATTLIST doc   %id.att; >
+
+<!ELEMENT title (#PCDATA) >
+
+<!ELEMENT chapter   (title, (para | graphic)+, section*) >
+<!ATTLIST chapter   %id.att; >
+
+<!ELEMENT section   (title, (para | graphic)+, section*) >
+<!ATTLIST section   %id.att; >
+
+<!ELEMENT para      (#PCDATA) >
+
+<!ELEMENT graphic   EMPTY >
+<!ATTLIST graphic   href CDATA #IMPLIED
+                    %id.att; >

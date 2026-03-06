@@ -1,0 +1,142 @@
+<map version="freeplane 1.12.1">
+<!--To view this file, download free mind mapping software Freeplane from https://www.freeplane.org -->
+<bookmarks>
+    <bookmark nodeId="ID_1090958577" name="Root" opensAsRoot="true"/>
+</bookmarks>
+<node TEXT="sgml2xml" LOCALIZED_STYLE_REF="AutomaticLayout.level.root" FOLDED="false" ID="ID_1090958577" CREATED="1409300609620" MODIFIED="1772722557602">
+<hook NAME="accessories/plugins/AutomaticLayout.properties" VALUE="ALL"/>
+<font BOLD="true"/>
+<hook NAME="MapStyle" background="#002b36ff" zoom="0.826">
+    <properties show_icon_for_attributes="true" edgeColorConfiguration="#808080ff,#ff0000ff,#0000ffff,#00ff00ff,#ff00ffff,#00ffffff,#7c0000ff,#00007cff,#007c00ff,#7c007cff,#007c7cff,#7c7c00ff" auto_compact_layout="true" show_note_icons="true" fit_to_viewport="false" show_icons="BESIDE_NODES" associatedTemplateLocation="template:/dark_solarized_template.mm" show_tags="UNDER_NODES" showTagCategories="false"/>
+    <tags category_separator="::"/>
+
+<map_styles>
+<stylenode LOCALIZED_TEXT="styles.root_node" STYLE="oval" UNIFORM_SHAPE="true" VGAP_QUANTITY="24 pt">
+<font SIZE="24"/>
+<stylenode LOCALIZED_TEXT="styles.predefined" POSITION="bottom_or_right" STYLE="bubble">
+<stylenode LOCALIZED_TEXT="default" ID="ID_1664261437" ICON_SIZE="12 pt" FORMAT_AS_HYPERLINK="false" COLOR="#002b36" BACKGROUND_COLOR="#fdf6e3" STYLE="bubble" SHAPE_HORIZONTAL_MARGIN="8 pt" SHAPE_VERTICAL_MARGIN="5 pt" BORDER_WIDTH_LIKE_EDGE="false" BORDER_WIDTH="1.9 px" BORDER_COLOR_LIKE_EDGE="false" BORDER_COLOR="#f0f0f0" BORDER_DASH_LIKE_EDGE="true" BORDER_DASH="SOLID" VGAP_QUANTITY="3 pt">
+<arrowlink SHAPE="CUBIC_CURVE" COLOR="#fdf6e3" WIDTH="2" TRANSPARENCY="255" DASH="" FONT_SIZE="9" FONT_FAMILY="SansSerif" DESTINATION="ID_1664261437" STARTINCLINATION="132.75 pt;-32.25 pt;" ENDINCLINATION="132.75 pt;24 pt;" STARTARROW="NONE" ENDARROW="DEFAULT"/>
+<font NAME="SansSerif" SIZE="11" BOLD="false" STRIKETHROUGH="false" ITALIC="false"/>
+<edge STYLE="bezier" COLOR="#93a1a1" WIDTH="3" DASH="SOLID"/>
+<richcontent TYPE="DETAILS" CONTENT-TYPE="plain/auto"/>
+<richcontent TYPE="NOTE" CONTENT-TYPE="plain/auto"/>
+</stylenode>
+<stylenode LOCALIZED_TEXT="defaultstyle.details" COLOR="#fdf6e3" BACKGROUND_COLOR="#073642">
+<font SIZE="10"/>
+</stylenode>
+<stylenode LOCALIZED_TEXT="defaultstyle.tags">
+<font SIZE="10"/>
+</stylenode>
+<stylenode LOCALIZED_TEXT="defaultstyle.attributes">
+<font SIZE="10"/>
+</stylenode>
+<stylenode LOCALIZED_TEXT="defaultstyle.note" COLOR="#000000" BACKGROUND_COLOR="#2aa198" TEXT_ALIGN="LEFT">
+<icon BUILTIN="clock2"/>
+<font SIZE="10" ITALIC="true"/>
+</stylenode>
+<stylenode LOCALIZED_TEXT="defaultstyle.selection" COLOR="#fdf6e3" BACKGROUND_COLOR="#d33682" BORDER_COLOR_LIKE_EDGE="false" BORDER_COLOR="#d33682"/>
+<stylenode LOCALIZED_TEXT="defaultstyle.floating">
+<edge STYLE="hide_edge"/>
+<cloud COLOR="#f0f0f0" SHAPE="ROUND_RECT"/>
+</stylenode>
+</stylenode>
+<stylenode LOCALIZED_TEXT="styles.user-defined" POSITION="bottom_or_right" STYLE="bubble">
+<stylenode LOCALIZED_TEXT="styles.important" ID="ID_1940777954" BORDER_COLOR_LIKE_EDGE="false" BORDER_COLOR="#bf616a">
+<icon BUILTIN="yes"/>
+<arrowlink COLOR="#bf616a" TRANSPARENCY="255" DESTINATION="ID_1940777954"/>
+<font NAME="Ubuntu" SIZE="12" BOLD="true"/>
+</stylenode>
+<stylenode LOCALIZED_TEXT="styles.flower" COLOR="#ffffff" BACKGROUND_COLOR="#255aba" STYLE="oval" TEXT_ALIGN="CENTER" BORDER_WIDTH_LIKE_EDGE="false" BORDER_WIDTH="22 pt" BORDER_COLOR_LIKE_EDGE="false" BORDER_COLOR="#f9d71c" BORDER_DASH_LIKE_EDGE="false" BORDER_DASH="CLOSE_DOTS" MAX_WIDTH="6 cm" MIN_WIDTH="3 cm"/>
+</stylenode>
+<stylenode LOCALIZED_TEXT="styles.AutomaticLayout" POSITION="bottom_or_right" STYLE="bubble">
+<stylenode LOCALIZED_TEXT="AutomaticLayout.level.root" COLOR="#ffffff" BACKGROUND_COLOR="#002b36" STYLE="bubble" SHAPE_HORIZONTAL_MARGIN="10 pt" SHAPE_VERTICAL_MARGIN="10 pt" BORDER_WIDTH="3.1 px" BORDER_COLOR_LIKE_EDGE="true" BORDER_DASH_LIKE_EDGE="true">
+<font SIZE="18"/>
+</stylenode>
+<stylenode LOCALIZED_TEXT="AutomaticLayout.level,1" COLOR="#fdf6e3" BACKGROUND_COLOR="#073642" STYLE="bubble" SHAPE_HORIZONTAL_MARGIN="8 pt" SHAPE_VERTICAL_MARGIN="5 pt">
+<font SIZE="16"/>
+</stylenode>
+<stylenode LOCALIZED_TEXT="AutomaticLayout.level,2" COLOR="#fdf6e3" BACKGROUND_COLOR="#586e75" STYLE="bubble" SHAPE_HORIZONTAL_MARGIN="8 pt" SHAPE_VERTICAL_MARGIN="5 pt" BORDER_COLOR="#f0f0f0">
+<font SIZE="14"/>
+</stylenode>
+<stylenode LOCALIZED_TEXT="AutomaticLayout.level,3" COLOR="#fdf6e3" BACKGROUND_COLOR="#657b83" STYLE="bubble" SHAPE_HORIZONTAL_MARGIN="8 pt" SHAPE_VERTICAL_MARGIN="5 pt" BORDER_COLOR_LIKE_EDGE="true">
+<font SIZE="12"/>
+</stylenode>
+<stylenode LOCALIZED_TEXT="AutomaticLayout.level,4" COLOR="#fdf6e3" BACKGROUND_COLOR="#839496" BORDER_COLOR_LIKE_EDGE="true">
+<font SIZE="11"/>
+</stylenode>
+<stylenode LOCALIZED_TEXT="AutomaticLayout.level,5" COLOR="#fdf6e3" BACKGROUND_COLOR="#93a1a1" BORDER_COLOR_LIKE_EDGE="true">
+<font SIZE="11"/>
+</stylenode>
+<stylenode LOCALIZED_TEXT="AutomaticLayout.level,6" BACKGROUND_COLOR="#eee8d5" BORDER_COLOR_LIKE_EDGE="true">
+<font SIZE="10"/>
+</stylenode>
+<stylenode LOCALIZED_TEXT="AutomaticLayout.level,7" BACKGROUND_COLOR="#eedfcc" BORDER_COLOR="#f0f0f0">
+<font SIZE="10"/>
+</stylenode>
+<stylenode LOCALIZED_TEXT="AutomaticLayout.level,8" BACKGROUND_COLOR="#fdf6e3" BORDER_COLOR="#f0f0f0">
+<font SIZE="10"/>
+</stylenode>
+<stylenode LOCALIZED_TEXT="AutomaticLayout.level,9" BORDER_COLOR="#f0f0f0">
+<font SIZE="10"/>
+</stylenode>
+<stylenode LOCALIZED_TEXT="AutomaticLayout.level,10" BORDER_COLOR="#f0f0f0">
+<font SIZE="9"/>
+</stylenode>
+</stylenode>
+</stylenode>
+</map_styles>
+</hook>
+<node TEXT="ant" POSITION="bottom_or_right" ID="ID_166723937" CREATED="1772722560521" MODIFIED="1772722563392"/>
+<node TEXT="catalogs" POSITION="bottom_or_right" ID="ID_925021880" CREATED="1772722566924" MODIFIED="1772722588997"/>
+<node TEXT="lib" POSITION="bottom_or_right" ID="ID_1291817539" CREATED="1772722590863" MODIFIED="1772722593397">
+<node TEXT="MorganaXProc-III" ID="ID_252129823" CREATED="1772722618789" MODIFIED="1772722640989"/>
+<node TEXT="SP" ID="ID_1708037944" CREATED="1772722642033" MODIFIED="1772722644268"/>
+<node TEXT="xproc-batch" ID="ID_205203895" CREATED="1772722645861" MODIFIED="1772722658327"/>
+</node>
+<node TEXT="modules" POSITION="bottom_or_right" ID="ID_356675079" CREATED="1772722597154" MODIFIED="1772724947180">
+<node TEXT="ata" ID="ID_503824339" CREATED="1772722666780" MODIFIED="1772722681338">
+<node TEXT="pipelines" ID="ID_1118669687" CREATED="1772782949148" MODIFIED="1772782952145"/>
+<node TEXT="xproc" ID="ID_1426462075" CREATED="1772722706855" MODIFIED="1772722709180"/>
+<node TEXT="xslt" ID="ID_932668728" CREATED="1772722709766" MODIFIED="1772722711849"/>
+<node TEXT="schemas" ID="ID_1990883209" CREATED="1772722822634" MODIFIED="1772722826162">
+<node TEXT="sgml" ID="ID_617975778" CREATED="1772722829699" MODIFIED="1772722832090"/>
+<node TEXT="xml" ID="ID_751048358" CREATED="1772722832686" MODIFIED="1772722834323"/>
+</node>
+</node>
+<node TEXT="s1000d" ID="ID_801241643" CREATED="1772722681687" MODIFIED="1772722685079">
+<node TEXT="pipelines" ID="ID_1373453199" CREATED="1772782949148" MODIFIED="1772782952145"/>
+<node TEXT="xproc" ID="ID_1005044989" CREATED="1772722706855" MODIFIED="1772722709180"/>
+<node TEXT="xslt" ID="ID_110384212" CREATED="1772722709766" MODIFIED="1772722711849"/>
+<node TEXT="schemas" ID="ID_1959386779" CREATED="1772722822634" MODIFIED="1772722826162">
+<node TEXT="sgml" ID="ID_256767678" CREATED="1772722829699" MODIFIED="1772722832090"/>
+<node TEXT="xml" ID="ID_156544459" CREATED="1772722832686" MODIFIED="1772722834323"/>
+</node>
+</node>
+<node TEXT="milspec" ID="ID_860827356" CREATED="1772722685512" MODIFIED="1772722688364">
+<node TEXT="pipelines" ID="ID_859526534" CREATED="1772782949148" MODIFIED="1772782952145"/>
+<node TEXT="xproc" ID="ID_768942979" CREATED="1772722706855" MODIFIED="1772722709180"/>
+<node TEXT="xslt" ID="ID_1593083595" CREATED="1772722709766" MODIFIED="1772722711849"/>
+<node TEXT="schemas" ID="ID_68459286" CREATED="1772722822634" MODIFIED="1772722826162">
+<node TEXT="sgml" ID="ID_279491977" CREATED="1772722829699" MODIFIED="1772722832090"/>
+<node TEXT="xml" ID="ID_1214710465" CREATED="1772722832686" MODIFIED="1772722834323"/>
+</node>
+</node>
+<node TEXT="common" ID="ID_1675394910" CREATED="1772724517733" MODIFIED="1772724520492">
+<node TEXT="pipelines" ID="ID_1444323297" CREATED="1772782949148" MODIFIED="1772782952145"/>
+<node TEXT="schemas" ID="ID_938900338" CREATED="1772788488576" MODIFIED="1772788491598">
+<node TEXT="sgml" ID="ID_1815901380" CREATED="1772788499547" MODIFIED="1772788502065">
+<node TEXT="dtd" ID="ID_1184822867" CREATED="1772788516740" MODIFIED="1772788519727"/>
+<node TEXT="entities" ID="ID_818909445" CREATED="1772788520273" MODIFIED="1772788524379"/>
+<node TEXT="xml-entities" ID="ID_156560808" CREATED="1772788524866" MODIFIED="1772788529829"/>
+</node>
+<node TEXT="xml" ID="ID_1709529467" CREATED="1772788502860" MODIFIED="1772788504747">
+<node TEXT="dtd" ID="ID_93250151" CREATED="1772788509139" MODIFIED="1772788512836"/>
+</node>
+</node>
+<node TEXT="xslt" ID="ID_1544863963" CREATED="1772724598207" MODIFIED="1772724600517"/>
+</node>
+</node>
+<node TEXT="build.properties.xml" POSITION="bottom_or_right" ID="ID_1610010348" CREATED="1772723190454" MODIFIED="1772723202754"/>
+<node TEXT="build.xml" POSITION="bottom_or_right" ID="ID_1930857539" CREATED="1772723203401" MODIFIED="1772723221013"/>
+</node>
+</map>

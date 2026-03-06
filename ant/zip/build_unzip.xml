@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+    basedir="."
+    xmlns:if="ant:if"
+    xmlns:unless="ant:unless"
+    name="unzip-all"
+    default="all">
+    
+    <!-- load ant-contrib -->
+    <taskdef resource="net/sf/antcontrib/antlib.xml"/>
+    
+    <property environment="env"/>
+    
+    
+    <!-- Build properties -->
+    <xmlproperty
+        file="build.properties.local.xml"
+        keeproot="false"
+        collapseattributes="true"
+        semanticattributes="true"/>
+    
+    <xmlproperty
+        file="build.properties.xml"
+        keeproot="false"
+        collapseattributes="true"
+        semanticattributes="true"/>
+    
+    
+    <target name="prep" description="Preparation">
+        <mkdir dir="${base.tmp}"/>
+        <mkdir dir="${base.out}"/>
+    </target>
+    
+    
+    <!-- Loop through input archives -->
+    <target
+        name="loop-unzip"
+        description="Loop through any zip archives in the source directory">
+        
+        <echo message="base.source: ${base.source}" />
+        <echo message="base.out: ${base.out}" />        
+        
+        <foreach target="unzip" param="file">
+            <path>
+                <fileset dir="${base.source}">
+                    <include name="**/*${zip.string}*.zip"/>
+                </fileset>
+            </path>
+        </foreach>
+    </target>
+    
+    
+    <!-- Unzip input archive -->
+    <target name="unzip" description="Unzip archive">
+        <!-- Base URL for the sources -->
+        <makeurl property="base.url" file="${base.source}" separator="/"/>
+        
+        <!-- The full source URL for each file -->
+        <local name="local.sources"/>
+        <dirname property="local.sources" file="${file}"/>
+        <local name="local.sources.url"/>
+        <makeurl property="local.sources.url" file="${local.sources}" separator="/"/>
+        
+        <!-- Base URL for all output -->
+        <local name="local.out.url"/>
+        <makeurl property="local.out.url" file="${base.out}" separator="/"/>
+        
+        <!-- Remove the base URL for the full source URL
+             because we don't want a file: protocol URL for the unzip -->
+        <local name="local.target"/>
+        <loadresource property="local.target">
+            <propertyresource name="local.sources.url"/>
+            <filterchain>
+                <tokenfilter>
+                    <filetokenizer/>
+                    <replacestring from="${base.url}" to=""/>
+                    <replacestring from="%20" to=" "/>
+                </tokenfilter>
+            </filterchain>
+        </loadresource>
+        
+        <local name="target.set"/>
+        <condition property="target.set" value="true" else="false">
+            <isset property="local.target"/>
+        </condition>
+        
+        <local name="local.unzip"/>
+        
+        <if>
+            <equals arg1="${target.set}" arg2="true"/>
+            <then>
+                <echo>Local target is set</echo>
+                <property name="local.unzip" value="${base.out}\${local.target}"/>
+            </then>
+            <else>
+                <echo>Local target is not set</echo>
+                <property name="local.unzip" value="${base.out}"/>
+            </else>
+        </if>
+        
+        <echo message="Output path is ${local.unzip}"/>
+        
+        <!-- Unzip to target -->
+        <unzip src="${file}" dest="${local.unzip}"/>
+    </target>
+    
+    
+    <target name="all" depends="prep, loop-unzip" description="Run all"/>
+    
+    
+</project>

@@ -1,0 +1,25 @@
+-- Catalog for SGML to XML NTNG 2026-03-06 --
+
+OVERRIDE YES
+
+SGMLDECL "ccc.dcl"
+
+CATALOG "ISOent.cat"
+
+
+-- SGML DTD(s) --
+
+PUBLIC "-//CWORD//DTD DOC TEST//EN" "dtd/doc.dtd"
+
+
+-- XML DTD(s) --
+
+PUBLIC "-//ATA-TEXT//DTD EM-VER11-LEVEL2//EN" "rr/dtd/em.dtd"
+
+
+-- Special char entity files (note extra whitespace in PUBLIC IDs) --
+
+PUBLIC "ISO 8879-1986//ENTITIES   General Technical//EN" "entities/ISOtech.ent"
+PUBLIC "ISO 8879-1986//ENTITIES   Numeric and Special Graphic//EN" "entities/ISOnum.ent"
+PUBLIC "ISO 8879-1986//ENTITIES   Greek Letters//EN" "entities/ISOgrk1"
+

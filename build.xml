@@ -1,0 +1,662 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+    basedir="."
+    xmlns:if="ant:if"
+    xmlns:unless="ant:unless"
+    name="sgm2xml"
+    default="no-unzip">
+    
+    
+    <!-- load ant-contrib -->
+    <taskdef resource="net/sf/antcontrib/antlib.xml"/>
+    
+    
+    <property environment="env"/>
+    
+    <condition property="isWindows">
+        <os family="windows" />
+    </condition>
+    
+    <condition property="isLinux">
+        <os family="unix" />
+    </condition>
+    
+    
+    <!-- Generate a timestamp, to be used for the output folder -->
+    <tstamp>
+        <format property="current.time" pattern="yyyyMMddHHmmss" />
+    </tstamp>
+    
+    
+    <!-- Build properties -->
+    <xmlproperty
+        file="build.properties.local.xml"
+        keeproot="false"
+        collapseattributes="true"
+        semanticattributes="true"/>
+    <xmlproperty
+        file="build.properties.xml"
+        keeproot="false"
+        collapseattributes="true"
+        semanticattributes="true"/>
+    
+    
+    <!-- XProc macrodef -->
+    <include file="ant/xproc.xml"/>
+    
+    
+    <!-- Create dirs -->
+    <target name="mkdirs" description="Create target directories">        
+        <mkdir dir="${base.tmp}"/>
+        <mkdir dir="${base.pre}"/>
+        <mkdir dir="${base.spam}"/>
+        <mkdir dir="${base.sx}"/>
+        <mkdir dir="${base.xml}"/>
+        <mkdir dir="${base.debug}"/>
+        <mkdir dir="${base.out}"/>
+        <mkdir dir="${base.reports}"/>        
+    </target>
+    
+    
+    <!-- Prepping before conversion -->
+    <target name="prepare" description="Prepare filenames and tool paths">
+        <!-- Set path to spam -->
+        <condition property="sp-loc.path.spam" value="${sp-loc.win-path.spam}">
+            <isset property="isWindows"/>
+        </condition>
+        <condition property="sp-loc.path.spam" value="${sp-loc.nix-path.spam}">
+            <isset property="isLinux"/>
+        </condition>
+        
+        <!-- Set path to sx -->
+        <condition property="sp-loc.path.sx" value="${sp-loc.win-path.sx}">
+            <isset property="isWindows"/>
+        </condition>
+        <condition property="sp-loc.path.sx" value="${sp-loc.nix-path.sx}">
+            <isset property="isLinux"/>
+        </condition>
+        
+        <!-- Set path to nsgmls -->
+        <condition property="sp-loc.path.nsgmls" value="${sp-loc.win-path.nsgmls}">
+            <isset property="isWindows"/>
+        </condition>
+        <condition property="sp-loc.path.nsgmls" value="${sp-loc.nix-path.nsgmls}">
+            <isset property="isLinux"/>
+        </condition>
+    </target>
+    
+    
+    <target name="uncompress" description="Uncompress and list sources">
+        <record name="${base.reports}/01-uncompress.txt" action="start" append="true"/>
+        
+        <ant dir="${repos.sgm2xml}/ant/zip" antfile="build_unzip.xml" target="loop-unzip" inheritAll="false">
+            <property name="base.source" value="${base.source}"/>
+            <property name="base.out" value="${base.source}"/>
+        </ant>
+        
+        <for param="file">
+            <path>
+                <fileset dir="${base.source}">
+                    <include name="**/*"/>
+                </fileset>
+            </path>
+            <sequential>
+                <local name="filename"/>
+                <local name="dirname"/>
+                <dirname property="dirname" file="@{file}"/>
+                <basename property="filename" file="@{file}"/>
+                <echo
+                    message="${dirname}/${filename}&#x0A;"
+                    append="yes"
+                    file="${base.reports}/sources-${env.date}.txt"/>
+            </sequential>
+        </for>
+        <record name="${base.reports}/01-uncompress.txt" action="stop" append="true"/>
+    </target>
+    
+    
+    <!-- Loop through files for nsgmls validation -->
+    <target
+        name="loop-nsgmls"
+        description="Loop through files in source directory">
+        
+        <record name="${base.reports}/02-loop-ngsmls.txt" action="start" append="true"/>
+        
+        <echo message="Using catalog ${modules.common.schemas.input}"/>
+        
+        <foreach
+            target="nsgmls"
+            param="file"
+            inheritall="true">
+            <path>
+                <fileset dir="${base.source}">
+                    <include name="**/*.sgm"/>
+                    <include name="**/*.sgml"/>
+                </fileset>
+            </path>
+        </foreach>
+        
+        <record name="${base.reports}/02-loop-ngsmls.txt" action="stop" append="true"/>
+    </target>
+    
+    
+    <!-- Validate using nsgmls -->
+    <target
+        name="nsgmls"
+        description="Validate file">
+        
+        <echo message="Validating ${file}" />
+        
+        <exec
+            executable="${sp-loc.path.nsgmls}"
+            dir="."
+            inputstring="&#10;">
+            <arg value="-s"/>
+            <arg value="-E0"/>
+            <arg value="-ferrnsgmls.txt"/>
+            <arg value="-c"/>
+            <arg value="${modules.common.schemas.input}"/>
+            <arg value="${file}"/>
+        </exec>
+        
+        <concat destfile="${base.reports}/nsgmls-report-${env.date}.txt" append="true">
+            <filelist dir="." files="errnsgmls.txt"/>
+        </concat>
+        
+        <echo message="Validating ${file}"/>
+    </target>
+    
+    
+    <!-- Replace line feeds with spaces if preceeded and succeeded by word chars -->
+    <target
+        name="preprocess-content"
+        description="Preprocessing - replace line feeds splitting words with spaces">
+        <copy todir="${base.pre}">
+            <fileset dir="${base.source}">
+                <include name="**/*.sgm"/>
+            </fileset>
+        </copy>
+        
+        <echo message="Handling misplaced line feeds in SGML files in ${base.pre}"/>
+        
+        <replaceregexp
+            match="([a-zA-Z])\n([a-zA-Z])"
+            replace="\1 \2"
+            flags="g">
+            <fileset dir="${base.pre}">
+                <include name="**/*.sgm"/>
+            </fileset>
+        </replaceregexp>
+    </target>
+    
+    
+    <!-- Loop through the source SGML for document normalisation -->
+    <target
+        name="loop-spam"
+        description="Loop through files in source directory">
+        
+        <record name="${base.reports}/03-loop-spam.txt" action="start" append="true"/>
+        
+        <echo message="base.source: ${base.pre}" />
+        <echo message="Using catalog ${modules.common.schemas.input}"/>
+        
+        <foreach target="spam" param="file" inheritall="true">
+            <path>
+                <fileset dir="${base.pre}">
+                    <include name="**/*.sgm"/>
+                    <include name="**/*.sgml"/>
+                </fileset>
+            </path>
+        </foreach>
+        
+        <record name="${base.reports}/03-loop-spam.txt" action="stop" append="true"/>
+    </target>
+    
+    
+    <!-- Normalise an SGML file -->
+    <target
+        name="spam"
+        description="Normalise file">
+        
+        <echo message="Normalising (spam) ${file} (base.pre ${base.pre})"/>
+        
+        <local name="local.diff"/>
+        <dirname file="${file}" property="local.diff"/>
+        <echo message="local diff is ${local.diff}"/>
+        
+        <local name="local.filename"/>
+        <basename file="${file}" property="local.filename"/>
+        <echo message="local filename is ${local.filename}"/>
+        
+        <local name="local.target"/>
+        <loadresource property="local.target">
+            <propertyresource name="local.diff"/>
+            <filterchain>
+                <tokenfilter>
+                    <filetokenizer/>
+                    <replacestring from="${base.pre}" to=""/>
+                    <replacestring from="%20" to="_"/>
+                </tokenfilter>
+            </filterchain>
+        </loadresource>
+        
+        <local name="spam.set"/>
+        
+        <condition property="spam.set" value="true" else="false">
+            <and>
+                <isset property="local.target"/>
+                <not>
+                    <equals arg1="${base.pre}" arg2="${local.target}"/>
+                </not>
+            </and>
+        </condition>
+        
+        <local name="local.spam"/>
+        
+        <if>
+            <equals arg1="${spam.set}" arg2="true"/>
+            <then>
+                <echo>Local target is set</echo>
+                <mkdir dir="${base.spam}/${local.target}"/>
+                <property name="local.spam" value="${base.spam}/${local.target}"/>
+            </then>
+            <else>
+                <echo>Local target is not set</echo>
+                <property name="local.spam" value="${base.spam}"/>
+            </else>
+        </if>
+        
+        <echo message="Local target is ${local.target}"/>
+        
+        <echo message="Output path (spam) is ${local.spam}"/>
+        
+        <exec
+            executable="${sp-loc.path.spam}"
+            output="${local.spam}\${local.filename}"
+            dir="."
+            inputstring="&#10;">
+            <arg value="-p"/>
+            <arg value="-p"/>
+            <arg value="-x"/>
+            <arg value="-x"/>
+            <arg value="-l"/>
+            <arg value="-D${base.source}"/>
+            <arg value="-E0"/>
+            <arg value="-ferrspam.txt"/>
+            <arg value="-c"/>
+            <arg value="${modules.common.schemas.input}"/>
+            <arg value="${file}"/>
+        </exec>
+        
+        <concat destfile="${base.reports}/spam-report-${env.date}.txt" append="true">
+            <filelist dir="." files="errspam.txt"/>
+        </concat>
+        
+        <echo message="Saving ${local.spam}/${local.filename}"/>
+    </target>
+    
+    
+    <!-- Loop through SGML files for XML conversion -->
+    <target
+        name="loop-sx"
+        description="Loop through normalised files">
+        
+        <record name="${base.reports}/04-loop-sx.txt" action="start" append="true"/>
+        
+        <foreach
+            target="sx"
+            param="file"
+            inheritall="true">
+            <path>
+                <fileset dir="${base.spam}">
+                    <include name="**/*.sgm"/>
+                    <include name="**/*.sgml"/>
+                </fileset>
+            </path>
+        </foreach>
+        
+        <record name="${base.reports}/04-loop-sx.txt" action="stop" append="true"/>
+    </target>
+    
+    
+    <!-- Convert SGML to XML -->
+    <target
+        name="sx"
+        description="Convert file from SGML to XML">
+        
+        <echo message="Converting (sx) ${file}"/>
+        
+        <local name="local.diff"/>
+        <dirname file="${file}" property="local.diff"/>
+        
+        <local name="local.filename"/>
+        <basename file="${file}" property="local.filename"/>
+        
+        <local name="local.target"/>
+        <loadresource property="local.target">
+            <propertyresource name="local.diff"/>
+            <filterchain>
+                <tokenfilter>
+                    <filetokenizer/>
+                    <replacestring from="${base.spam}" to=""/>
+                </tokenfilter>
+            </filterchain>
+        </loadresource>
+        
+        <local name="sx.set"/>
+        <condition property="sx.set" value="true" else="false">
+            <and>
+                <isset property="local.target"/>
+                <not>
+                    <equals arg1="${base.spam}" arg2="${local.target}"/>
+                </not>
+            </and>
+        </condition>
+        
+        <local name="local.sx"/>
+        
+        <if>
+            <equals arg1="${sx.set}" arg2="true"/>
+            <then>
+                <echo>Local target is set</echo>
+                <mkdir dir="${base.sx}/${local.target}"/>
+                <property name="local.sx" value="${base.sx}/${local.target}"/>
+            </then>
+            <else>
+                <echo>Local target is not set</echo>
+                <property name="local.sx" value="${base.sx}"/>
+            </else>
+        </if>
+        
+        <echo message="Output path is ${local.sx}"/>
+        
+        <!-- Output file is XML, not SGML, so change file suffix -->
+        <local name="local.xml"/>
+        <propertyregex
+            property="local.xml"
+            input="${local.filename}"
+            regexp="^([\w\W]+)(\.sgm(l)?)$"
+            replace="\1.xml"
+            global="true"/>
+        
+        <exec
+            executable="${sp-loc.path.sx}"
+            output="${local.sx}\${local.xml}">
+            <arg value="-c"/>
+            <arg value="${modules.common.schemas.output}"/>
+            <arg value="-xndata"/>
+            <arg value="-xnotation"/>
+            <arg value="-xlower"/>
+            <arg value="-xempty"/>
+            <arg value="-D${base.source}"/>
+            <arg value="-E0"/>
+            <arg value="-ferrsx.txt"/>
+            <arg value="${file}"/>
+        </exec>
+        
+        <concat destfile="${base.reports}/sx-report-${env.date}.txt" append="true">
+            <filelist dir="." files="errsx.txt"/>
+        </concat>
+        
+        <echo message="Saving ${local.sx}/${local.xml}"/>
+    </target>
+    
+    
+    <!-- Add ISO XML character entity file declarations -->
+    <target
+        name="add-entity-declarations"
+        description="Add XML character entity declarations to DTD internal subsets">
+        
+        <record name="${base.reports}/05-add-entity-declarations.txt" action="start" append="true"/>
+        
+        <!-- Load entity declarations from file -->
+        <loadfile
+            property="entities"
+            srcfile="${modules.common.schemas.resources.ent}"/>
+        
+        <!-- Add the entity declarations first in the internal subset -->
+        <replaceregexp
+            match="(&lt;!DOCTYPE\s+[a-zA-Z0-9\-]+\s+\[)"
+            replace="\1${entities}"
+            flags="m">
+            <fileset dir="${base.sx}">
+                <include name="**/*.xml"/>
+            </fileset>
+        </replaceregexp>
+        
+        <!-- Fix CA schemas base URI -->
+        <local name="local.ca"/>
+        <propertyregex
+            property="local.ca"
+            input="${modules.common}"
+            regexp="\\"
+            replace="/"
+            global="true"/>
+        
+        <!-- Add base URI to the entity declarations added to the internal subset -->
+        <replaceregexp
+            match="xml-entities"
+            replace="${modules.common.schemas}/sgml/xml-entities"
+            byline="yes">
+            <fileset dir="${base.sx}">
+                <include name="**/*.xml"/>
+            </fileset>
+        </replaceregexp>
+        
+        <echo message="Added character entities to internal subsets"/>
+        
+        <echo file="${base.reports}/internal-subset-${env.date}.txt" message="${entities}"/>
+        
+        <record name="${base.reports}/05-add-entity-declarations.txt" action="stop" append="true"/>
+    </target>
+    
+    
+    <!-- Loop unparsed -->
+    <target
+        name="loop-unparsed"
+        description="Loop through normalised files">
+        
+        <record name="${base.reports}/06-loop-unparsed.txt" action="start" append="true"/>
+        
+        <foreach
+            target="unparsed-entities"
+            param="file"
+            inheritall="true">
+            <path>
+                <fileset dir="${base.sx}">
+                    <include name="**/*.xml"/>
+                </fileset>
+            </path>
+        </foreach>
+        
+        <record name="${base.reports}/06-loop-unparsed.txt" action="stop" append="true"/>
+        
+    </target>
+    
+    
+    <!-- Map unparsed entities to @href -->
+    <target
+        name="unparsed-entities"
+        description="Map unparsed entities to @href">
+        
+        <local name="local.diff"/>
+        <dirname file="${file}" property="local.diff"/>
+        
+        <local name="local.filename"/>
+        <basename file="${file}" property="local.filename"/>
+        
+        <local name="local.target"/>
+        <loadresource property="local.target">
+            <propertyresource name="local.diff"/>
+            <filterchain>
+                <tokenfilter>
+                    <filetokenizer/>
+                    <replacestring from="${base.sx}" to=""/>
+                </tokenfilter>
+            </filterchain>
+        </loadresource>
+        
+        <local name="unparsed.set"/>
+        <condition property="unparsed.set" value="true" else="false">
+            <and>
+                <isset property="local.target"/>
+                <not>
+                    <equals arg1="${base.sx}" arg2="${local.target}"/>
+                </not>
+            </and>
+        </condition>
+        
+        <local name="local.unparsed"/>
+        
+        <if>
+            <equals arg1="${unparsed.set}" arg2="true"/>
+            <then>
+                <echo>Local target is set</echo>
+                <mkdir dir="${base.xml}/${local.target}"/>
+                <property name="local.unparsed" value="${base.xml}/${local.target}"/>
+            </then>
+            <else>
+                <echo>Local target is not set</echo>
+                <property name="local.unparsed" value="${base.xml}"/>
+            </else>
+        </if>
+        
+        <echo message="Output path is ${local.unparsed}"/>
+        
+        <record append="yes" name="${base.reports}/report-unparsed-entities-${env.date}.txt" action="start"/>
+        
+        <xslt
+            in="${file}"
+            style="${modules.common.xslt.unparsed}"
+            out="${local.unparsed}\${local.filename}">
+            <factory name="net.sf.saxon.TransformerFactoryImpl"/>
+        </xslt>
+        
+        <record append="yes" name="${base.reports}/report-unparsed-entities-${env.date}.txt" action="stop"/>
+    </target>
+    
+    
+    <!-- Run XProc pipeline -->
+    <!-- Add conditions so a missing module won't break anything -->
+    <target
+        name="run-manifest"
+        description="Run XSLT manifest to convert well-formed XML to valid XML">
+        
+        <record name="${base.reports}/07-run-manifest.txt" action="start" append="true"/>
+        
+        <echo message="Running XProc to produce valid XML"/>
+        <echo message="Catalog ${catalogs.catalog}"/>
+        
+        <local name="local.in"/>
+        <local name="local.out"/>
+        <local name="local.tmp"/>
+        <local name="local.reports"/>
+        
+        <!-- URIs required as input -->
+        <makeurl property="local.in" file="${base.xml}"/>
+        <makeurl property="local.out" file="${base.out}"/>
+        <makeurl property="local.reports" file="${base.reports}"/>
+        <makeurl property="local.tmp" file="${base.tmp}"/>
+        
+        <echo message="Sources in ${local.in}, saving to ${local.out}, debug is ${debug}"/>
+        
+        <run-xproc>
+            <xproc-args>
+                <!-- Pipeline -->
+                <arg value="${pipeline.ata-xml}"/>
+                
+                <!-- Catalog -->
+                <arg value="-catalogs=${catalogs.catalog}"/>
+                
+                <!-- Inputs -->
+                <arg value="-input:manifest="/>
+                <arg value="-input:sch=${sch}"/>
+                
+                <!-- Options -->
+                <arg value="-option:input-base-uri=${local.in}"/>
+                <arg value="-option:output-base-uri=${local.out}"/>
+                <arg value="-option:reports-dir=${local.reports}"/>
+                <arg value="-option:tmp-dir=${local.tmp}"/>
+                <arg value="-option:debug=${debug}"/>
+                
+                <!-- Include file suffixes...
+                 This is NOT a regex - the regex is constructed in the XProc -->
+                <arg value="-option:include=.xml"/>
+            </xproc-args>
+        </run-xproc>
+        
+        <record name="${base.reports}/07-run-manifest.txt" action="stop" append="true"/>
+    </target>
+    
+    
+    <!-- Housekeeping -->
+    <target name="housekeeping" description="Housekeeping">
+        <delete file="${repos.sgm2xml}/errspam.txt"/>
+        <delete file="${repos.sgm2xml}/errsx.txt"/>
+        <delete file="${repos.sgm2xml}/errnsgmls.txt"/>
+    </target>
+    
+    
+    <target name="copy-graphics" description="Copy graphics to output">
+        <copy todir="${base.out}">
+            <fileset dir="${base.source}">
+                <exclude name="**/*.sgm"/>
+                <exclude name="**/*.sgml"/>
+                <exclude name="**/*.zip"/>
+            </fileset>
+        </copy>
+        
+        <for param="file">
+            <path>
+                <fileset dir="${base.out}">
+                    <include name="**/*"/>
+                </fileset>
+            </path>
+            <sequential>
+                <local name="filename"/>
+                <local name="dirname"/>
+                <dirname property="dirname" file="@{file}"/>
+                <basename property="filename" file="@{file}"/>
+                <echo
+                    message="${dirname}/${filename}&#x0A;"
+                    append="yes"
+                    file="${base.reports}/processed-output-${env.date}.txt"/>
+            </sequential>
+        </for>
+    </target>
+    
+    
+    <target
+        name="cleanup"
+        description="Remove temp folders"
+        unless="${debug}">
+        <echo message="debug is set to ${debug}"/>
+    </target>
+    
+    
+    
+    <target
+        name="all"
+        description="Run an end to end SGML to XML conversion"
+        depends="mkdirs, prepare, uncompress, preprocess-content, loop-spam, loop-sx, add-entity-declarations, loop-unparsed, run-manifest, copy-graphics, housekeeping"/>
+    
+    <target
+        name="no-unzip"
+        description="Run an end to end SGML to XML conversion without unzip"
+        depends="mkdirs, prepare, preprocess-content, loop-spam, loop-sx, add-entity-declarations, loop-unparsed"/>
+    <!-- , run-manifest, copy-graphics, housekeeping -->
+    
+    <target
+        name="run-nsgmls"
+        description="Parse SGML only"
+        depends="mkdirs, prepare, uncompress, loop-nsgmls"/>
+    <target
+        name="run-spam"
+        description="Normalise SGML only"
+        depends="mkdirs, prepare, uncompress, preprocess-content, loop-spam"/>
+    <target
+        name="run-sx"
+        description="Convert normalised SGML to XML only"
+        depends="mkdirs, prepare, uncompress, preprocess-content, loop-spam, loop-sx"/>
+    
+</project>

@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<properties>
+    
+    <!-- Change accordingly for repository path -->
+    <repos>
+        <dir location="/home/ari/Documents/repos"/>
+        <sgml2xml location="${repos.dir}/sgml2xml-tng"/>
+        <lib location="${repos.sgml2xml}/lib"/>
+    </repos>
+    
+    
+    <!-- Modules -->
+    <modules location="${repos.sgml2xml}/modules">
+        <common location="${modules}/common">
+            <schemas location="${modules.common}/schemas">
+                <!-- SGML -->
+                <input location="${modules.common.schemas}/sgml/catalog.txt"/>
+                <!-- SGML to XML conversion -->
+                <output location="${modules.common.schemas}/sgml/catalog_sgml2xml.txt"/>
+                <!-- ATA resources -->
+                <resources>
+                    <ent location="${modules.common.schemas}/sgml/ISOent-declarations-xml.txt"/>
+                </resources>
+            </schemas>
+            
+            <!-- Common XSLT -->
+            <xslt location="${modules.common}/xslt">
+                <unparsed location="${modules.common.xslt}/map-unparsed-entities.xsl"/>
+            </xslt>
+            <xproc/>
+        </common>
+        
+        <!-- ATA module -->
+        <ata location="${modules}/ata">
+            <schemas location="${modules.ata}/schemas">
+                <!-- SGML -->
+                <input location="${modules.ata.schemas}/sgml/catalog.txt"/>
+                <!-- SGML to XML conversion -->
+                <output location="${modules.ata.schemas}/sgml/catalog_sgml2xml.txt"/>
+                <!-- ATA resources -->
+                <resources>
+                    <ent location="${modules.ata.schemas}/sgml/ISOent-declarations-xml.txt"/>
+                </resources>
+            </schemas>
+            
+            <!-- Schematron -->
+            <sch location="${modules.ata}/sch/ata-checks.sch"/>
+            
+            <!-- XProc pipeline manifests and libs -->
+            <pipeline>
+                <manifest location="${repos.ata}/pipelines/ataxml-xslt-manifest.xml"/>
+                <ata-xml location="${repos.ata}/xproc/ata-migration.xpl"/>
+            </pipeline>
+        </ata>
+        
+        <!-- Other modules go here -->
+    </modules>
+    
+    
+    <!-- SP package location abstraction (lib) -->
+    <sp-loc>
+        <win-path>
+            <bin location="${repos.lib}/sp1_3_4/bin"/>
+            <spam value="${sp-loc.win-path.bin}/spam.exe"/>
+            <sx value="${sp-loc.win-path.bin}/sx.exe"/>
+            <nsgmls value="${sp-loc.win-path.bin}/nsgmls.exe"/>
+        </win-path>
+        <nix-path>
+            <spam value="/usr/bin/ospam"/>
+            <sx value="/usr/bin/osx"/>
+            <nsgmls value="/usr/bin/onsgmls"/>
+        </nix-path>
+    </sp-loc>
+    
+    <!-- XML Catalogs -->
+    <catalogs>
+        <dir location="${repos.sgml2xml}/catalogs"/>
+        <catalog location="${catalogs.dir}/catalog.xml"/>
+    </catalogs>
+    
+    <!-- Morgana -->
+    <!--<morgana>
+        <home location="${repos.lib}/MorganaXProc-IIIse-1.8.3"/>
+        <lib location="${morgana.home}/MorganaXProc-IIIse_lib"/>
+        <jar location="${morgana.home}/MorganaXProc-IIIse.jar"/>
+        <config location="${morgana.home}/config.xml"/>
+        <resolver location="${morgana.lib}/xmlresolver-6.0.21.jar"/>
+    </morgana>-->
+    
+    <!-- Saxon -->
+    <saxon>
+        <jar location="${repos.lib}/saxon/Saxon-he-12.9.jar"/>
+    </saxon>
+    
+    <!-- Debug and verbose -->
+    <debug value="true"/>
+    <verbose value="true"/>
+    
+    <!-- Run XSpecs -->
+    <run-xspecs value="false"/>
+    
+    <!-- DTD and Schematron validation; leave to false for now -->
+    <validation>
+        <dtd-in value="false"/>
+        <dtd-out value="false"/>
+        <sch-in value="false"/>
+        <sch-out value="false"/>
+    </validation>
+    
+    
+    
+    <!-- Project environment; ${env.src} is a folder path
+         inside your main project as given by ${base.dir} -->
+    <env>
+        <src value="test"/>
+        <date value="${current.time}"/>
+    </env>
+    
+    <!-- ${base.dir} should be the conversion's base location, 
+         minus the ${env.src}/data part set by the conversion. -->
+    <base>
+        <dir location="/home/ari/Documents/projects/ata-sgml2xml"/>
+        <source location="${base.dir}/${env.src}/data"/>
+        <tmp location="${base.dir}/${env.src}/tmp/${env.date}"/>
+        <pre location="${base.tmp}/pre"/>
+        <spam location="${base.tmp}/spam"/>
+        <sx location="${base.tmp}/sx"/>
+        <xml location="${base.tmp}/xml"/>
+        <debug location="${base.tmp}/debug"/>
+        <reports location="${base.tmp}/reports"/>
+        <out location="${base.tmp}/out"/>
+    </base>
+    
+</properties>
