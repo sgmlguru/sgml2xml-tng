@@ -1,0 +1,34 @@
+-- Catalog for RR PoC 2026-01-29 --
+
+OVERRIDE YES
+
+SGMLDECL "ata.dcl"
+
+CATALOG "ISOent.cat"
+
+
+-- DTDs ATA 2200 September 2020 --
+
+PUBLIC "-//ATA-TEXT//DTD CPM-VER6-LEVEL2//EN" "dtd/cpm.dtd"
+PUBLIC "-//ATA-TEXT//DTD EM-VER10-LEVEL2//EN" "dtd/em.dtd"
+PUBLIC "-//ATA-TEXT//DTD SB-VER10-LEVEL2//EN" "dtd/sb.dtd"
+PUBLIC "-//ATA-TEXT//DTD SDS-VER11-LEVEL2//EN" "dtd/sds.dtd"
+PUBLIC "-//ATA-TEXT//DTD CMM-VER15-LEVEL2//EN" "dtd/cmm.dtd"
+PUBLIC "-//ATA-TEXT//DTD EIPC-VER11-LEVEL2//EN" "dtd/eipc.dtd"
+PUBLIC "-//ATA-TEXT//DTD LEA-VER1//EN" "dtd/lea.dtd"
+PUBLIC "-//ATA-TEXT//DTD SBI-VER8-LEVEL2//EN" "dtd/sbi.dtd"
+PUBLIC "-//ATA-TEXT//DTD TEM-VER6-LEVEL2//EN" "dtd/tem.dtd"
+
+
+-- DTDs ATA RR versions --
+
+PUBLIC "-//ATA-TEXT//DTD EM-VER11-LEVEL2//EN" "rr/dtd/em.dtd"
+PUBLIC "-//ATA-TEXT//DTD EIPC-VER12-LEVEL2//EN" "rr/dtd/eipc.dtd"
+
+
+-- Special char entity files (note extra whitespace in PUBLIC IDs) --
+
+PUBLIC "ISO 8879-1986//ENTITIES   General Technical//EN" "entities/ISOtech.ent"
+PUBLIC "ISO 8879-1986//ENTITIES   Numeric and Special Graphic//EN" "entities/ISOnum.ent"
+PUBLIC "ISO 8879-1986//ENTITIES   Greek Letters//EN" "entities/ISOgrk1"
+

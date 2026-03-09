@@ -1,0 +1,8 @@
+-- Catalog file for RR ATA 2200 DTDs (XML) --
+
+
+-- DTDs ATA RR versions --
+
+PUBLIC "-//ATA-TEXT//DTD XML EM-VER11-LEVEL2//EN" "em.dtd"
+PUBLIC "-//ATA-TEXT//DTD XML EIPC-VER12-LEVEL2//EN" "eipc.dtd"
+

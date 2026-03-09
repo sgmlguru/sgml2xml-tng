@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="../xproc-batch/xproc-tools/schemas/manifest.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<manifest xmlns="http://www.corbas.co.uk/ns/transforms/manifest" xml:base=".">
+    
+    <group description="Main structures" xml:base="../xslt/ata-xml/">
+        <item href="ATAXML_table.xsl" description="Convert SGML CALS to OASIS CALS"/>
+        <item href="ATAXML_ulink.xsl" description="Convert ulink to refext"/>
+    </group>
+    
+    <group description="EM-specific steps" xml:base="../xslt/ata-em/">
+        <item href="lXitem-effect.xsl" description="Move effect outside lXitem if first or last"/>
+        <item href="EM_nested-elem2pi.xsl" description="Handle nested inclusion elements"/>
+        <item href="EM_prc-elem2pi.xsl" description="Convert inclusion elements in prclist or prcitem"/>
+    </group>
+    
+    <group description="Common effect handling" xml:base="../xslt/ata-xml/">
+        <item href="ATAXML_move-effect.xsl" description="Move misplaced effect elements"/>
+        <item href="ATAXML_elem2pi.xsl" description="Handle non-nested inclusion elements"/>
+    </group>
+    
+    <group description="Common other" xml:base="../xslt/common/">
+        <item href="empty-sbdata.xsl" description="Fix empty SB list for EM and SDS"/>
+    </group>
+    
+    <group description="Cleanup" xml:base="../xslt/common/">
+        <item href="attr-tokens.xsl" description="Use upper-case in token list attributes"/>
+        <item href="cleanup.xsl" description="Various cleanup"/>
+    </group>
+    
+</manifest>

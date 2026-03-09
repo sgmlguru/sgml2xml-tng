@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+    <public publicId="-//ATA-TEXT//DTD XML EIPC-VER11-LEVEL2//EN" uri="eipc.dtd"/>
+    <system systemId="eipc.dtd" uri="eipc.dtd"/>
+</catalog>
