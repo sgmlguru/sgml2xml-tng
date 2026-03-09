@@ -1,0 +1,30 @@
+<xspec:description xmlns:xspec="http://www.jenitennison.com/xslt/xspec" stylesheet="../../main/resources/content/transpile.xsl"
+                   xmlns:sch="http://purl.oclc.org/dsdl/schematron"
+                   xmlns:schxslt="http://dmaus.name/ns/2023/schxslt"
+                   xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xspec:scenario label="When reducing a schema">
+    <xspec:call template="schxslt:reduce-schema">
+      <xspec:param name="schema" as="element(sch:schema)">
+        <sch:schema>
+          <sch:phase id="phase-1">
+            <sch:active pattern="p-1"/>
+            <sch:active pattern="p-2"/>
+            <sch:active pattern="p-3"/>
+          </sch:phase>
+          <sch:phase id="phase-2">
+            <sch:active pattern="p-3"/>
+            <sch:active pattern="p-4"/>
+          </sch:phase>
+          <sch:pattern id="p-1"/>
+          <sch:group id="p-2"/>
+          <sch:group id="p-3"/>
+          <sch:pattern id="p-4"/>
+        </sch:schema>
+      </xspec:param>
+      <xspec:param name="phase" as="xs:string" select="'phase-2'"/>
+    </xspec:call>
+    <xspec:expect test="$xspec:result/@defaultPhase = 'phase-2'" label="the @defaultPhase attribute is set to the target phase."/>
+    <xspec:expect test="exists($xspec:result/sch:phase[@id = 'phase-2'])" label="the target phase element is still present."/>
+    <xspec:expect test="count($xspec:result/sch:phase) eq 1" label="all other phase elements are removed."/>
+  </xspec:scenario>
+</xspec:description>

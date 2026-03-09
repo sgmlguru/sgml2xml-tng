@@ -1,0 +1,20 @@
+<testcase expect="invalid" xmlns="https://doi.org/10.5281/zenodo.5679629#">
+  <label>The svrl:failed-assert element provides the @id of the containing group</label>
+  <schemas>
+    <sch:schema xmlns:sch="http://purl.oclc.org/dsdl/schematron">
+      <sch:group id="group-id">
+        <sch:rule context="*" id="rule-id">
+          <sch:assert test="false()"/>
+        </sch:rule>
+      </sch:group>
+    </sch:schema>
+  </schemas>
+  <documents>
+    <document filename="document.xml">
+      <root xmlns=""/>
+    </document>
+  </documents>
+  <assertions xmlns:svrl="http://purl.oclc.org/dsdl/svrl">
+    <assertion assert="/svrl:schematron-output/svrl:failed-assert/@groupId = 'group-id'"/>
+  </assertions>
+</testcase>

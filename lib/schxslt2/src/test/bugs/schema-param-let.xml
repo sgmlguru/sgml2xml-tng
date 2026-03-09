@@ -1,0 +1,20 @@
+<testcase expect="valid" xmlns="https://doi.org/10.5281/zenodo.5679629#">
+  <label>A schema uses both top-level sch:let and sch:param</label>
+  <schemas>
+    <sch:schema xmlns:sch="http://purl.oclc.org/dsdl/schematron" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" queryBinding="xslt3">
+      <sch:param name="param-var" value="'param-var'"/>
+      <sch:let name="let-var" value="'let-var'"/>
+      <sch:pattern>
+        <sch:rule context="root">
+          <sch:assert test="$let-var eq 'let-var'"/>
+          <sch:assert test="$param-var eq 'param-var'"/>
+        </sch:rule>
+      </sch:pattern>
+    </sch:schema>
+  </schemas>
+  <documents>
+    <document filename="document.xml">
+      <root xmlns=""/>
+    </document>
+  </documents>
+</testcase>

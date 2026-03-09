@@ -1,0 +1,20 @@
+<testcase expect="invalid" xmlns="https://doi.org/10.5281/zenodo.5679629#">
+  <label>The svrl:failed-assert element provides the @id of the containing pattern</label>
+  <schemas>
+    <sch:schema xmlns:sch="http://purl.oclc.org/dsdl/schematron">
+      <sch:pattern id="pattern-id">
+        <sch:rule context="*" id="rule-id">
+          <sch:report test="true()"/>
+        </sch:rule>
+      </sch:pattern>
+    </sch:schema>
+  </schemas>
+  <documents>
+    <document filename="document.xml">
+      <root xmlns=""/>
+    </document>
+  </documents>
+  <assertions xmlns:svrl="http://purl.oclc.org/dsdl/svrl">
+    <assertion assert="/svrl:schematron-output/svrl:successful-report/@patternId = 'pattern-id'"/>
+  </assertions>
+</testcase>
