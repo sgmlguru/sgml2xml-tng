@@ -8,9 +8,6 @@ This repository contains code and resources to convert SGML documents to well-fo
 * OpenJDK version 8, 11, or later - other versions may cause issues
 * [Ant](https://ant.apache.org/bindownload.cgi)
 * [Ant-contrib](https://sourceforge.net/projects/ant-contrib/files/ant-contrib/1.0b3/ant-contrib-1.0b3-bin.zip/download)
-* Windows Subsystem for Linux 2 (optional) [Install instructions](https://pureinfotech.com/install-windows-subsystem-linux-2-windows-10/)
-
-**NOTE!** Saxon 12.9 HE is included.
 
 
 ## Setup
