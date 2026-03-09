@@ -1,0 +1,131 @@
+<!--**********************************************************************
+    *                                                                    *
+    *                     AECMA 1000D Change 8                           *
+    *                   Document Type Definition                         *
+    *                                                                    *
+    *                     Release Version 1.8                            *
+    *                   Dated 31st January 1999                          *
+    *                                                                    *
+    * Amendment :-                                                       *
+    * 1. Update Public Identifier                                        *
+    * 2. CPF 98-30D Add ID attributes to required elements               *
+    *  a. Change attribute entity %INSDEL; to %bodyatt; for elements :-  *
+    *      CAUTION, NOTE, WARNING                                        *
+    *                                                                    *
+    * Typical invocation :                                               *
+    * <!ENTITY % WCNP PUBLIC                                             *
+    *   "-//AECMA//ELEMENTS Warning Caution Note Paragraphs 19990131//EN"*
+    * >                                                                  *
+    * %WCNP;                                                             *
+    ********************************************************************** -->
+
+
+
+<!--**********************************************************************
+    * Define Element WARNING containing:-                                *
+    *--------------------------------------------------------------------*
+    * Mandatory Repeatable Group.                                        *
+    *--------------------------------------------------------------------*
+    *   GRAPHIC - mandatory  single      contains No Other Tags.         *
+    *  or                                                                *
+    *   PARA    - mandatory  single      contains Running Text.          *
+    *  or                                                                *
+    *   Definition stored in entity %list;                               *
+    *--------------------------------------------------------------------*
+    *@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*
+    * Attribute(s):-                                                     *
+    *  TYPE     - CDATA    - IMPLIED  - Specifies the type of Warning.   *
+    *  XREFID   - IDREF    - IMPLIED  - Specifies a unique identifier of *
+    *                                   an element.                      *
+    *  VITAL    - NUMBER   - "0"      - Declares if vital warning.       *
+    *           - "0"      - None Vital Warning.                         *
+    *           - "1"      - Vital Warning.                              *
+    * Attribute Definition List stored in entity %bodyatt;               *
+    **********************************************************************
+    * EXCLUSION - FIGURE, FOLDOUT, TABLE.                                *
+    ********************************************************************** -->
+
+<!ELEMENT warning - - (graphic | para | %list;)+ -(figure | foldout | table) >
+<!ATTLIST warning
+            type        CDATA       #IMPLIED
+            xrefid      IDREF       #IMPLIED
+            vital       %yesorno;   "0"
+            %bodyatt; >
+<!-- changed %INSDEL; to %bodyatt; -->
+
+
+
+<!--**********************************************************************
+    * Define Element CAUTION containing:-                                *
+    *--------------------------------------------------------------------*
+    * Mandatory Repeatable Group.                                        *
+    *--------------------------------------------------------------------*
+    *   GRAPHIC - mandatory  single      contains No Other Tags.         *
+    *  or                                                                *
+    *   PARA    - mandatory  single      contains Running Text.          *
+    *  or                                                                *
+    *   Definition stored in entity %list;                               *
+    *--------------------------------------------------------------------*
+    *@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*
+    * Attribute(s):-                                                     *
+    *  TYPE     - CDATA    - IMPLIED  - Specifies the type of Caution.   *
+    *  XREFID   - IDREF    - IMPLIED  - Specifies a unique identifier of *
+    *                                   an element.                      *
+    * Attribute Definition List stored in entity %bodyatt;               *
+    **********************************************************************
+    * EXCLUSION - FIGURE, FOLDOUT, TABLE.                                *
+    ********************************************************************** -->
+
+<!ELEMENT caution - - (graphic | para | %list;)+ -(figure | foldout | table) >
+<!ATTLIST caution
+            type        CDATA       #IMPLIED
+            xrefid      IDREF       #IMPLIED
+            %bodyatt; >
+<!-- changed %INSDEL; to %bodyatt; -->
+
+
+
+<!--**********************************************************************
+    * Define Element NOTE containing:-                                   *
+    *--------------------------------------------------------------------*
+    * Mandatory Repeatable Group.                                        *
+    *--------------------------------------------------------------------*
+    *   GRAPHIC - mandatory  single      contains No Other Tags.         *
+    *  or                                                                *
+    *   PARA    - mandatory  single      contains Running Text.          *
+    *  or                                                                *
+    *   Definition stored in entity %list;                               *
+    *--------------------------------------------------------------------*
+    *@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*
+    * Attribute(s):-                                                     *
+    *  TYPE     - CDATA    - IMPLIED  - Specifies the type of Note.      *
+    *  XREFID   - IDREF    - IMPLIED  - Specifies a unique identifier of *
+    *                                   an element.                      *
+    * Attribute Definition List stored in entity %bodyatt;               *
+    **********************************************************************
+    * EXCLUSION - FIGURE, FOLDOUT, TABLE.                                *
+    ********************************************************************** -->
+
+<!ELEMENT note - - (graphic | para | %list;)+ -(figure | foldout | table) >
+<!ATTLIST note
+            type        CDATA       #IMPLIED
+            xrefid      IDREF       #IMPLIED
+            %bodyatt; >
+<!-- changed %INSDEL; to %bodyatt; -->
+
+
+
+<!--**********************************************************************
+    * Define Element PARA (Paragraph) containing:-                       *
+    *   APPLIC  - optional   single      contains TYPE, MODEL.           *
+    *  Definition stored in entity %paracon;                             *
+    *@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*
+    * Attribute(s):-                                                     *
+    * Attribute definition list stored in entity %bodyatt;               *
+    * Attribute Definition List stored in entity %secur;                 *
+    ********************************************************************** -->
+
+<!ELEMENT para - o (applic?,(%paracon;)) >
+<!ATTLIST para
+            %bodyatt;
+            %secur; >
