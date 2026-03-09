@@ -73,6 +73,11 @@ Add source filesets by editing `build.properties.local.xml`, as follows:
 2. For each set of files, update the folder name (`${env.src}`) property of that set (`fileset` in the above example) - it is assumed that the folder is a subfolder to the base path, and it is further assumed that that folder contains a subfolder called `data` where the sources live.
 
 
+### Mapping Graphic Entities
+
+TBA
+
+
 ## Running
 
 Set up the sources as described above. Then do this:
