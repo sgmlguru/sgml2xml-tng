@@ -61,6 +61,28 @@
             </pipeline>
         </ata>
         
+        <s1000d location="${modules}/s1000d">
+            <schemas location="${modules.s1000d}/schemas">
+                <!-- SGML -->
+                <input location="${modules.s1000d.schemas}/sgml/1.8/dtd/catalog.cat"/>
+                <!-- SGML to XML conversion -->
+                <output location="${modules.s1000d.schemas}/sgml/1.8/catalog_sgml2xml.txt"/>
+                <!-- ATA resources -->
+                <resources>
+                    <ent location="${modules.common.schemas}/sgml/ISOent-declarations-xml.txt"/>
+                </resources>
+            </schemas>
+            
+            <!-- Schematron -->
+            <!--<sch location="${modules.s1000d}/sch/s1000d-checks.sch"/>-->
+            
+            <!-- XProc pipeline manifests and libs -->
+            <!--<pipeline>
+                <manifest location="${repos.s1000d}/pipelines/s1000dxml-xslt-manifest.xml"/>
+                <ata-xml location="${repos.s1000d}/xproc/s1000d-migration.xpl"/>
+            </pipeline>-->
+        </s1000d>
+        
         <!-- Other modules go here -->
     </modules>
     
