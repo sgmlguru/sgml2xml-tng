@@ -7,7 +7,7 @@
 	<path_to_SchXSLT_1>schxslt-1.4.5-sources/xslt/1.0</path_to_SchXSLT_1>-->
 	<path_to_SchXSLT_2>schxslt-1.4.5-sources/xslt/2.0</path_to_SchXSLT_2>
 	
-	<!--<path_to_SchXSLT2_transpiler>../schxslt2/src/main/resources/content/transpile.xsl</path_to_SchXSLT2_transpiler>-->
+	<path_to_SchXSLT2_transpiler>../schxslt2/src/main/resources/content/transpile.xsl</path_to_SchXSLT2_transpiler>
 	
 	<!-- Explitly overright Saxon's default -->
 	<XSLTValidationMode>LAX</XSLTValidationMode>
