@@ -16,6 +16,8 @@ Set up the pipeline thusly:
 
 1. Add the AntContrib JAR file to `~/.ant/lib` or `$ANT_HOME/lib`
 2. Create a local build properties file by saving `build.properties.localRENAME.xml` in the current folder as `build.properties.local.xml`.
+3. (OPTIONAL) If you want to produce something more than well-formed XML, set the `${wellformed-only}` property to 'false' in `build.properties.local.xml`.
+4. (OPTIONAL) Add a module that defines your source SGML and target XML formats, as well as any transformations that need to take place, in `modules/`. See TBA for instructions.
 
 
 ## Sources Setup
@@ -71,6 +73,13 @@ Add source filesets by editing `build.properties.local.xml`, as follows:
 
 
 ### Mapping Graphic Entities
+
+The example SGML DTD declares a `graphic` element that links to graphics using either a graphic entity named in `@name` or via a direct reference in `@href`. The graphic entity is converted to a direct reference via the `@href` attribute when transforming everything to XML. This is an example DTD only, and it goes without saying that horrible things will happen if you create an SGML instance that has a `graphic` element using both mechanisms and then convert it to XML. It's an example, for goodness sake.
+
+The entity-to-href conversion currently happens in `modules/common/map-unparsed-entities.xsl`. This is very, very crude and I aplogise for it. It will change.
+
+
+## XML Output Modules
 
 TBA
 
