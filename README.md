@@ -79,9 +79,72 @@ The example SGML DTD declares a `graphic` element that links to graphics using e
 The entity-to-href conversion currently happens in `modules/common/map-unparsed-entities.xsl`. This is very, very crude and I aplogise for it. It will change.
 
 
-## XML Output Modules
+## Modules
 
-TBA
+A *module* is a set of files (SGML and XML DTDs or schemas, catalogs, SGML declarations, XSLTs, XProc pipelines, etc) that does the following:
+
+* Fully defines the SGML sources
+	* SGML DTDs
+	* SGML declaration(s)
+	* Catalog files
+	* Entities
+* Fully defines the XML output files
+	* XML DTDs/schemas
+	* Catalog files
+	* Pipeline manifests
+	* XProc and XSLT
+	* (etc)
+
+The idea is to gather all necessary files to validate the sources and targets, normalise the SGML into files with the `DOCTYPE` declarations containing the entire DTDs in the internal subset, convert that SGML into well-formed XML with XML character entity declarations in an internal `DOCTYPE` subset and then into well-formed, UTF-8-encoded XML, and then, finally, run an XProc pipeline that produces valid XML.
+
+A module structure will look something like this:
+
+```XML
+modules/<module>
+├── pipelines
+├── sch
+├── schemas
+│   ├── sgml
+│   │   ├── dtd
+│   └── xml
+│       ├── dtd
+│       ├── mod
+├── xproc
+└── xslt
+```
+
+The module itself (the folder in `modules`) should be named descriptively, so `ata`, `s1000d`, etc. As for the contents, there's bound to be some variation but the above would have the following:
+
+* `pipelines` - a manifest file listing the XSLT steps that transform the well-formed XML into valid files
+* `sch` - Schematron rules you may want to validate the output with
+* `schemas`
+	* `sgml` - SGML DTDs, catalogs, SGML declarations; `modules/common` contains some common entities
+	* `xml` - XML DTDs, schemas, modules, catalogs; the XML requires OASIS XML catalogs
+* `xproc` - XProc pipelines; importantly, you'll need an initial pipeline that will iterate through your well-formed XML to determine the XML schema
+* `xslt` - the XSLT files used by the manifest in `pipelines`
+
+The XSLT pipelines use the [xproc-batch](https://github.com/sgmlguru/xproc-batch) library. That repository's README should explain how to use them. You should take a look at the `ata` and `s1000d` modules for ideas on how to process your well-formed XML.
+
+The `modules/common` folder also contains a perfectly trivial SGML DTD and associated examples that may prove to be helpful.
+
+
+### ATA Module
+
+The ATA module transforms ATA iSpec 2200 SGML instances to an "ATA-like" XML format. Graphic entities in the SGML are handled using direct, `@href`-based references in the XML, and some SGML constructs introduced using SGML inclusions are represented using XML processing instructions. This is far from ideal, even though the SGML inclusion elements were all `EMPTY` elements. In an ideal world, those PIs would be modelled differently. This, however, is just a proof of concept.
+
+
+#### Missing DTDs?
+
+The SGML and XML ATA DTDs cannot be part of this repository as they are owned by their respective copyright holders. You need to buy the ATA iSpec 2200 DTDs if you wish to use the ATA module; similarly, you will then need to create XML versions of those DTDs.
+
+Also keep in mind that the ATA module contains catalog files and SGML declarations specific to the DTDs I cannot include in the repo. You'll need to make sure to update those catalog files for the versions you are using.
+
+
+### S1000D Module
+
+The S1000D module cannot contain the actual 1.8 DTDs or 4.1 XSDs, as those are owned by their respective copyright holders. You can get these from the [S1000D website](https://s1000d.org/) if you register and agree to their [Terms and Conditions](https://s1000d.org/?page_id=108).
+
+The 1.8 DTD files should all go into `modules/s1000d/schemas/sgml/1.8/dtd/`. The 4.1 XSDs should go into `TBA`.
 
 
 ## Running
