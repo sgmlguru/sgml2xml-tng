@@ -17,6 +17,7 @@
     </xsl:template>
     
     
+    <!-- ATA sheet -->
     <xsl:template match="sheet">
         <xsl:copy>
             <xsl:copy-of select="@*"/>
@@ -42,6 +43,7 @@
     </xsl:template>
     
     
+    <!-- ATA grsymbol -->
     <xsl:template match="grsymbol">
         <xsl:copy>
             <xsl:copy-of select="@*"/>
@@ -59,6 +61,7 @@
     </xsl:template>
     
     
+    <!-- ATA refmedia -->
     <xsl:template match="refmedia">
         <xsl:copy>
             <xsl:copy-of select="@*"/>
@@ -72,6 +75,26 @@
             </xsl:message>
             
             <xsl:apply-templates select="node()"/>
+        </xsl:copy>
+    </xsl:template>
+    
+    
+    <!-- DOC Example XML DTD -->
+    <xsl:template match="graphic[@name]">
+        <xsl:copy>
+            <xsl:copy-of select="@*"/>
+            
+            <xsl:attribute
+                name="href"
+                select="tokenize(unparsed-entity-uri(@name),'/')[last()]"/>
+            
+            <xsl:message expand-text="yes">
+                Element {name(.)}, name {@name}
+                href {tokenize(unparsed-entity-uri(@name),'/')[last()]}
+            </xsl:message>
+            
+            <xsl:apply-templates select="node()"/>
+            
         </xsl:copy>
     </xsl:template>
     
