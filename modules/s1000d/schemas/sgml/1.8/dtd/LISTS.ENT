@@ -1,0 +1,145 @@
+<!--**********************************************************************
+    *                                                                    *
+    *                     AECMA 1000D Change 8                           *
+    *                   Document Type Definition                         *
+    *                                                                    *
+    *                     Release Version 1.8                            *
+    *                   Dated 31st January 1999                          *
+    *                                                                    *
+    * Amendment :-                                                       *
+    * 1. Update Public Identifier                                        *
+    * 2. CPF 98-30D Add ID attributes to required elements               *
+    *  a. Change attribute entity %INSDEL; to %bodyatt; for elements :-  *
+    *      DEF, DEFLIST, TERM, RANDLIST, SEQLIST, ITEM                   *
+    *                                                                    *
+    * Typical invocation :                                               *
+    * <!ENTITY % EXTLIST                                                 *
+    *   PUBLIC "-//AECMA//ELEMENTS Lists Breakdown 19990131//EN" >       *
+    * %EXTLIST;                                                          *
+    ********************************************************************** -->
+
+
+
+<!--**********************************************************************
+    * Define Element RANDLIST (Random List) containing:-                 *
+    *  Definition stored in entity %titles; - optional single.           *
+    *  ITEM     - mandatory  repeatable  contains PARA, definition stored*
+    *                                    in entity %paracon;.            *
+    *@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*
+    * Attribute(s):-                                                     *
+    *  PREFIX   - DECLARED  - REQUIRED - Prefix of randlist items.       *
+    *           - "SIMPLE"  - Prefix with a space.                       *
+    *           - "UNORDER" - Prefix with a character.                   *
+    *  Attribute Definition List stored in entity %bodyatt;              *
+    *  Attribute Definition List stored in entity %secur;                *
+    ********************************************************************** -->
+
+<!ELEMENT randlist      - -     ((%titles;)?,item+) >
+<!ATTLIST randlist
+             prefix  (simple | unorder) #REQUIRED
+             %bodyatt;
+             %secur; >
+<!-- changed %INSDEL; to %bodyatt; -->
+
+
+
+<!--**********************************************************************
+    * Define Element SEQLIST (Sequential List) containing:-              *
+    *  Definition stored in entity %titles; - optional single.           *
+    *  ITEM     - mandatory  repeatable  contains PARA, definition stored*
+    *                                    in entity %paracon;.            *
+    *@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*
+    * Attribute(s):-                                                     *
+    *  Attribute Definition List stored in entity %bodyatt;              *
+    *  Attribute Definition List stored in entity %secur;                *
+    ********************************************************************** -->
+
+<!ELEMENT seqlist       - -     ((%titles;)?,item+) >
+<!ATTLIST seqlist
+             %bodyatt;
+             %secur; >
+<!-- changed %INSDEL; to %bodyatt; -->
+
+
+
+<!--**********************************************************************
+    * Define Element ITEM (List Item) containing:-                       *
+    *--------------------------------------------------------------------*
+    *  Mandatory Repeatable Group                                        *
+    *--------------------------------------------------------------------*
+    *   PARA     - mandatory  single      contains definition stored in  *
+    *                                     entity %paracon;               *
+    *  or                                                                *
+    *   Definition stored in entity %paracon;                            *
+    *--------------------------------------------------------------------*
+    *@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*
+    * Attribute(s):-                                                     *
+    *  Attribute Definition List stored in entity %bodyatt;              *
+    ********************************************************************** -->
+
+<!ELEMENT item          - O     (para | %paracon;)+ >
+<!ATTLIST item
+             %bodyatt; >
+<!-- removed ID attribute, changed %INSDEL; to %bodyatt; -->
+
+
+
+<!--**********************************************************************
+    * Define Element DEFLIST (Definition List) containing:-              *
+    *  Definition stored in entity %titles; - optional single.           *
+    *  TERM     - mandatory  single      contains definition stored in   *
+    *                                    entity %text;                   *
+    *  DEF      - mandatory  single      contains PARA, definition stored*
+    *                                    in entity %paracon;.            *
+    *@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*
+    * Attribute(s):-                                                     *
+    *  Attribute Definition List stored in entity %bodyatt;              *
+    *  Attribute Definition List stored in entity %secur;                *
+    ********************************************************************** -->
+
+<!ELEMENT deflist       - -     ((%titles;)?,(term,def)+) >
+<!ATTLIST deflist
+             %bodyatt;
+             %secur; >
+<!-- changed %INSDEL; to %bodyatt; -->
+
+
+
+<!--**********************************************************************
+    * Define Element TERM (Term) containing:-                            *
+    *--------------------------------------------------------------------*
+    * Mandatory Repeatable Group.                                        *
+    *--------------------------------------------------------------------*
+    *  Definition stored in entity %text;                                *
+    *--------------------------------------------------------------------*
+    *@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*
+    * Attribute(s):-                                                     *
+    * Attribute Definition List stored in entity %bodyatt;               *
+    ********************************************************************** -->
+
+<!ELEMENT term          - O     (%text;)+  >
+<!ATTLIST term
+             %bodyatt; >
+<!-- changed %INSDEL; to %bodyatt; -->
+
+
+
+<!--**********************************************************************
+    * Define Element DEF (Definition) containing:-                       *
+    *--------------------------------------------------------------------*
+    *  Mandatory Repeatable Group                                        *
+    *--------------------------------------------------------------------*
+    *   PARA     - mandatory  single      contains definition stored in  *
+    *                                     entity %paracon;               *
+    *  or                                                                *
+    *   Definition stored in entity %paracon;                            *
+    *--------------------------------------------------------------------*
+    *@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*
+    * Attribute(s):-                                                     *
+    * Attribute Definition List stored in entity %bodyatt;               *
+    ********************************************************************** -->
+
+<!ELEMENT def           - O     (para | %paracon;)+  >
+<!ATTLIST def
+             %bodyatt; >
+<!-- changed %INSDEL; to %bodyatt; -->
