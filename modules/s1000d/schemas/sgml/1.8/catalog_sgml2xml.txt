@@ -1,0 +1,33 @@
+
+-- Catalog for SGML to XML conversion --
+
+OVERRIDE YES
+
+SGMLDECL "aecma.dcl"
+
+CATALOG "../../../../common/schemas/sgml/ISOent-xml.cat"
+
+
+-- S1000D 1.8 --
+
+CATALOG "dtd/catalog.cat"
+
+
+-- 4.1? --
+
+PUBLIC "XXX" "dtd/YYY"
+
+
+-- NOTATIONs --
+
+NOTATION "JPEG" "image/jpeg"
+NOTATION "CGM" "image/cgm"
+NOTATION "PNG" "image/png"
+NOTATION "CCITT4" "application/ccitt4"
+NOTATION "GCF" "application/x-graphing-calculator"
+NOTATION "PDF" "application/pdf"
+NOTATION "VRML" "model/vrml"
+NOTATION "MPEG" "video/mpeg"
+NOTATION "MP3" "audio/mpeg"
+
+
