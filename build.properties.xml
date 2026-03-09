@@ -103,6 +103,7 @@
     <!-- Debug and verbose -->
     <debug value="true"/>
     <verbose value="true"/>
+    <wellformed-only value="true"/>
     
     <!-- Run XSpecs -->
     <run-xspecs value="false"/>
