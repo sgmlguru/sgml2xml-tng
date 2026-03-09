@@ -542,53 +542,64 @@
         name="run-manifest"
         description="Run XSLT manifest to convert well-formed XML to valid XML">
         
-        <record name="${base.reports}/07-run-manifest.txt" action="start" append="true"/>
-        
-        <echo message="Running XProc ${modules.common.pipelines.xproc} to produce valid XML"/>
-        <echo message="Catalog ${catalogs.catalog}"/>
-        
-        <local name="local.in"/>
-        <local name="local.out"/>
-        <local name="local.tmp"/>
-        <local name="local.reports"/>
-        
-        <!-- URIs required as input -->
-        <makeurl property="local.in" file="${base.xml}"/>
-        <makeurl property="local.out" file="${base.out}"/>
-        <makeurl property="local.reports" file="${base.reports}"/>
-        <makeurl property="local.tmp" file="${base.tmp}"/>
-        
-        <echo message="Sources in ${local.in}, saving to ${local.out}, debug is ${debug}"/>
-        <echo message="CLASSPATH ${morgana.jar}:${morgana.lib}/*:${saxon.jar}"/>
-        
-        <echo message="URIs ${local.in} ${local.out} ${local.tmp} ${local.reports}"/>
-        
-        <run-xproc>
-            <xproc-args>
-                <!-- Pipeline -->
-                <arg value="${modules.common.pipelines.xproc}"/>
+        <if>
+            <equals arg1="${wellformed-only}" arg2="true"/>
+            <!-- Not running the pipeline, we are producing well-formed only -->
+            <then>
+                <echo message="Only producing well-formed XML..."/>
+                <copydir src="${base.sx}" dest="${base.out}" excludes=".sgm .sgml"/>
+            </then>
+            <!-- Run pipeline on well-formed XML -->
+            <else>
+                <record name="${base.reports}/07-run-manifest.txt" action="start" append="true"/>
                 
-                <!-- Catalog -->
-                <arg value="-catalogs=${catalogs.catalog}"/>
+                <echo message="Running XProc ${modules.common.pipelines.xproc} to produce valid XML"/>
+                <echo message="Catalog ${catalogs.catalog}"/>
                 
-                <!-- Inputs -->
-                <arg value="-input:manifest="/>
-                <arg value="-input:sch=${modules.common.sch}"/>
+                <local name="local.in"/>
+                <local name="local.out"/>
+                <local name="local.tmp"/>
+                <local name="local.reports"/>
                 
-                <!-- Options -->
-                <arg value="-option:input-base-uri=${local.in}"/>
-                <arg value="-option:output-base-uri=${local.out}"/>
-                <arg value="-option:reports-dir=${local.reports}"/>
-                <arg value="-option:tmp-dir=${local.tmp}"/>
-                <arg value="-option:debug=${debug}"/>
+                <!-- URIs required as input -->
+                <makeurl property="local.in" file="${base.xml}"/>
+                <makeurl property="local.out" file="${base.out}"/>
+                <makeurl property="local.reports" file="${base.reports}"/>
+                <makeurl property="local.tmp" file="${base.tmp}"/>
                 
-                <!-- Include file suffixes...
+                <echo message="Sources in ${local.in}, saving to ${local.out}, debug is ${debug}"/>
+                <echo message="CLASSPATH ${morgana.jar}:${morgana.lib}/*:${saxon.jar}"/>
+                
+                <echo message="URIs ${local.in} ${local.out} ${local.tmp} ${local.reports}"/>
+                
+                <run-xproc>
+                    <xproc-args>
+                        <!-- Pipeline -->
+                        <arg value="${modules.common.pipelines.xproc}"/>
+                        
+                        <!-- Catalog -->
+                        <arg value="-catalogs=${catalogs.catalog}"/>
+                        
+                        <!-- Inputs -->
+                        <arg value="-input:manifest="/>
+                        <arg value="-input:sch=${modules.common.sch}"/>
+                        
+                        <!-- Options -->
+                        <arg value="-option:input-base-uri=${local.in}"/>
+                        <arg value="-option:output-base-uri=${local.out}"/>
+                        <arg value="-option:reports-dir=${local.reports}"/>
+                        <arg value="-option:tmp-dir=${local.tmp}"/>
+                        <arg value="-option:debug=${debug}"/>
+                        
+                        <!-- Include file suffixes...
                  This is NOT a regex - the regex is constructed in the XProc -->
-                <arg value="-option:include=.xml"/>
-            </xproc-args>
-        </run-xproc>
-        
-        <record name="${base.reports}/07-run-manifest.txt" action="stop" append="true"/>
+                        <arg value="-option:include=.xml"/>
+                    </xproc-args>
+                </run-xproc>
+                
+                <record name="${base.reports}/07-run-manifest.txt" action="stop" append="true"/>
+            </else>
+        </if>
     </target>
     
     
