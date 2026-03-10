@@ -14,9 +14,9 @@
         <p>This is the wrapper XProc pipeline for converting ATA-like well-formed XML to valid ATA XML</p>
     </p:documentation>
     
-    <p:import href="../xproc-batch/xproc/validate-convert.xpl"/>
+    <p:import href="../../../lib/xproc-batch/xproc/validate-convert.xpl"/>
     
-    <p:input port="manifest" select="'../pipelines/ataxml-xslt-manifest.xml'" sequence="true"/>
+    <p:input port="manifest" select="''" sequence="true"/>
     
     <p:input port="sch" select="'../sch/ata-checks.sch'"/>
     
