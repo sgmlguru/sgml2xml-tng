@@ -1,0 +1,5 @@
+SGMLDECL "xml.dcl"
+
+OVERRIDE YES
+
+PUBLIC "-//CWORD//DTD DOC TEST//EN" "doc.dtd"
