@@ -1,0 +1,53 @@
+<!-- My very fine test DTD -->
+
+<!-- NOTATIONS -->
+<!NOTATION cgm PUBLIC 
+"-//USA-DOD//NOTATION Computer Graphics Metafile//EN"               >
+
+<!NOTATION ccitt4 PUBLIC 
+"-//USA-DOD//NOTATION CCITT Group4 Facsimile//EN"                   >
+
+<!NOTATION gcf PUBLIC
+"-//ATA-TEXT//NOTATION Graphic Companion File//EN"                  >
+
+<!NOTATION pdf PUBLIC
+"-//Adobe Inc.//NOTATION Portable Document Format//EN"              >
+
+<!NOTATION png PUBLIC
+"-//W3C//NOTATION Portable Network Graphics//EN"                    >
+
+<!NOTATION jpeg PUBLIC
+"+//ISBN 0-7923-9432-1::Graphic Notation//NOTATION Joint
+ Photographic Experts Group Raster//EN"                             >
+
+<!NOTATION vrml PUBLIC 
+  "-//ATA-TEXT//NOTATION Virtual Reality Modeling Language//EN"     >
+
+<!NOTATION mpeg PUBLIC
+"-//ATA-TEXT//NOTATION Motion Pictures Expert Group//EN"            >
+
+<!NOTATION mp3 PUBLIC
+"-//ATA-TEXT//NOTATION Motion Pictures Expert Group, Audio
+ Layer 3//EN"                                                       >
+
+<!-- ENTITIES -->
+
+<!ENTITY % id.att   "id ID #IMPLIED" >
+
+<!ELEMENT doc   - - (title, chapter+) >
+<!ATTLIST doc   %id.att; >
+
+<!ELEMENT title - - (#PCDATA) >
+
+<!ELEMENT chapter   - - (title, (para | graphic)+, section*) >
+<!ATTLIST chapter   %id.att; >
+
+<!ELEMENT section   - - (title, (para | graphic)+, section*) >
+<!ATTLIST section   %id.att; >
+
+<!ELEMENT para      - - (#PCDATA) >
+
+<!ELEMENT graphic   - O EMPTY >
+<!ATTLIST graphic   href CDATA #IMPLIED
+                    name ENTITY #IMPLIED
+                    %id.att; >

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctypes>
+    
+    <!-- NOTE!
+         @root should contain a regex pattern to match root name() -->
+    
+    <!-- DOC XML DTD -->
+    <doctype root="(doc)" include="true">
+        <xslt-manifest>doc-xslt-manifest.xml</xslt-manifest>
+        <xspec-manifest></xspec-manifest>
+        <xml-publicid>-//CWORD//DTD XML DOC TEST//EN</xml-publicid>
+        <xml-systemid>doc.dtd</xml-systemid>
+    </doctype>
+</doctypes>

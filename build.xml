@@ -41,6 +41,14 @@
         semanticattributes="true"/>
     
     
+    <!-- Use module-specific properties -->
+    <xmlproperty
+        file="${modules}/${current-module}/${current-module}.properties.xml"
+        keeproot="false"
+        collapseattributes="true"
+        semanticattributes="true"/>
+    
+    
     <!-- XProc macrodef -->
     <include file="ant/xproc.xml"/>
     
@@ -122,7 +130,7 @@
         
         <record name="${base.reports}/02-loop-ngsmls.txt" action="start" append="true"/>
         
-        <echo message="Using catalog ${modules.common.schemas.input}"/>
+        <echo message="Using catalog ${module.schemas.input}"/>
         
         <foreach
             target="nsgmls"
@@ -155,7 +163,7 @@
             <arg value="-E0"/>
             <arg value="-ferrnsgmls.txt"/>
             <arg value="-c"/>
-            <arg value="${modules.common.schemas.input}"/>
+            <arg value="${module.schemas.input}"/>
             <arg value="${file}"/>
         </exec>
         
@@ -198,7 +206,7 @@
         <record name="${base.reports}/03-loop-spam.txt" action="start" append="true"/>
         
         <echo message="base.source: ${base.pre}" />
-        <echo message="Using catalog ${modules.common.schemas.input}"/>
+        <echo message="Using catalog ${module.schemas.input}"/>
         
         <foreach target="spam" param="file" inheritall="true">
             <path>
@@ -284,7 +292,7 @@
             <arg value="-E0"/>
             <arg value="-ferrspam.txt"/>
             <arg value="-c"/>
-            <arg value="${modules.common.schemas.input}"/>
+            <arg value="${module.schemas.input}"/>
             <arg value="${file}"/>
         </exec>
         
@@ -383,7 +391,7 @@
             executable="${sp-loc.path.sx}"
             output="${local.sx}\${local.xml}">
             <arg value="-c"/>
-            <arg value="${modules.common.schemas.output}"/>
+            <arg value="${module.schemas.output}"/>
             <arg value="-xndata"/>
             <arg value="-xnotation"/>
             <arg value="-xlower"/>
@@ -412,7 +420,7 @@
         <!-- Load entity declarations from file -->
         <loadfile
             property="entities"
-            srcfile="${modules.common.schemas.resources.ent}"/>
+            srcfile="${module.schemas.resources.ent}"/>
         
         <!-- Add the entity declarations first in the internal subset -->
         <replaceregexp
@@ -542,6 +550,14 @@
         name="run-manifest"
         description="Run XSLT manifest to convert well-formed XML to valid XML">
         
+        <echo message="Using ${modules}/${current-module}/${current-module}.properties.xml"/>
+        
+        <echoproperties>
+            <propertyset>
+                <propertyref prefix="module."/>
+            </propertyset>
+        </echoproperties>
+        
         <if>
             <equals arg1="${wellformed-only}" arg2="true"/>
             <!-- Not running the pipeline, we are producing well-formed only -->
@@ -553,7 +569,7 @@
             <else>
                 <record name="${base.reports}/07-run-manifest.txt" action="start" append="true"/>
                 
-                <echo message="Running XProc ${modules.common.pipelines.xproc} to produce valid XML"/>
+                <echo message="Running XProc ${module.pipeline.xproc} to produce valid XML"/>
                 <echo message="Catalog ${catalogs.catalog}"/>
                 
                 <local name="local.in"/>
@@ -575,14 +591,14 @@
                 <run-xproc>
                     <xproc-args>
                         <!-- Pipeline -->
-                        <arg value="${modules.common.pipelines.xproc}"/>
+                        <arg value="${module.pipeline.xproc}"/>
                         
                         <!-- Catalog -->
                         <arg value="-catalogs=${catalogs.catalog}"/>
                         
                         <!-- Inputs -->
                         <arg value="-input:manifest="/>
-                        <arg value="-input:sch=${modules.common.sch}"/>
+                        <arg value="-input:sch=${module.sch}"/>
                         
                         <!-- Options -->
                         <arg value="-option:input-base-uri=${local.in}"/>

@@ -6,19 +6,20 @@
     xmlns:sgproc="http://www.sgmlguru.org/ns/xproc/steps"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:ccproc="http://www.corbas.co.uk/ns/xproc/steps"
-    name="ata-migration"
-    type="sgproc:ata-migration"
+    name="doc-migration"
+    type="sgproc:doc-migration"
     version="3.0">
     
     <p:documentation>
-        <p>This is the wrapper XProc pipeline for converting ATA-like well-formed XML to valid ATA XML</p>
+        <p>This is the wrapper XProc pipeline for converting well-formed XML to valid "DOC" XML</p>
     </p:documentation>
     
     <p:import href="../../../lib/xproc-batch/xproc/validate-convert.xpl"/>
     
+    
     <p:input port="manifest" select="''" sequence="true"/>
     
-    <p:input port="sch" select="'../sch/ata-checks.sch'"/>
+    <p:input port="sch" select="'../sch/test.sch'"/>
     
     <p:input port="doctypes" href="./doctype-lookup.xml"/>
     
@@ -45,7 +46,7 @@
     
     
     <p:for-each name="loop-doctypes">
-        <p:with-input select="//doctype[@root!='' and @include='true']" pipe="doctypes@ata-migration"/>
+        <p:with-input select="//doctype[@root!='' and @include='true']" pipe="doctypes@doc-migration"/>
         
         <!-- Get DOCTYPE properties for conversion -->
         <p:variable name="root" select="string(/doctype/@root)" as="xs:string"/>
@@ -60,7 +61,7 @@
             <p:with-input port="manifest">
                 <p:document href="../pipelines/{$xslt-manifest}"/>
             </p:with-input>
-            <p:with-input port="sch" pipe="sch@ata-migration"/>
+            <p:with-input port="sch" pipe="sch@doc-migration"/>
             <p:with-option name="input-base-uri" select="$input-base-uri"/>
             <p:with-option name="output-base-uri" select="if ($output-base-uri != '') then $output-base-uri else concat($tmp-dir, '/out')" />
             <p:with-option name="reports-dir" select="if ($reports-dir != '') then $reports-dir else concat($tmp-dir, '/reports')" />

@@ -1,0 +1,7 @@
+-- Catalog file for simple DOC XML DTD --
+
+
+-- XML DTD(s) --
+
+PUBLIC "-//CWORD//DTD XML DOC TEST//EN" "doc.dtd"
+
