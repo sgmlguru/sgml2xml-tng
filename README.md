@@ -208,6 +208,11 @@ The S1000D module cannot contain the actual 1.8 DTDs or 4.1 XSDs, as those are o
 The 1.8 DTD files should go in `modules/s1000d/schemas/sgml/1.8/dtd/`. The 4.1 XSDs should go in `TBA`.
 
 
+#### Identifying S1000D Module Types
+
+Unlike ATA, the target S1000D 4.1 schemas are XSDs and do not need `DOCTYPE` declarations. The identifiers go into attributes and we can easily use a single pipeline for all data module types, including determining the type of data module: A 1.8 data module type is easiest to recognise by looking at the `CONTENT` element's child element. This will be `descript`, `proced`, `schedule`, `ipc`, `acrw` or `afi`. The very few examples I have mix case, suggesting that their SGML declarations didn't bother with case sensitivity either.
+
+
 ## Running
 
 Set up the sources as described above. Then run `build.xml` without arguments.
