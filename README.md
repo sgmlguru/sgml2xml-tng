@@ -205,7 +205,7 @@ Also keep in mind that the ATA module contains catalog files and SGML declaratio
 
 The S1000D module cannot contain the actual 1.8 DTDs or 4.1 XSDs, as those are owned by their respective copyright holders. You can get these from the [S1000D website](https://s1000d.org/) if you register and agree to their [Terms and Conditions](https://s1000d.org/?page_id=108).
 
-The 1.8 DTD files should all go into `modules/s1000d/schemas/sgml/1.8/dtd/`. The 4.1 XSDs should go into `TBA`.
+The 1.8 DTD files should go in `modules/s1000d/schemas/sgml/1.8/dtd/`. The 4.1 XSDs should go in `TBA`.
 
 
 ## Running
