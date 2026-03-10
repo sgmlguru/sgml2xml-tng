@@ -4,12 +4,12 @@
     <module location="${modules}/s1000d">
         <schemas location="${module}/schemas">
             <!-- SGML -->
-            <input location="${module.schemas}/sgml/catalog.txt"/>
+            <input location="${module.schemas}/sgml/1.8/dtd/catalog.cat"/>
             <!-- SGML to XML conversion -->
-            <output location="${module.schemas}/sgml/catalog_sgml2xml.txt"/>
+            <output location="${module.schemas}/sgml/1.8/catalog_sgml2xml.txt"/>
             <!-- ATA resources -->
             <resources>
-                <ent location="${module.schemas}/sgml/ISOent-declarations-xml.txt"/>
+                <ent location="${modules.common.schemas.resources.ent}"/>
             </resources>
         </schemas>
         
