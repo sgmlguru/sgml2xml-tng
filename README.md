@@ -18,6 +18,7 @@ Set up the pipeline thusly:
 2. Create a local build properties file by saving `build.properties.localRENAME.xml` in the current folder as `build.properties.local.xml`.
 3. (OPTIONAL) If you want to produce something more than well-formed XML, set the `${wellformed-only}` property to 'false' in `build.properties.local.xml`.
 4. (OPTIONAL) Add a module that defines your source SGML and target XML formats, as well as any transformations that need to take place, in `modules/`. See TBA for instructions.
+5. (OPTIONAL) Set the name of the module as the value of the `${current-module}` property in `build.properties.local.xml`.
 
 
 ## Sources Setup
@@ -76,7 +77,7 @@ Add source filesets by editing `build.properties.local.xml`, as follows:
 
 The example SGML DTD declares a `graphic` element that links to graphics using either a graphic entity named in `@name` or via a direct reference in `@href`. The graphic entity is converted to a direct reference via the `@href` attribute when transforming everything to XML. This is an example DTD only, and it goes without saying that horrible things will happen if you create an SGML instance that has a `graphic` element using both mechanisms and then convert it to XML. It's an example, for goodness sake.
 
-The entity-to-href conversion currently happens in `modules/common/map-unparsed-entities.xsl`. This is very, very crude and I aplogise for it. It will change.
+The entity-to-href conversion currently happens in `modules/common/map-unparsed-entities.xsl`. This is very, very crude and I apologise for it. It will change.
 
 
 ## Modules
@@ -123,14 +124,74 @@ The module itself (the folder in `modules`) should be named descriptively, so `a
 * `xproc` - XProc pipelines; importantly, you'll need an initial pipeline that will iterate through your well-formed XML to determine the XML schema
 * `xslt` - the XSLT files used by the manifest in `pipelines`
 
+Each module *must* also have an Ant properties file named `MODULE_NAME.properties.xml`, where `MODULE_NAME` is the module's name. It needs to be directly inside the `MODULE_NAME` folder and should look something like this:
+
+```XML
+<properties>
+    
+    <module location="${modules}/NAME">
+        <schemas location="${module}/schemas">
+            <!-- SGML -->
+            <input location="${module.schemas}/sgml/catalog.txt"/>
+            <!-- SGML to XML conversion -->
+            <output location="${module.schemas}/sgml/catalog_sgml2xml.txt"/>
+            <!-- ATA resources -->
+            <resources>
+                <ent location="${module.schemas}/sgml/ISOent-declarations-xml.txt"/>
+            </resources>
+        </schemas>
+        
+        <!-- Schematron -->
+        <sch location="${module}/sch/NAME.sch"/>
+        
+        <!-- XProc pipeline manifests and libs -->
+        <pipeline>
+            <manifest location="${module}/pipelines/NAME-xslt-manifest.xml"/>
+            <xproc location="${module}/xproc/NAME-migration.xpl"/>
+        </pipeline>
+    </module>
+    
+</properties>
+```
+
 The XSLT pipelines use the [xproc-batch](https://github.com/sgmlguru/xproc-batch) library. That repository's README should explain how to use them. You should take a look at the `ata` and `s1000d` modules for ideas on how to process your well-formed XML.
 
-The `modules/common` folder also contains a perfectly trivial SGML DTD and associated examples that may prove to be helpful.
+The `modules/doc` folder also contains a perfectly trivial SGML DTD and associated examples that may prove to be helpful.
 
 
 ### ATA Module
 
 The ATA module transforms ATA iSpec 2200 SGML instances to an "ATA-like" XML format. Graphic entities in the SGML are handled using direct, `@href`-based references in the XML, and some SGML constructs introduced using SGML inclusions are represented using XML processing instructions. This is far from ideal, even though the SGML inclusion elements were all `EMPTY` elements. In an ideal world, those PIs would be modelled differently. This, however, is just a proof of concept.
+
+There is a `modules/ata/ata.properties.xml` file:
+
+```XML
+<properties>
+    
+    <module location="${modules}/ata">
+        <schemas location="${module}/schemas">
+            <!-- SGML -->
+            <input location="${module.schemas}/sgml/catalog.txt"/>
+            <!-- SGML to XML conversion -->
+            <output location="${module.schemas}/sgml/catalog_sgml2xml.txt"/>
+            <!-- ATA resources -->
+            <resources>
+                <ent location="${module.schemas}/sgml/ISOent-declarations-xml.txt"/>
+            </resources>
+        </schemas>
+        
+        <!-- Schematron -->
+        <sch location="${module}/sch/ata-checks.sch"/>
+        
+        <!-- XProc pipeline manifests and libs -->
+        <pipeline>
+            <manifest location="${module}/pipelines/ataxml-xslt-manifest.xml"/>
+            <xproc location="${module}/xproc/ata-migration.xpl"/>
+        </pipeline>
+    </module>
+    
+</properties>
+```
 
 
 #### Missing DTDs?
@@ -149,9 +210,5 @@ The 1.8 DTD files should all go into `modules/s1000d/schemas/sgml/1.8/dtd/`. The
 
 ## Running
 
-Set up the sources as described above. Then do this:
-
-1. Open a shell (aka command prompt).
-2. Change the current directory to the location where the pipeline Ant build script is located.
-3. Type `ant` and hit **Enter**.
+Set up the sources as described above. Then run `build.xml` without arguments.
 
