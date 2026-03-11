@@ -50,7 +50,7 @@
     
     
     <!-- XProc macrodef -->
-    <include file="ant/xproc.xml"/>
+    <include file="${repos.sgm2xml}/ant/xproc.xml"/>
     
     
     <!-- Create dirs -->
