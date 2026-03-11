@@ -5,7 +5,7 @@ OVERRIDE YES
 
 SGMLDECL "ata.dcl"
 
-CATALOG "ISOent-xml.cat"
+CATALOG "../../../common/schemas/sgml/ISOent-xml.cat"
 
 
 -- ATA iSpec 2200 Default --
