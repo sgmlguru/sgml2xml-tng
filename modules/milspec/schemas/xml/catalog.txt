@@ -1,0 +1,4 @@
+-- Catalog file for MIL-SPEC DTD (XML) --
+
+
+CATALOG "dtd/catalog.cat"

@@ -96,11 +96,22 @@ A *module* is a set of files (SGML and XML DTDs or schemas, catalogs, SGML decla
 	* XProc and XSLT
 	* (etc)
 
-The idea is to gather all necessary files to validate the sources and targets, normalise the SGML into files with the `DOCTYPE` declarations containing the entire DTDs in the internal subset, convert that SGML into well-formed XML with XML character entity declarations in an internal `DOCTYPE` subset and then into well-formed, UTF-8-encoded XML, and then, finally, run an XProc pipeline that produces valid XML.
+The idea is to gather all necessary files to validate the sources and targets, normalise the SGML into files with the `DOCTYPE` declarations containing the entire DTDs in the internal subset, convert that SGML into well-formed XML with XML character entity declarations in an internal `DOCTYPE` subset and then into well-formed, UTF-8-encoded XML, and then, finally, run an XProc pipeline that produces valid XML. We currently have the following modules:
+
+```
+modules/
+├── ata
+├── common
+├── doc
+├── milspec
+└── s1000d
+```
+
+`common/` contains everything common for all modules -- entities, etc.
 
 A module structure will look something like this:
 
-```XML
+```
 modules/<module>
 ├── pipelines
 ├── sch
@@ -156,7 +167,7 @@ Each module *must* also have an Ant properties file named `MODULE_NAME.propertie
 
 The XSLT pipelines use the [xproc-batch](https://github.com/sgmlguru/xproc-batch) library. That repository's README should explain how to use them. You should take a look at the `ata` and `s1000d` modules for ideas on how to process your well-formed XML.
 
-The `modules/doc` folder also contains a perfectly trivial SGML DTD and associated examples that may prove to be helpful.
+The `modules/doc` folder is a very simple module that contains a perfectly trivial SGML DTD and associated examples that may prove to be helpful.
 
 
 ### ATA Module
@@ -194,7 +205,7 @@ There is a `modules/ata/ata.properties.xml` file:
 ```
 
 
-#### Missing DTDs?
+#### Yes, the ATA DTDs Are Missing
 
 The SGML and XML ATA DTDs cannot be part of this repository as they are owned by their respective copyright holders. You need to buy the ATA iSpec 2200 DTDs if you wish to use the ATA module; similarly, you will then need to create XML versions of those DTDs.
 
