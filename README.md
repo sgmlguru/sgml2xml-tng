@@ -107,7 +107,13 @@ modules/
 └── s1000d
 ```
 
-`common/` contains everything common for all modules -- entities, etc.
+
+### Common
+
+`common/` contains everything common for all modules -- for example, there are `SDATA` character entity sets for SGML, plus equivalent Unicode character entity sets for the XML conversion.
+
+
+### Module Structure
 
 A module structure will look something like this:
 
@@ -125,7 +131,7 @@ modules/<module>
 └── xslt
 ```
 
-The module itself (the folder in `modules`) should be named descriptively, so `ata`, `s1000d`, etc. As for the contents, there's bound to be some variation but the above would have the following:
+The module (i.e. the folder in `modules`) should be named descriptively, so `ata`, `s1000d`, etc. As for the contents, there's bound to be some variation but the above would have the following:
 
 * `pipelines` - a manifest file listing the XSLT steps that transform the well-formed XML into valid files
 * `sch` - Schematron rules you may want to validate the output with
@@ -134,6 +140,11 @@ The module itself (the folder in `modules`) should be named descriptively, so `a
 	* `xml` - XML DTDs, schemas, modules, catalogs; the XML requires OASIS XML catalogs
 * `xproc` - XProc pipelines; importantly, you'll need an initial pipeline that will iterate through your well-formed XML to determine the XML schema
 * `xslt` - the XSLT files used by the manifest in `pipelines`
+
+The XSLT pipelines use the [xproc-batch](https://github.com/sgmlguru/xproc-batch) library. That repository's README should explain how to use them. You should take a look at the `ata` and `s1000d` modules for ideas on how to process your well-formed XML.
+
+
+#### Module-specific Properties
 
 Each module *must* also have an Ant properties file named `MODULE_NAME.properties.xml`, where `MODULE_NAME` is the module's name. It needs to be directly inside the `MODULE_NAME` folder and should look something like this:
 
@@ -165,12 +176,15 @@ Each module *must* also have an Ant properties file named `MODULE_NAME.propertie
 </properties>
 ```
 
-The XSLT pipelines use the [xproc-batch](https://github.com/sgmlguru/xproc-batch) library. That repository's README should explain how to use them. You should take a look at the `ata` and `s1000d` modules for ideas on how to process your well-formed XML.
+Some modules will have more than others; ATA, for example, includes a CALS XML table module for the ATA XML DTDs.
+
+
+#### Doc Module
 
 The `modules/doc` folder is a very simple module that contains a perfectly trivial SGML DTD and associated examples that may prove to be helpful.
 
 
-### ATA Module
+#### ATA Module
 
 The ATA module transforms ATA iSpec 2200 SGML instances to an "ATA-like" XML format. Graphic entities in the SGML are handled using direct, `@href`-based references in the XML, and some SGML constructs introduced using SGML inclusions are represented using XML processing instructions. This is far from ideal, even though the SGML inclusion elements were all `EMPTY` elements. In an ideal world, those PIs would be modelled differently. This, however, is just a proof of concept.
 
@@ -205,23 +219,30 @@ There is a `modules/ata/ata.properties.xml` file:
 ```
 
 
-#### Yes, the ATA DTDs Are Missing
+And yes, the ATA DTDs are missing:
 
 The SGML and XML ATA DTDs cannot be part of this repository as they are owned by their respective copyright holders. You need to buy the ATA iSpec 2200 DTDs if you wish to use the ATA module; similarly, you will then need to create XML versions of those DTDs.
 
 Also keep in mind that the ATA module contains catalog files and SGML declarations specific to the DTDs I cannot include in the repo. You'll need to make sure to update those catalog files for the versions you are using.
 
 
-### S1000D Module
+#### S1000D Module
 
 The S1000D module cannot contain the actual 1.8 DTDs or 4.1 XSDs, as those are owned by their respective copyright holders. You can get these from the [S1000D website](https://s1000d.org/) if you register and agree to their [Terms and Conditions](https://s1000d.org/?page_id=108).
 
 The 1.8 DTD files should go in `modules/s1000d/schemas/sgml/1.8/dtd/`. The 4.1 XSDs should go in `TBA`.
 
 
-#### Identifying S1000D Module Types
+##### Identifying S1000D Module Types
 
 Unlike ATA, the target S1000D 4.1 schemas are XSDs and do not need `DOCTYPE` declarations. The identifiers go into attributes and we can easily use a single pipeline for all data module types, including determining the type of data module: A 1.8 data module type is easiest to recognise by looking at the `CONTENT` element's child element. This will be `descript`, `proced`, `schedule`, `ipc`, `acrw` or `afi`. The very few examples I have mix case, suggesting that their SGML declarations didn't bother with case sensitivity either.
+
+
+#### MIL-SPEC Module
+
+There is also a nascent MIL-SPEC module that contains two SGML DTDs and one official XML DTD. The SGML DTDs are very similar to one another; the newer DTD includes a handful of modifications.
+
+The module will likely fail initial conversion, as I don't have any SGML document examples available.
 
 
 ## Running
