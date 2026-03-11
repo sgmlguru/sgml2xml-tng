@@ -4,7 +4,7 @@ OVERRIDE YES
 
 SGMLDECL "ata.dcl"
 
-CATALOG "ISOent.cat"
+CATALOG "../../../common/schemas/sgml/ISOent.cat"
 
 
 -- DTDs ATA 2200 September 2020 --

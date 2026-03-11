@@ -4,7 +4,7 @@ OVERRIDE YES
 
 SGMLDECL "ccc.dcl"
 
-CATALOG "ISOent.cat"
+CATALOG "../../../common/sgml/ISOent.cat"
 
 
 -- SGML DTD(s) --
