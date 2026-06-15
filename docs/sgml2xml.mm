@@ -7,7 +7,7 @@
 <hook NAME="accessories/plugins/AutomaticLayout.properties" VALUE="ALL"/>
 <font BOLD="true"/>
 <hook NAME="MapStyle" background="#002b36ff" zoom="0.826">
-    <properties show_icon_for_attributes="true" edgeColorConfiguration="#808080ff,#ff0000ff,#0000ffff,#00ff00ff,#ff00ffff,#00ffffff,#7c0000ff,#00007cff,#007c00ff,#7c007cff,#007c7cff,#7c7c00ff" auto_compact_layout="true" show_note_icons="true" fit_to_viewport="false" show_icons="BESIDE_NODES" associatedTemplateLocation="template:/dark_solarized_template.mm" show_tags="UNDER_NODES" showTagCategories="false"/>
+    <properties show_icon_for_attributes="true" edgeColorConfiguration="#808080ff,#ff0000ff,#0000ffff,#00ff00ff,#ff00ffff,#00ffffff,#7c0000ff,#00007cff,#007c00ff,#7c007cff,#007c7cff,#7c7c00ff" auto_compact_layout="true" show_tags="UNDER_NODES" show_note_icons="true" associatedTemplateLocation="template:/dark_solarized_template.mm" fit_to_viewport="false" show_icons="BESIDE_NODES" showTagCategories="false"/>
     <tags category_separator="::"/>
 
 <map_styles>
@@ -15,7 +15,7 @@
 <font SIZE="24"/>
 <stylenode LOCALIZED_TEXT="styles.predefined" POSITION="bottom_or_right" STYLE="bubble">
 <stylenode LOCALIZED_TEXT="default" ID="ID_1664261437" ICON_SIZE="12 pt" FORMAT_AS_HYPERLINK="false" COLOR="#002b36" BACKGROUND_COLOR="#fdf6e3" STYLE="bubble" SHAPE_HORIZONTAL_MARGIN="8 pt" SHAPE_VERTICAL_MARGIN="5 pt" BORDER_WIDTH_LIKE_EDGE="false" BORDER_WIDTH="1.9 px" BORDER_COLOR_LIKE_EDGE="false" BORDER_COLOR="#f0f0f0" BORDER_DASH_LIKE_EDGE="true" BORDER_DASH="SOLID" VGAP_QUANTITY="3 pt">
-<arrowlink SHAPE="CUBIC_CURVE" COLOR="#fdf6e3" WIDTH="2" TRANSPARENCY="255" DASH="" FONT_SIZE="9" FONT_FAMILY="SansSerif" DESTINATION="ID_1664261437" STARTINCLINATION="132.75 pt;-32.25 pt;" ENDINCLINATION="132.75 pt;24 pt;" STARTARROW="NONE" ENDARROW="DEFAULT"/>
+<arrowlink SHAPE="CUBIC_CURVE" COLOR="#fdf6e3" WIDTH="2" TRANSPARENCY="255" DASH="" FONT_SIZE="9" FONT_FAMILY="SansSerif" DESTINATION="ID_1664261437" STARTINCLINATION="132.75 pt;-31.5 pt;" ENDINCLINATION="132.75 pt;24 pt;" STARTARROW="NONE" ENDARROW="DEFAULT"/>
 <font NAME="SansSerif" SIZE="11" BOLD="false" STRIKETHROUGH="false" ITALIC="false"/>
 <edge STYLE="bezier" COLOR="#93a1a1" WIDTH="3" DASH="SOLID"/>
 <richcontent TYPE="DETAILS" CONTENT-TYPE="plain/auto"/>
@@ -102,6 +102,7 @@
 <node TEXT="sgml" ID="ID_617975778" CREATED="1772722829699" MODIFIED="1772722832090"/>
 <node TEXT="xml" ID="ID_751048358" CREATED="1772722832686" MODIFIED="1772722834323"/>
 </node>
+<node TEXT="xslt" ID="ID_1080118505" CREATED="1775156672025" MODIFIED="1775156675420"/>
 </node>
 <node TEXT="s1000d" ID="ID_801241643" CREATED="1772722681687" MODIFIED="1772722685079">
 <node TEXT="pipelines" ID="ID_1373453199" CREATED="1772782949148" MODIFIED="1772782952145"/>
@@ -119,6 +120,14 @@
 <node TEXT="schemas" ID="ID_68459286" CREATED="1772722822634" MODIFIED="1772722826162">
 <node TEXT="sgml" ID="ID_279491977" CREATED="1772722829699" MODIFIED="1772722832090"/>
 <node TEXT="xml" ID="ID_1214710465" CREATED="1772722832686" MODIFIED="1772722834323"/>
+</node>
+</node>
+<node TEXT="doc" ID="ID_504759405" CREATED="1775156541346" MODIFIED="1775156550954">
+<node TEXT="pipelines" ID="ID_1753499208" CREATED="1775156544605" MODIFIED="1775156548281"/>
+<node TEXT="xproc" ID="ID_344401192" CREATED="1775156559474" MODIFIED="1775156569114"/>
+<node TEXT="schemas" ID="ID_1152260900" CREATED="1775156569412" MODIFIED="1775156582578">
+<node TEXT="sgml" ID="ID_1020901525" CREATED="1775156608776" MODIFIED="1775156611708"/>
+<node TEXT="xml" ID="ID_564373661" CREATED="1775156612234" MODIFIED="1775156614992"/>
 </node>
 </node>
 <node TEXT="common" ID="ID_1675394910" CREATED="1772724517733" MODIFIED="1772724520492">
