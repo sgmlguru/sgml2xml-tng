@@ -13,6 +13,13 @@
     </repos>
     
     
+    <!-- Set up current run and module -->
+    <debug value="true"/>
+    <verbose value="true"/>
+    <wellformed-only value="false"/>
+    <current-module value="doc"/>
+    
+    
     <!-- Project environment; ${env.src} is a folder path
          inside your main project as given by ${base.dir} -->
     <env>
