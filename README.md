@@ -8,6 +8,7 @@ This repository contains code and resources to convert SGML documents to well-fo
 * OpenJDK version 8, 11, or later - other versions may cause issues
 * [Ant](https://ant.apache.org/bindownload.cgi)
 * [Ant-contrib](https://sourceforge.net/projects/ant-contrib/files/ant-contrib/1.0b3/ant-contrib-1.0b3-bin.zip/download)
+* For Linux, the OpenSP package (called `opensp` in most Debian-based distributions)
 
 
 ## Setup
@@ -15,10 +16,10 @@ This repository contains code and resources to convert SGML documents to well-fo
 Set up the pipeline thusly:
 
 1. Add the AntContrib JAR file to `~/.ant/lib` or `$ANT_HOME/lib`
-2. Create a local build properties file by saving `build.properties.localRENAME.xml` in the current folder as `build.properties.local.xml`.
-3. (OPTIONAL) If you want to produce something more than well-formed XML, set the `${wellformed-only}` property to 'false' in `build.properties.local.xml`.
+2. Create a local build properties file by saving `build_sgml2xml.properties.localRENAME.xml` in the current folder as `build_sgml2xml.properties.local.xml`.
+3. (OPTIONAL) If you want to produce something more than well-formed XML, set the `${wellformed-only}` property to 'false' in `build_sgml2xml.properties.local.xml`.
 4. (OPTIONAL) Add a module that defines your source SGML and target XML formats, as well as any transformations that need to take place, in `modules/`. See TBA for instructions.
-5. (OPTIONAL) Set the name of the module as the value of the `${current-module}` property in `build.properties.local.xml`.
+5. (OPTIONAL) Set the name of the module as the value of the `${current-module}` property in `build_sgml2xml.properties.local.xml`.
 
 
 ## Sources Setup
@@ -67,7 +68,7 @@ There are multiple debug folders:
 
 ### Adding New Sources
 
-Add source filesets by editing `build.properties.local.xml`, as follows:
+Add source filesets by editing `build_sgml2xml.properties.local.xml`, as follows:
 
 1. Update the *base path* (`${base.dir}`) property - this is `/path/to/base/dir`, above.
 2. For each set of files, update the folder name (`${env.src}`) property of that set (`fileset` in the above example) - it is assumed that the folder is a subfolder to the base path, and it is further assumed that that folder contains a subfolder called `data` where the sources live.

@@ -30,12 +30,12 @@
     
     <!-- Build properties -->
     <xmlproperty
-        file="build.properties.local.xml"
+        file="build_sgml2xml.properties.local.xml"
         keeproot="false"
         collapseattributes="true"
         semanticattributes="true"/>
     <xmlproperty
-        file="build.properties.xml"
+        file="build_sgml2xml.properties.xml"
         keeproot="false"
         collapseattributes="true"
         semanticattributes="true"/>
