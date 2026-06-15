@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <properties>
     
-    <!-- Set up current run and module -->
+    <!-- Debug and verbose -->
     <debug value="true"/>
-    <verbose value="false"/>
-    <wellformed-only value="false"/>
-    <current-module value="ata"/>
+    <verbose value="true"/>
     
     
     <!-- Change accordingly for repository path -->
