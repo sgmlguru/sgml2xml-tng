@@ -1,4 +1,5 @@
 *.xpr
+build_xml2sgml.properties.local.xml
 build.properties.local.xml
 build_sgml2xml.properties.local.xml
 errspam.txt
