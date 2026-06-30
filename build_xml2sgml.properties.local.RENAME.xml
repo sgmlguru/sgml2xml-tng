@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<properties>
+    
+    <repos>
+        <dir location="/path/to/repos"/>
+    </repos>
+    
+    <!-- Project environment; ${env.src} is a folder path
+         inside your main project as given by ${base.dir} -->
+    <env>
+        <src value="test"/>
+        <date value="${current.time}"/>
+    </env>
+    
+    
+    <!-- Directory paths -->
+    <base>
+        <dir location="/path/to/project/parent"/>
+        <source location="${base.dir}/${env.src}/data"/>
+    </base>
+    
+</properties>
