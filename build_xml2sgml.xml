@@ -26,14 +26,14 @@
 	
 	<!-- Local properties -->
 	<xmlproperty
-		file="${repos.xml2sgml}/build.properties.local.xml"
+		file="./build_xml2sgml.properties.local.xml"
 		keeproot="false"
 		collapseattributes="true"
 		semanticattributes="true"/>
 	
 	<!-- Default properties -->
 	<xmlproperty
-		file="${repos.xml2sgml}/build.properties.xml"
+		file="./build_xml2sgml.properties.xml"
 		keeproot="false"
 		collapseattributes="true"
 		semanticattributes="true"/>
@@ -47,8 +47,9 @@
 		collapseattributes="true"
 		semanticattributes="true"/>
 	
+	<echo message="Current module spec: ${modules}/${current-module}/${current-module}.properties.xml"/>
 	
-	<taskdef file="${repos.xml2sgml}/ant/antlib.xml" uri="sgml" />
+	<taskdef file="${repos.xml2sgml}/ant/antlib.xml" uri="sgml"/>
 	
 	
 	<!-- Create dirs -->
@@ -150,9 +151,15 @@
 		<local name="local.output-filepath"/>
 		
 		<basename property="local.source-filename-without-extension" file="${file}" suffix="xml"/>			
-		<property name="local.doctype" location="${base.doctypes}/${local.source-filename-without-extension}.xml"/>
-		<property name="local.source-with-doctype-xml" location="${base.spam}/${local.source-filename-without-extension}.xml"/>
-		<property name="local.source-normalised" location="${base.spam}/${local.source-filename-without-extension}.sgm"/>
+		<property
+			name="local.doctype"
+			location="${base.doctypes}/${local.source-filename-without-extension}.xml"/>
+		<property
+			name="local.source-with-doctype-xml"
+			location="${base.spam}/${local.source-filename-without-extension}.xml"/>
+		<property
+			name="local.source-normalised"
+			location="${base.spam}/${local.source-filename-without-extension}.sgm"/>
 		
 		
 		<sgml:insert-doctype
