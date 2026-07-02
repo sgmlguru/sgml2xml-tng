@@ -19,12 +19,12 @@
     
     
     <xsl:param
-        name="repos.ata-dtds" select="'/home/ari/Documents/repos/siemens/xml2sgml/ata-dtds'"/>
+        name="repos.dtds" select="'/home/ari/Documents/repos/siemens/xml2sgml/ata-dtds'"/>
     
     
     <xsl:variable
         name="isoent-declarations"
-        select="(if (starts-with($repos.ata-dtds,'file:/')) then () else ('file:/')) || replace($repos.ata-dtds,'\\','/') || '/sgml/ISOent-declarations-xml.txt'"
+        select="(if (starts-with($repos.dtds,'file:/')) then () else ('file:/')) || replace($repos.dtds,'\\','/') || '/sgml/ISOent-declarations-xml.txt'"
         as="xs:string"/>
     
     <xsl:variable
@@ -35,7 +35,7 @@
         <xsl:value-of
             select="replace($entity-declarations,
                             '&quot;xml-entities',
-                            ('&quot;' || replace($repos.ata-dtds,'\\','/') || '/xml-entities'))"/>
+                            ('&quot;' || replace($repos.dtds,'\\','/') || '/xml-entities'))"/>
     </xsl:variable>
     
     
