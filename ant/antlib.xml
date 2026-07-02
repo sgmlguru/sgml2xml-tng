@@ -14,12 +14,13 @@
         <attribute name="xslt-processor" default="${saxon.jar}"/>
         <attribute name="xslt-processor-classname" default="net.sf.saxon.Transform"/>
         <attribute name="uri-resolver" default="${morgana.resolver}"/>
-        <attribute name="catalogs" default="${catalogs.catalog}"/>
+        <attribute name="catalogs" default="${modules}/${current-module}/catalogs/catalog.xml"/>
         <attribute name="debug" default="${debug}"/>	
         
         <sequential>
             
             <echo message="Getting rid of XML constructs and expanding EMPTY tags in @{source}"/>
+            <echo message="Using stylesheet ${modules.common.xslt.xml2sgml.expand-empty} and catalog @{catalogs}"/>
             
             <java
                 classname="net.sf.saxon.Transform" 
@@ -27,11 +28,11 @@
                 failonerror="true">
                 <classpath>
                     <pathelement path="@{xslt-processor}"/>
-                    <pathelement path="${repos.xml2sgml}/lib/resolver.jar"/>
+                    <pathelement path="@{uri-resolver}"/>
                 </classpath>
                 <arg line="-catalog:@{catalogs}"/>
                 <arg value="-s:@{source}"/>
-                <arg value="-xsl:${modules.common.xslt.stylesheet.xml2sgml.expand-empty}"/>
+                <arg value="-xsl:${modules.common.xslt.xml2sgml.expand-empty}"/>
                 <arg value="-o:@{result}"/>
             </java>
             
@@ -73,12 +74,13 @@
         <attribute name="xslt-processor" default="${saxon.jar}"/>
         <attribute name="xslt-processor-classname" default="net.sf.saxon.Transform"/>
         <attribute name="uri-resolver" default="${morgana.resolver}"/>
-        <attribute name="catalogs" default="${catalogs.catalog}"/>
+        <attribute name="catalogs" default="${modules}/${current-module}/catalogs/catalog.xml"/>
         <attribute name="debug" default="${debug}"/>	               
         
         <sequential>
             
-            <echo message="Generating DOCTYPE declaration for @{source}"/>                
+            <echo message="Generating DOCTYPE declaration for @{source}"/>
+            <echo message="Using stylesheet ${modules.common.xslt.xml2sgml.generate-doctype} and catalog @{catalogs}"/>
             
             <local name="local.source.filename"/>
             <basename property="local.source.filename" file="@{source}"/>                             
@@ -86,11 +88,11 @@
             <java classname="@{xslt-processor-classname}" fork="yes">
                 <classpath>
                     <pathelement path="@{xslt-processor}"/>
-                    <pathelement path="${repos.xml2sgml}/lib/resolver.jar"/>
+                    <pathelement path="@{uri-resolver}"/>
                 </classpath>
                 <arg line="-catalog:@{catalogs}"/>
                 <arg value="-s:@{source}"/>
-                <arg value="-xsl:${modules.common.xslt.stylesheet.xml2sgml.generate-doctype}"/>
+                <arg value="-xsl:${modules.common.xslt.xml2sgml.generate-doctype}"/>
                 <arg value="-o:@{result}"/>
             </java>              
             
@@ -182,15 +184,17 @@
         <attribute name="xslt-processor" default="${saxon.jar}"/>
         <attribute name="xslt-processor-classname" default="net.sf.saxon.Transform"/>
         <attribute name="uri-resolver" default="${morgana.resolver}"/>
-        <attribute name="catalogs" default="${catalogs.catalog}"/>
+        <attribute name="catalogs" default="${modules}/${current-module}/catalogs/catalog.xml"/>
         <attribute name="debug" default="${debug}"/>	       
         
         <sequential>
 
             <echo message="Converting @{source} to ISO encoding"/>
-            <local name="local.ata-dtds"/>
-            <makeurl property="local.ata-dtds" file="${repos.ata-dtds}"/>
-            <echo message="Using ${xslt.stylesheet.xml2sgml.iso-encode} and ${repos.ata-dtds}"/>
+            <local name="local.dtds"/>
+            <makeurl property="local.dtds" file="${modules}/${current-module}/schemas"/>
+            
+            <echo message="Using ${xslt.xml2sgml.iso-encode} and ${repos.dtds}"/>
+            <echo message="Using stylesheet ${modules.common.xslt.xml2sgml.iso-encode} and catalog @{catalogs}"/>
                       
             <java
                 classname="@{xslt-processor-classname}" 
@@ -198,13 +202,13 @@
                 failonerror="true">
                 <classpath>
                     <pathelement path="@{xslt-processor}"/>
-                    <pathelement path="${repos.xml2sgml}/lib/resolver.jar"/>
+                    <pathelement path="@{uri-resolver}"/>
                 </classpath>
                 <arg line="-catalog:@{catalogs}"/>
                 <arg value="-s:@{source}"/>
-                <arg value="-xsl:${modules.common.xslt.stylesheet.xml2sgml.iso-encode}"/>
+                <arg value="-xsl:${modules.common.xslt.xml2sgml.iso-encode}"/>
                 <arg value="-o:@{result}"/>
-                <arg value="repos.ata-dtds=${local.ata-dtds}"/>
+                <arg value="repos.dtds=${local.dtds}"/>
             </java>
             
             <echo message="...saved as @{result}"/>
@@ -222,14 +226,14 @@
         <attribute name="result"/>
         <attribute name="spam-report-dir"/>
         <attribute name="sgml-processor" default="${sp-loc.path.spam}"/>		
-        <attribute name="catalogs" default="${catalogs.sgml}"/>
+        <attribute name="catalogs" default="${module.schemas.input}"/>
         <attribute name="fail-on-error" default="true"/>	          
         <attribute name="debug" default="${debug}"/>	       
         
         
         <sequential>
             
-            <echo message="Normalising @{source}"/>
+            <echo message="Normalising @{source} using @{catalogs}"/>
             
             <local name="local.source.filename"/>
             <local name="local.source.basename-without-file-extension"/>
@@ -244,6 +248,8 @@
             
             <mkdir dir="@{spam-report-dir}"/>
             <mkdir dir="${local.output-dir}"/>
+            
+            <echo message="Spam report to @{spam-report-dir}/${local.source.basename-without-file-extension}.txt"/>
             
             <!-- Set path to spam -->
             <condition property="sp-loc.path.spam" value="${sp-loc.win-path.spam}">
