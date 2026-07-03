@@ -80,7 +80,7 @@
     <base>
         <dir location="/home/ari/Documents/projects/xml2sgm"/>
         <source location="${base.dir}/${env.src}/data"/>
-        <tmp location="${base.dir}/${env.src}/tmp"/>
+        <tmp location="${base.dir}/${env.src}/tmp/${env.date}"/>
         <charmaps location="${base.tmp}/charmaps"/>
         <spam location="${base.tmp}/spam"/>
         <doctypes location="${base.tmp}/doctypes"/>
