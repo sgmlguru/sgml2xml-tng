@@ -120,7 +120,7 @@
 		
 		<sgml:remove-doctype	 
 			source="${file}"
-			result="${local.output-filepath}"/>			
+			result="${local.output-filepath}"/>
 		
 		<local name="local.output-doctype"/>
 		<property name="local.output-doctype" value="${base.doctypes}/${local.source-filename}"/>		
