@@ -18,9 +18,7 @@
         <attribute name="debug" default="${debug}"/>	
         
         <sequential>
-            
             <echo message="Getting rid of XML constructs and expanding EMPTY tags in @{source}"/>
-            <echo message="Using stylesheet ${modules.common.xslt.xml2sgml.expand-empty} and catalog @{catalogs}"/>
             
             <java
                 classname="net.sf.saxon.Transform" 
@@ -37,9 +35,7 @@
             </java>
             
             <echo message="...saved as @{result}"/>
-            
         </sequential>
-    
     </macrodef>
     
     
@@ -52,16 +48,13 @@
         <attribute name="debug" default="${debug}"/>	       
         
         <sequential>
-            
             <echo message="Removing DOCTYPE from @{source}"/>
             
             <copy file="@{source}" tofile="@{result}"/>
             
             <!-- Remove XML DOCTYPE -->
             <replaceregexp match="^(.*)&lt;\!DOCTYPE[^&gt;]*&gt;(.*)$" replace="\1\2" flags="s" file="@{result}"/>
-                        
         </sequential>
-        
     </macrodef>
     
     
@@ -80,8 +73,6 @@
         <sequential>
             
             <echo message="Generating DOCTYPE declaration for @{source}"/>
-            <echo message="Using stylesheet ${modules.common.xslt.xml2sgml.generate-doctype} and catalog @{catalogs}"/>
-            
             <echo message="doctype-lookup-uri=${module.schemas.sgml-doctypes}"/>
             
             <local name="local.source.filename"/>
@@ -100,15 +91,13 @@
             </java>              
             
             <echo message="...saved as @{result}"/>
-            
         </sequential>
-        
     </macrodef>
     
     
     <macrodef
         name="insert-doctype"
-        description="">
+        description="Loads previously generated DOCTYPE and inserts it">
         
         <attribute name="source"/>
         <attribute name="doctype"/>
@@ -124,8 +113,8 @@
                 <matches string="${local.source-as-string}" multiline="true">
                     <regexp pattern="^&lt;\?xml([^&gt;]*)\?&gt;"/>
                 </matches>
+                
                 <then>
-
                     <echo message="Loading @{doctype}"/>  
                     
                     <local name="local.doctype"/>
@@ -140,42 +129,32 @@
                         <regexp pattern="^&lt;\?xml([^&gt;]*)\?&gt;"/>
                         <substitution expression="${local.doctype}"/>
                     </replaceregexp>               
-                    
                 </then>
+                
                 <else>
-                    
                     <echo message="XML declaration not found in @{result}."/>                 
-                    
                     <if>
                         <matches string="${local.source-as-string}" multiline="false">
                             <regexp pattern="^\W*(.)"/>
                         </matches>
+                        
                         <then>
-                            
                             <echo message="Inserting DOCTYPE into @{result}"/>  
                             
                             <concat destfile="@{result}">
                                 <fileset file="@{doctype}"/>
                                 <fileset file="@{source}"/>
                             </concat>
-                                                        
                         </then>
+                        
                         <else>
-                            
                             <fail message="First character not found in @{result}"/>
-                            
                         </else>
                     </if>
-                    
-                     
                 </else>
             </if>
-            
-                 
         </sequential>
-        
     </macrodef>
-    
     
     
     <macrodef
@@ -191,13 +170,10 @@
         <attribute name="debug" default="${debug}"/>	       
         
         <sequential>
-
             <echo message="Converting @{source} to ISO encoding"/>
+            
             <local name="local.dtds"/>
             <makeurl property="local.dtds" file="${modules}/${current-module}/schemas"/>
-            
-            <echo message="Using ${xslt.xml2sgml.iso-encode} and ${repos.dtds}"/>
-            <echo message="Using stylesheet ${modules.common.xslt.xml2sgml.iso-encode} and catalog @{catalogs}"/>
                       
             <java
                 classname="@{xslt-processor-classname}" 
@@ -215,15 +191,13 @@
             </java>
             
             <echo message="...saved as @{result}"/>
-            
         </sequential>
-        
     </macrodef>
     
     
     <macrodef
         name="normalise"
-        description="">
+        description="Normalise using spam/ospam">
         
         <attribute name="source"/>
         <attribute name="result"/>
@@ -233,9 +207,7 @@
         <attribute name="fail-on-error" default="true"/>	          
         <attribute name="debug" default="${debug}"/>	       
         
-        
         <sequential>
-            
             <echo message="Normalising @{source} using @{catalogs}"/>
             
             <local name="local.source.filename"/>
@@ -244,10 +216,19 @@
             <local name="local.output-dir"/>
             <local name="local.result-property"/>
             
-            <basename property="local.source.filename" file="@{source}"/>
-            <basename property="local.source.basename-without-file-extension" file="@{source}" suffix="xml"/>
-            <property name="local.spam-report" location="@{spam-report-dir}/${local.source.basename-without-file-extension}.txt"/>
-            <dirname property="local.output-dir" file="@{result}"/>
+            <basename
+                property="local.source.filename"
+                file="@{source}"/>
+            <basename
+                property="local.source.basename-without-file-extension"
+                file="@{source}"
+                suffix="xml"/>
+            <property
+                name="local.spam-report"
+                location="@{spam-report-dir}/${local.source.basename-without-file-extension}.txt"/>
+            <dirname
+                property="local.output-dir"
+                file="@{result}"/>
             
             <mkdir dir="@{spam-report-dir}"/>
             <mkdir dir="${local.output-dir}"/>
@@ -262,7 +243,7 @@
                 <isset property="isLinux"/>
             </condition>
             
-            <echo message="Spam executable (isLinux = ${isLinux, isWindows = ${isWindows}}: ${sp-loc.path.spam}"/>
+            <echo message="Spam executable (isLinux = ${isLinux}, isWindows = ${isWindows}): ${sp-loc.path.spam}"/>
             
             <exec
                 executable="@{sgml-processor}" 
@@ -278,13 +259,10 @@
                 <arg value="-c"/>
                 <arg line="@{catalogs}"/>
                 <arg value="@{source}"/>
-                
             </exec>
             
             <echo message="...saved as @{result}"/>
-            
         </sequential>
-        
     </macrodef>
     
 </antlib>
