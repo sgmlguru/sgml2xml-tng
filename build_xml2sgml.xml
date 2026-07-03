@@ -74,7 +74,7 @@
 	
 	
 	<target name="loop-empty" description="Loop the inputs, fix the XML for each">				
-		<foreach target="expand-empty" param="file">
+		<foreach target="expand-empty" param="file" inheritall="true">
 			<path>
 				<fileset dir="${base.source}">
 					<include name="*.xml"/>
@@ -99,7 +99,7 @@
 	
 	
 	<target name="loop-charmaps" description="Loop the inputs, ISO-encode each">
-		<foreach target="charmap-xslt" param="file">
+		<foreach target="charmap-xslt" param="file" inheritall="true">
 			<path>
 				<fileset dir="${base.expand-empty}">
 					<include name="*.xml"/>
@@ -136,7 +136,7 @@
 	
 	
 	<target name="loop-spam" description="Loop the ISO-encoded files, run spam on each">
-		<foreach target="spam" param="file">
+		<foreach target="spam" param="file" inheritall="true">
 			<path>
 				<fileset dir="${base.charmaps}">
 					<include name="*.xml"/>
