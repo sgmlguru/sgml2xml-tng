@@ -82,6 +82,8 @@
             <echo message="Generating DOCTYPE declaration for @{source}"/>
             <echo message="Using stylesheet ${modules.common.xslt.xml2sgml.generate-doctype} and catalog @{catalogs}"/>
             
+            <echo message="doctype-lookup-uri=${module.schemas.sgml-doctypes}"/>
+            
             <local name="local.source.filename"/>
             <basename property="local.source.filename" file="@{source}"/>                             
             
@@ -94,6 +96,7 @@
                 <arg value="-s:@{source}"/>
                 <arg value="-xsl:${modules.common.xslt.xml2sgml.generate-doctype}"/>
                 <arg value="-o:@{result}"/>
+                <arg value="doctype-lookup-uri=${module.schemas.sgml-doctypes}"/>
             </java>              
             
             <echo message="...saved as @{result}"/>
