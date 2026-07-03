@@ -12,7 +12,6 @@
         <attribute name="source"/>
         <attribute name="doctype"/>
         <attribute name="result"/>
-        <attribute name="debug" default="${debug}"/>	       
         
         <sequential>
        
@@ -63,77 +62,6 @@
                     </if>
                 </else>
             </if>
-        </sequential>
-    </macrodef>
-    
-    
-    <macrodef
-        name="normalise"
-        description="Normalise using spam/ospam">
-        
-        <attribute name="source"/>
-        <attribute name="result"/>
-        <attribute name="spam-report-dir"/>
-        <attribute name="sgml-processor" default="${sp-loc.path.spam}"/>		
-        <attribute name="catalogs" default="${module.schemas.input}"/>
-        <attribute name="fail-on-error" default="true"/>	          
-        <attribute name="debug" default="${debug}"/>	       
-        
-        <sequential>
-            <echo message="Normalising @{source} using @{catalogs}"/>
-            
-            <local name="local.source.filename"/>
-            <local name="local.source.basename-without-file-extension"/>
-            <local name="local.spam-report"/>
-            <local name="local.output-dir"/>
-            <local name="local.result-property"/>
-            
-            <basename
-                property="local.source.filename"
-                file="@{source}"/>
-            <basename
-                property="local.source.basename-without-file-extension"
-                file="@{source}"
-                suffix="xml"/>
-            <property
-                name="local.spam-report"
-                location="@{spam-report-dir}/${local.source.basename-without-file-extension}.txt"/>
-            <dirname
-                property="local.output-dir"
-                file="@{result}"/>
-            
-            <mkdir dir="@{spam-report-dir}"/>
-            <mkdir dir="${local.output-dir}"/>
-            
-            <echo message="Spam report to @{spam-report-dir}/${local.source.basename-without-file-extension}.txt"/>
-            
-            <!-- Set path to spam -->
-            <condition property="sp-loc.path.spam" value="${sp-loc.win-path.spam}">
-                <isset property="isWindows"/>
-            </condition>
-            <condition property="sp-loc.path.spam" value="${sp-loc.nix-path.spam}">
-                <isset property="isLinux"/>
-            </condition>
-            
-            <echo message="Spam executable (isLinux = ${isLinux}, isWindows = ${isWindows}): ${sp-loc.path.spam}"/>
-            
-            <exec
-                executable="@{sgml-processor}" 
-                inputstring="&#10;"
-                output="@{result}"
-                failonerror="@{fail-on-error}">
-                
-                <arg value="-E0"/>
-                <arg value="-wno-empty"/>
-                <arg value="-wno-min-tag"/>
-                <arg value="-mreserved"/>
-                <arg value="-f${local.spam-report}"/>
-                <arg value="-c"/>
-                <arg line="@{catalogs}"/>
-                <arg value="@{source}"/>
-            </exec>
-            
-            <echo message="...saved as @{result}"/>
         </sequential>
     </macrodef>
     
