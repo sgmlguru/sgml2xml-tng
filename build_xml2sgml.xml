@@ -92,9 +92,23 @@
 		<basename property="local.source-filename" file="${file}"/>		
 		<property name="local.output-filepath" value="${base.expand-empty}/${local.source-filename}"/>
 		
-		<sgml:expand-empty		 
-			source="${file}" 
-			result="${local.output-filepath}"/>				
+		<echo message="Getting rid of XML constructs and expanding EMPTY tags in ${file}"/>
+		
+		<java
+			classname="net.sf.saxon.Transform" 
+			fork="yes"
+			failonerror="true">
+			<classpath>
+				<pathelement path="${saxon.jar}"/>
+				<pathelement path="${morgana.resolver}"/>
+			</classpath>
+			<arg line="-catalog:${modules}/${current-module}/catalogs/catalog.xml"/>
+			<arg value="-s:${file}"/>
+			<arg value="-xsl:${modules.common.xslt.xml2sgml.expand-empty}"/>
+			<arg value="-o:${local.output-filepath}"/>
+		</java>
+		
+		<echo message="...saved as ${local.output-filepath}"/>
 	</target>
 	
 	
@@ -116,22 +130,45 @@
 		<basename property="local.source-filename" file="${file}"/>		
 		<property name="local.output-filepath" value="${base.charmaps}/${local.source-filename}"/>
 		
-		<echo message="Copy ${file} to ${local.output-filepath}"/>
-		
-		<sgml:remove-doctype	 
-			source="${file}"
-			result="${local.output-filepath}"/>
-		
 		<local name="local.output-doctype"/>
-		<property name="local.output-doctype" value="${base.doctypes}/${local.source-filename}"/>		
+		<property name="local.output-doctype" value="${base.doctypes}/${local.source-filename}"/>
 		
-		<sgml:generate-doctype
-			source="${local.output-filepath}"
-			result="${local.output-doctype}"/>
+		<!-- Generate full DOCTYPE -->
+		<java classname="net.sf.saxon.Transform" fork="yes">
+			<classpath>
+				<pathelement path="${saxon.jar}"/>
+				<pathelement path="${morgana.resolver}"/>
+			</classpath>
+			<arg line="-catalog:${modules}/${current-module}/catalogs/catalog.xml"/>
+			<arg value="-s:${file}"/>
+			<arg value="-xsl:${modules.common.xslt.xml2sgml.generate-doctype}"/>
+			<arg value="-o:${local.output-doctype}"/>
+			<arg value="doctype-lookup-uri=${module.schemas.sgml-doctypes}"/>
+		</java>              
 		
-		<sgml:iso-encode 
-			source="${local.output-filepath}"
-			result="${local.output-filepath}"/>
+		<echo message="...saved as ${local.output-doctype}"/>
+		
+		<echo message="Converting ${file} to ISO encoding"/>
+		
+		<local name="local.dtds"/>
+		<makeurl property="local.dtds" file="${modules}/${current-module}/schemas"/>
+		
+		<java
+			classname="net.sf.saxon.Transform" 
+			fork="yes"
+			failonerror="true">
+			<classpath>
+				<pathelement path="${saxon.jar}"/>
+				<pathelement path="${morgana.resolver}"/>
+			</classpath>
+			<arg line="-catalog:${modules}/${current-module}/catalogs/catalog.xml"/>
+			<arg value="-s:${file}"/>
+			<arg value="-xsl:${modules.common.xslt.xml2sgml.iso-encode}"/>
+			<arg value="-o:${local.output-filepath}"/>
+			<arg value="repos.dtds=${local.dtds}"/>
+		</java>
+		
+		<echo message="...saved as ${local.output-filepath}"/>
 	</target>
 	
 	
