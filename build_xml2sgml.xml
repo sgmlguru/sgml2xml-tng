@@ -92,9 +92,23 @@
 		<basename property="local.source-filename" file="${file}"/>		
 		<property name="local.output-filepath" value="${base.expand-empty}/${local.source-filename}"/>
 		
-		<sgml:expand-empty		 
-			source="${file}" 
-			result="${local.output-filepath}"/>				
+		<echo message="Getting rid of XML constructs and expanding EMPTY tags in ${file}"/>
+		
+		<java
+			classname="net.sf.saxon.Transform" 
+			fork="yes"
+			failonerror="true">
+			<classpath>
+				<pathelement path="${saxon.jar}"/>
+				<pathelement path="${morgana.resolver}"/>
+			</classpath>
+			<arg line="-catalog:${modules}/${current-module}/catalogs/catalog.xml"/>
+			<arg value="-s:${file}"/>
+			<arg value="-xsl:${modules.common.xslt.xml2sgml.expand-empty}"/>
+			<arg value="-o:${local.output-filepath}"/>
+		</java>
+		
+		<echo message="...saved as ${local.output-filepath}"/>
 	</target>
 	
 	
@@ -116,22 +130,45 @@
 		<basename property="local.source-filename" file="${file}"/>		
 		<property name="local.output-filepath" value="${base.charmaps}/${local.source-filename}"/>
 		
-		<echo message="Copy ${file} to ${local.output-filepath}"/>
-		
-		<sgml:remove-doctype	 
-			source="${file}"
-			result="${local.output-filepath}"/>
-		
 		<local name="local.output-doctype"/>
-		<property name="local.output-doctype" value="${base.doctypes}/${local.source-filename}"/>		
+		<property name="local.output-doctype" value="${base.doctypes}/${local.source-filename}"/>
 		
-		<sgml:generate-doctype
-			source="${local.output-filepath}"
-			result="${local.output-doctype}"/>
+		<!-- Generate full DOCTYPE -->
+		<java classname="net.sf.saxon.Transform" fork="yes">
+			<classpath>
+				<pathelement path="${saxon.jar}"/>
+				<pathelement path="${morgana.resolver}"/>
+			</classpath>
+			<arg line="-catalog:${modules}/${current-module}/catalogs/catalog.xml"/>
+			<arg value="-s:${file}"/>
+			<arg value="-xsl:${modules.common.xslt.xml2sgml.generate-doctype}"/>
+			<arg value="-o:${local.output-doctype}"/>
+			<arg value="doctype-lookup-uri=${module.schemas.sgml-doctypes}"/>
+		</java>              
 		
-		<sgml:iso-encode 
-			source="${local.output-filepath}"
-			result="${local.output-filepath}"/>
+		<echo message="...saved as ${local.output-doctype}"/>
+		
+		<echo message="Converting ${file} to ISO encoding"/>
+		
+		<local name="local.dtds"/>
+		<makeurl property="local.dtds" file="${modules}/${current-module}/schemas"/>
+		
+		<java
+			classname="net.sf.saxon.Transform" 
+			fork="yes"
+			failonerror="true">
+			<classpath>
+				<pathelement path="${saxon.jar}"/>
+				<pathelement path="${morgana.resolver}"/>
+			</classpath>
+			<arg line="-catalog:${modules}/${current-module}/catalogs/catalog.xml"/>
+			<arg value="-s:${file}"/>
+			<arg value="-xsl:${modules.common.xslt.xml2sgml.iso-encode}"/>
+			<arg value="-o:${local.output-filepath}"/>
+			<arg value="repos.dtds=${local.dtds}"/>
+		</java>
+		
+		<echo message="...saved as ${local.output-filepath}"/>
 	</target>
 	
 	
@@ -167,12 +204,64 @@
 			doctype="${local.doctype}"
 			result="${local.source-with-doctype-xml}"/>
 		
-		<sgml:normalise
-			source="${local.source-with-doctype-xml}" 
-			spam-report-dir="${base.report}"
-			fail-on-error="false"
-			result="${local.source-normalised}"/>
+		<!-- Normalise follows... -->
 		
+		<echo message="Normalising @{source} using ${module.schemas.input}"/>
+		
+		<local name="local.source.filename"/>
+		<local name="local.source.basename-without-file-extension"/>
+		<local name="local.spam-report"/>
+		<local name="local.output-dir"/>
+		<local name="local.result-property"/>
+		
+		<basename
+			property="local.source.filename"
+			file="${local.source-with-doctype-xml}"/>
+		<basename
+			property="local.source.basename-without-file-extension"
+			file="${local.source-with-doctype-xml}"
+			suffix="xml"/>
+		<property
+			name="local.spam-report"
+			location="@{spam-report-dir}/${local.source.basename-without-file-extension}.txt"/>
+		<dirname
+			property="local.output-dir"
+			file="${local.source-normalised}"/>
+		
+		<mkdir dir="${local.spam-report}"/>
+		<mkdir dir="${local.output-dir}"/>
+		
+		<echo message="Spam report to @{spam-report-dir}/${local.source.basename-without-file-extension}.txt"/>
+		
+		<!-- Set path to spam -->
+		<condition property="sp-loc.path.spam" value="${sp-loc.win-path.spam}">
+			<isset property="isWindows"/>
+		</condition>
+		<condition property="sp-loc.path.spam" value="${sp-loc.nix-path.spam}">
+			<isset property="isLinux"/>
+		</condition>
+		
+		<echo message="Spam executable (isLinux = ${isLinux}, isWindows = ${isWindows}): ${sp-loc.path.spam}"/>
+		
+		<exec
+			executable="${sp-loc.path.spam}" 
+			inputstring="&#10;"
+			output="${local.source-normalised}"
+			failonerror="false">
+			
+			<arg value="-E0"/>
+			<arg value="-wno-empty"/>
+			<arg value="-wno-min-tag"/>
+			<arg value="-mreserved"/>
+			<arg value="-f${local.spam-report}"/>
+			<arg value="-c"/>
+			<arg line="${module.schemas.input}"/>
+			<arg value="${local.source-with-doctype-xml}"/>
+		</exec>
+		
+		<echo message="...saved as ${local.source-normalised}"/>
+		
+		<!-- Insert DOCTYPE again because it's not done by spam -->
 		<sgml:insert-doctype		 
 			source="${local.source-normalised}"
 			doctype="${local.doctype}"
