@@ -11,6 +11,8 @@
             <resources>
                 <ent location="${module.schemas}/sgml/ISOent-declarations-xml.txt"/>
             </resources>
+            <!-- SGML DOCTYPE lookup -->
+            <sgml-doctypes location="${module.schemas}/sgml/doctype-lookup.xml"/>
         </schemas>
         
         <!-- Schematron -->
