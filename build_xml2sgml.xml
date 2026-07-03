@@ -204,12 +204,64 @@
 			doctype="${local.doctype}"
 			result="${local.source-with-doctype-xml}"/>
 		
-		<sgml:normalise
-			source="${local.source-with-doctype-xml}" 
-			spam-report-dir="${base.report}"
-			fail-on-error="false"
-			result="${local.source-normalised}"/>
+		<!-- Normalise follows... -->
 		
+		<echo message="Normalising @{source} using ${module.schemas.input}"/>
+		
+		<local name="local.source.filename"/>
+		<local name="local.source.basename-without-file-extension"/>
+		<local name="local.spam-report"/>
+		<local name="local.output-dir"/>
+		<local name="local.result-property"/>
+		
+		<basename
+			property="local.source.filename"
+			file="${local.source-with-doctype-xml}"/>
+		<basename
+			property="local.source.basename-without-file-extension"
+			file="${local.source-with-doctype-xml}"
+			suffix="xml"/>
+		<property
+			name="local.spam-report"
+			location="@{spam-report-dir}/${local.source.basename-without-file-extension}.txt"/>
+		<dirname
+			property="local.output-dir"
+			file="${local.source-normalised}"/>
+		
+		<mkdir dir="${local.spam-report}"/>
+		<mkdir dir="${local.output-dir}"/>
+		
+		<echo message="Spam report to @{spam-report-dir}/${local.source.basename-without-file-extension}.txt"/>
+		
+		<!-- Set path to spam -->
+		<condition property="sp-loc.path.spam" value="${sp-loc.win-path.spam}">
+			<isset property="isWindows"/>
+		</condition>
+		<condition property="sp-loc.path.spam" value="${sp-loc.nix-path.spam}">
+			<isset property="isLinux"/>
+		</condition>
+		
+		<echo message="Spam executable (isLinux = ${isLinux}, isWindows = ${isWindows}): ${sp-loc.path.spam}"/>
+		
+		<exec
+			executable="${sp-loc.path.spam}" 
+			inputstring="&#10;"
+			output="${local.source-normalised}"
+			failonerror="false">
+			
+			<arg value="-E0"/>
+			<arg value="-wno-empty"/>
+			<arg value="-wno-min-tag"/>
+			<arg value="-mreserved"/>
+			<arg value="-f${local.spam-report}"/>
+			<arg value="-c"/>
+			<arg line="${module.schemas.input}"/>
+			<arg value="${local.source-with-doctype-xml}"/>
+		</exec>
+		
+		<echo message="...saved as ${local.source-normalised}"/>
+		
+		<!-- Insert DOCTYPE again because it's not done by spam -->
 		<sgml:insert-doctype		 
 			source="${local.source-normalised}"
 			doctype="${local.doctype}"
