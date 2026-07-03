@@ -2,7 +2,7 @@
 <catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
     
     <!-- XML DTDs -->
-    <nextCatalog catalog="../modules/common/xml/catalog.xml"/>
+    <nextCatalog catalog="../modules/common/schemas/xml/catalog.xml"/>
     
     <!-- XProc Batch -->
     <nextCatalog catalog="../lib/xproc-batch/catalogs/catalog.xml"/>

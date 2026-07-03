@@ -2,6 +2,10 @@
 
 This repository contains code and resources to convert SGML documents to well-formed XML, optionally valid against a specified XML DTD (XSDs and RNGs not yet supported).
 
+There's now also a first attempt at including similar XML to SGML functionality, in spite of the (currently misleading) repository name.
+
+Please note that this is a work in progress and the README may be missing things.
+
 
 ## Prerequisites
 
@@ -19,10 +23,13 @@ Set up the pipeline thusly:
 2. Create a local build properties file by saving `build_sgml2xml.properties.localRENAME.xml` in the current folder as `build_sgml2xml.properties.local.xml`.
 3. (OPTIONAL) If you want to produce something more than well-formed XML, set the `${wellformed-only}` property to 'false' in `build_sgml2xml.properties.local.xml`.
 4. (OPTIONAL) Add a module that defines your source SGML and target XML formats, as well as any transformations that need to take place, in `modules/`. See TBA for instructions.
-5. (OPTIONAL) Set the name of the module as the value of the `${current-module}` property in `build_sgml2xml.properties.local.xml`.
+5. Set the name of the module as the value of the `${current-module}` property in `build_sgml2xml.properties.local.xml` (SGML to XML) and `build_xml2sgml.properties.local.xml` (XML to SGML), respectively.
 
 
 ## Sources Setup
+
+
+### SGML to XML
 
 The SGML sources *must* be set up as follows:
 
@@ -66,7 +73,7 @@ There are multiple debug folders:
 * `reports` contains a number of log files to trace the performed operations
 
 
-### Adding New Sources
+#### Adding New Sources
 
 Add source filesets by editing `build_sgml2xml.properties.local.xml`, as follows:
 
@@ -74,11 +81,57 @@ Add source filesets by editing `build_sgml2xml.properties.local.xml`, as follows
 2. For each set of files, update the folder name (`${env.src}`) property of that set (`fileset` in the above example) - it is assumed that the folder is a subfolder to the base path, and it is further assumed that that folder contains a subfolder called `data` where the sources live.
 
 
-### Mapping Graphic Entities
+#### Mapping Graphic Entities
 
 The example SGML DTD declares a `graphic` element that links to graphics using either a graphic entity named in `@name` or via a direct reference in `@href`. The graphic entity is converted to a direct reference via the `@href` attribute when transforming everything to XML. This is an example DTD only, and it goes without saying that horrible things will happen if you create an SGML instance that has a `graphic` element using both mechanisms and then convert it to XML. It's an example, for goodness sake.
 
 The entity-to-href conversion currently happens in `modules/common/map-unparsed-entities.xsl`. This is very, very crude and I apologise for it. It will change.
+
+
+### XML to SGML
+
+Setting up the XML sources to be converted to SGML is identical to the SGML to XML conversion setup:
+
+```
+</path/to/base/dir>/
+    <fileset>
+        data/
+            (XML files)
+```
+
+`/path/to/base/dir` is a base path to subfolders, each of whch contains a separate folder with a set of XML files to be converted. Each of those folders (`fileset`, above) needs to contain a folder named `data`, in which the XML files live. Thus, the full path to the XML file(s) is `</path/to/base/dir/fileset>/data/**/*.sgm`.
+
+Note that source subdirectories are preserved in the output.
+
+The XML to SGML migration output differs slightly:
+
+```
+</path/to/base/dir>/
+    <fileset>
+        data/
+            (XML files)
+        tmp/
+            <dateTimeStamp>/
+                charmaps/
+                debug/
+                doctypes/
+                expand-empty/
+                out/
+                reports/
+                spam/
+```
+
+Valid SGML is saved in `out`. Subfolder structures inside `data` are preserved.
+
+There are multiple debug folders:
+
+* `charmaps` contains ISO-encoded XML converted from the input UTF-8
+* `debug` contains pipeline debug output, if XProc pipelines were used to tweak the initial XML
+* `doctypes` contains generated `DOCTYPE` declarations for the output file(s), inserted after normalisation
+* `expand-empty` contains tweaked XML, with empty elements expanded
+* `out` contains the final SGML output
+* `reports` contains a number of log files to trace the performed operations
+* `spam` contains the normalised XML and resulting SGML
 
 
 ## Modules
@@ -120,6 +173,7 @@ A module structure will look something like this:
 
 ```
 modules/<module>
+├── catalogs
 ├── pipelines
 ├── sch
 ├── schemas
@@ -134,6 +188,7 @@ modules/<module>
 
 The module (i.e. the folder in `modules`) should be named descriptively, so `ata`, `s1000d`, etc. As for the contents, there's bound to be some variation but the above would have the following:
 
+* `catalogs` - OASIS catalog XML to be used as an entry point for a module; it points out the module-specific catalogs and then the shared catalogs
 * `pipelines` - a manifest file listing the XSLT steps that transform the well-formed XML into valid files
 * `sch` - Schematron rules you may want to validate the output with
 * `schemas`
@@ -248,5 +303,12 @@ The module will likely fail initial conversion, as I don't have any SGML documen
 
 ## Running
 
-Set up the sources as described above. Then run `build.xml` without arguments.
+### SGML to XML
+
+Set up the sources as described above. Then run `build_sgml2xml.xml` without arguments.
+
+
+### XML to SGML
+
+Set up the sources as described above. Then run `build_xml2sgml.xml` without arguments.
 

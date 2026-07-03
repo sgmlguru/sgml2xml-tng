@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<antlib
+    xmlns:if="ant:if"
+    xmlns:unless="ant:unless"
+    xmlns:sgml="sgml">
+    
+    
+    <macrodef
+        name="expand-empty"
+        description="Prepare an XML file for conversion to SGML.">
+        
+        <attribute name="source"/>
+        <attribute name="result"/>
+        <attribute name="xslt-processor" default="${saxon.jar}"/>
+        <attribute name="xslt-processor-classname" default="net.sf.saxon.Transform"/>
+        <attribute name="uri-resolver" default="${morgana.resolver}"/>
+        <attribute name="catalogs" default="${modules}/${current-module}/catalogs/catalog.xml"/>
+        <attribute name="debug" default="${debug}"/>	
+        
+        <sequential>
+            
+            <echo message="Getting rid of XML constructs and expanding EMPTY tags in @{source}"/>
+            <echo message="Using stylesheet ${modules.common.xslt.xml2sgml.expand-empty} and catalog @{catalogs}"/>
+            
+            <java
+                classname="net.sf.saxon.Transform" 
+                fork="yes"
+                failonerror="true">
+                <classpath>
+                    <pathelement path="@{xslt-processor}"/>
+                    <pathelement path="@{uri-resolver}"/>
+                </classpath>
+                <arg line="-catalog:@{catalogs}"/>
+                <arg value="-s:@{source}"/>
+                <arg value="-xsl:${modules.common.xslt.xml2sgml.expand-empty}"/>
+                <arg value="-o:@{result}"/>
+            </java>
+            
+            <echo message="...saved as @{result}"/>
+            
+        </sequential>
+    
+    </macrodef>
+    
+    
+    <macrodef
+        name="remove-doctype"
+        description="">
+        
+        <attribute name="source"/>
+        <attribute name="result"/>
+        <attribute name="debug" default="${debug}"/>	       
+        
+        <sequential>
+            
+            <echo message="Removing DOCTYPE from @{source}"/>
+            
+            <copy file="@{source}" tofile="@{result}"/>
+            
+            <!-- Remove XML DOCTYPE -->
+            <replaceregexp match="^(.*)&lt;\!DOCTYPE[^&gt;]*&gt;(.*)$" replace="\1\2" flags="s" file="@{result}"/>
+                        
+        </sequential>
+        
+    </macrodef>
+    
+    
+    <macrodef
+        name="generate-doctype"
+        description="Generate full DOCTYPE declaration, used by spam target before normalisation">
+        
+        <attribute name="source"/>
+        <attribute name="result"/>
+        <attribute name="xslt-processor" default="${saxon.jar}"/>
+        <attribute name="xslt-processor-classname" default="net.sf.saxon.Transform"/>
+        <attribute name="uri-resolver" default="${morgana.resolver}"/>
+        <attribute name="catalogs" default="${modules}/${current-module}/catalogs/catalog.xml"/>
+        <attribute name="debug" default="${debug}"/>	               
+        
+        <sequential>
+            
+            <echo message="Generating DOCTYPE declaration for @{source}"/>
+            <echo message="Using stylesheet ${modules.common.xslt.xml2sgml.generate-doctype} and catalog @{catalogs}"/>
+            
+            <local name="local.source.filename"/>
+            <basename property="local.source.filename" file="@{source}"/>                             
+            
+            <java classname="@{xslt-processor-classname}" fork="yes">
+                <classpath>
+                    <pathelement path="@{xslt-processor}"/>
+                    <pathelement path="@{uri-resolver}"/>
+                </classpath>
+                <arg line="-catalog:@{catalogs}"/>
+                <arg value="-s:@{source}"/>
+                <arg value="-xsl:${modules.common.xslt.xml2sgml.generate-doctype}"/>
+                <arg value="-o:@{result}"/>
+            </java>              
+            
+            <echo message="...saved as @{result}"/>
+            
+        </sequential>
+        
+    </macrodef>
+    
+    
+    <macrodef
+        name="insert-doctype"
+        description="">
+        
+        <attribute name="source"/>
+        <attribute name="doctype"/>
+        <attribute name="result"/>
+        <attribute name="debug" default="${debug}"/>	       
+        
+        <sequential>
+       
+            <local name="local.source-as-string"/>                      
+            <loadfile property="local.source-as-string" srcfile="@{source}"/>
+                                   
+            <if>
+                <matches string="${local.source-as-string}" multiline="true">
+                    <regexp pattern="^&lt;\?xml([^&gt;]*)\?&gt;"/>
+                </matches>
+                <then>
+
+                    <echo message="Loading @{doctype}"/>  
+                    
+                    <local name="local.doctype"/>
+                    <loadfile property="local.doctype" srcfile="@{doctype}"/>
+
+                    <copy file="@{source}" tofile="@{result}"/>  
+                    
+                    <echo message="Replacing XML declaration with DOCTYPE in @{result}"/>
+                    
+                    <!-- Insert the DOCTYPE as it is required by spam -->
+                    <replaceregexp file="@{result}" flags="m">
+                        <regexp pattern="^&lt;\?xml([^&gt;]*)\?&gt;"/>
+                        <substitution expression="${local.doctype}"/>
+                    </replaceregexp>               
+                    
+                </then>
+                <else>
+                    
+                    <echo message="XML declaration not found in @{result}."/>                 
+                    
+                    <if>
+                        <matches string="${local.source-as-string}" multiline="false">
+                            <regexp pattern="^\W*(.)"/>
+                        </matches>
+                        <then>
+                            
+                            <echo message="Inserting DOCTYPE into @{result}"/>  
+                            
+                            <concat destfile="@{result}">
+                                <fileset file="@{doctype}"/>
+                                <fileset file="@{source}"/>
+                            </concat>
+                                                        
+                        </then>
+                        <else>
+                            
+                            <fail message="First character not found in @{result}"/>
+                            
+                        </else>
+                    </if>
+                    
+                     
+                </else>
+            </if>
+            
+                 
+        </sequential>
+        
+    </macrodef>
+    
+    
+    
+    <macrodef
+        name="iso-encode"
+        description="">
+        
+        <attribute name="source"/>
+        <attribute name="result"/>
+        <attribute name="xslt-processor" default="${saxon.jar}"/>
+        <attribute name="xslt-processor-classname" default="net.sf.saxon.Transform"/>
+        <attribute name="uri-resolver" default="${morgana.resolver}"/>
+        <attribute name="catalogs" default="${modules}/${current-module}/catalogs/catalog.xml"/>
+        <attribute name="debug" default="${debug}"/>	       
+        
+        <sequential>
+
+            <echo message="Converting @{source} to ISO encoding"/>
+            <local name="local.dtds"/>
+            <makeurl property="local.dtds" file="${modules}/${current-module}/schemas"/>
+            
+            <echo message="Using ${xslt.xml2sgml.iso-encode} and ${repos.dtds}"/>
+            <echo message="Using stylesheet ${modules.common.xslt.xml2sgml.iso-encode} and catalog @{catalogs}"/>
+                      
+            <java
+                classname="@{xslt-processor-classname}" 
+                fork="yes"
+                failonerror="true">
+                <classpath>
+                    <pathelement path="@{xslt-processor}"/>
+                    <pathelement path="@{uri-resolver}"/>
+                </classpath>
+                <arg line="-catalog:@{catalogs}"/>
+                <arg value="-s:@{source}"/>
+                <arg value="-xsl:${modules.common.xslt.xml2sgml.iso-encode}"/>
+                <arg value="-o:@{result}"/>
+                <arg value="repos.dtds=${local.dtds}"/>
+            </java>
+            
+            <echo message="...saved as @{result}"/>
+            
+        </sequential>
+        
+    </macrodef>
+    
+    
+    <macrodef
+        name="normalise"
+        description="">
+        
+        <attribute name="source"/>
+        <attribute name="result"/>
+        <attribute name="spam-report-dir"/>
+        <attribute name="sgml-processor" default="${sp-loc.path.spam}"/>		
+        <attribute name="catalogs" default="${module.schemas.input}"/>
+        <attribute name="fail-on-error" default="true"/>	          
+        <attribute name="debug" default="${debug}"/>	       
+        
+        
+        <sequential>
+            
+            <echo message="Normalising @{source} using @{catalogs}"/>
+            
+            <local name="local.source.filename"/>
+            <local name="local.source.basename-without-file-extension"/>
+            <local name="local.spam-report"/>
+            <local name="local.output-dir"/>
+            <local name="local.result-property"/>
+            
+            <basename property="local.source.filename" file="@{source}"/>
+            <basename property="local.source.basename-without-file-extension" file="@{source}" suffix="xml"/>
+            <property name="local.spam-report" location="@{spam-report-dir}/${local.source.basename-without-file-extension}.txt"/>
+            <dirname property="local.output-dir" file="@{result}"/>
+            
+            <mkdir dir="@{spam-report-dir}"/>
+            <mkdir dir="${local.output-dir}"/>
+            
+            <echo message="Spam report to @{spam-report-dir}/${local.source.basename-without-file-extension}.txt"/>
+            
+            <!-- Set path to spam -->
+            <condition property="sp-loc.path.spam" value="${sp-loc.win-path.spam}">
+                <isset property="isWindows"/>
+            </condition>
+            <condition property="sp-loc.path.spam" value="${sp-loc.nix-path.spam}">
+                <isset property="isLinux"/>
+            </condition>
+            
+            <echo message="Spam executable (isLinux = ${isLinux, isWindows = ${isWindows}}: ${sp-loc.path.spam}"/>
+            
+            <exec
+                executable="@{sgml-processor}" 
+                inputstring="&#10;"
+                output="@{result}"
+                failonerror="@{fail-on-error}">
+                
+                <arg value="-E0"/>
+                <arg value="-wno-empty"/>
+                <arg value="-wno-min-tag"/>
+                <arg value="-mreserved"/>
+                <arg value="-f${local.spam-report}"/>
+                <arg value="-c"/>
+                <arg line="@{catalogs}"/>
+                <arg value="@{source}"/>
+                
+            </exec>
+            
+            <echo message="...saved as @{result}"/>
+            
+        </sequential>
+        
+    </macrodef>
+    
+</antlib>

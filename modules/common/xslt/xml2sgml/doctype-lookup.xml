@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctypes>
+    <!-- EIPC -->
+    <doctype root="eipc">
+        <xslt-manifest>ataxml-xslt-manifest.xml</xslt-manifest>
+        <xspec-manifest>ataxml-xspec-manifest.xml</xspec-manifest>
+        <publicid>-//ATA-TEXT//DTD EIPC-VER12-LEVEL2//EN</publicid>
+        <systemid>eipc.dtd</systemid>
+    </doctype>
+    
+    <!-- EM -->
+    <doctype root="em">
+        <xslt-manifest>em-ataxml-xslt-manifest.xml</xslt-manifest>
+        <xspec-manifest>ataxml-xspec-manifest.xml</xspec-manifest>
+        <publicid>-//ATA-TEXT//DTD EM-VER11-LEVEL2//EN</publicid>
+        <systemid>em.dtd</systemid>
+    </doctype>
+    
+    <!-- Default -->
+    <doctype>
+        <xslt-manifest>ataxml-xslt-manifest.xml</xslt-manifest>
+        <xspec-manifest>ataxml-xspec-manifest.xml</xspec-manifest>
+        <publicid></publicid>
+        <systemid></systemid>
+    </doctype>
+</doctypes>

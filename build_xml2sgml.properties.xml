@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<properties>
+    
+    <!-- Repos -->
+    <repos>
+        <dir location="/home/ari/Documents/repos"/>
+        <xml2sgml location="${repos.dir}/sgml2xml-tng"/>
+        <lib location="${repos.xml2sgml}/lib"/>
+    </repos>
+    
+    <!-- Set up current run and module -->
+    <debug value="true"/>
+    <verbose value="true"/>
+    <current-module value="doc"/>
+    
+    
+    <modules location="${repos.xml2sgml}/modules">
+        <common location="${modules}/common">
+            <!-- Common XSLT -->
+            <xslt location="${modules.common}/xslt">
+                <xml2sgml>
+                    <expand-empty location="${modules.common.xslt}/xml2sgml/xml2sgm.xsl"/>
+                    <iso-encode location="${modules.common.xslt}/xml2sgml/utf8-to-iso.xsl">
+                        <!--<sgml-entities-dir location="${repos.ata-dtds}/sgml"/>-->
+                    </iso-encode>
+                    <generate-doctype location="${modules.common.xslt}/xml2sgml/generate-doctype.xsl"/>                
+                </xml2sgml>
+            </xslt>
+        </common>
+        
+    </modules>
+    
+    
+    <!-- Morgana -->
+    <morgana>
+        <home location="${repos.lib}/MorganaXProc-IIIse-1.8.3"/>
+        <lib location="${morgana.home}/MorganaXProc-IIIse_lib"/>
+        <jar location="${morgana.home}/MorganaXProc-IIIse.jar"/>
+        <config location="${morgana.home}/config.xml"/>
+        <resolver location="${morgana.lib}/xmlresolver-6.0.21.jar"/>
+    </morgana>
+    
+    <!-- Saxon -->
+    <saxon>
+        <jar location="${repos.lib}/saxon/saxon-he-12.9.jar"/>
+    </saxon>
+    
+    
+    <!-- SP package location abstraction -->
+    <sp-loc>
+        <win-path>
+            <bin location="${repos.xml2sgml}/lib/sp1_3_4/bin"/>
+            <spam value="${sp-loc.win-path.bin}/spam.exe"/>
+            <sx value="${sp-loc.win-path.bin}/sx.exe"/>
+            <sgmlnorm value="${sp-loc.win-path.bin}/sgmlnorm.exe"/>
+        </win-path>
+        <nix-path>
+            <spam value="/usr/bin/ospam"/>
+            <sx value="/usr/bin/osx"/>
+            <sgmlnorm value="/usr/bin/osgmlnorm"/>
+        </nix-path>
+    </sp-loc>
+    
+    
+    <!-- XML Catalogs -->
+    <catalogs>
+        <catalog location="${repos.xml2sgml}/catalogs/catalog.xml"/>
+    </catalogs>
+    
+    
+    <!-- Project environment; ${env.src} is a folder path
+         inside your main project as given by ${base.dir} -->
+    <env>
+        <src value="single"/>
+        <date value="${current.time}"/>
+    </env>
+    
+    
+    <!-- Directory paths -->
+    <base>
+        <dir location="/home/ari/Documents/projects/xml2sgm"/>
+        <source location="${base.dir}/${env.src}/data"/>
+        <tmp location="${base.dir}/${env.src}/tmp/${env.date}"/>
+        <charmaps location="${base.tmp}/charmaps"/>
+        <spam location="${base.tmp}/spam"/>
+        <doctypes location="${base.tmp}/doctypes"/>
+        <out location="${base.tmp}/out"/>
+        <expand-empty location="${base.tmp}/expand-empty"/>
+        <report location="${base.tmp}/reports"/>
+        <debug location="${base.tmp}/debug"/>
+    </base>	
+    
+</properties>

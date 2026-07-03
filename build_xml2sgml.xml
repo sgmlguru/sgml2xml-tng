@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+	xmlns:sgml="sgml"	
+	basedir="."
+	name="xml2sgml" 
+	default="all">
+	
+	<!-- load ant-contrib -->
+	<taskdef resource="net/sf/antcontrib/antlib.xml"/>
+	
+	<tstamp>
+		<format property="current.time" pattern="yyyyMMddHHmmss"/>
+	</tstamp>
+	
+	
+	<property environment="env"/>
+	
+	<condition property="isWindows">
+		<os family="windows" />
+	</condition>
+	
+	<condition property="isLinux">
+		<os family="unix" />
+	</condition>
+	
+	
+	<!-- Local properties -->
+	<xmlproperty
+		file="./build_xml2sgml.properties.local.xml"
+		keeproot="false"
+		collapseattributes="true"
+		semanticattributes="true"/>
+	
+	<!-- Default properties -->
+	<xmlproperty
+		file="./build_xml2sgml.properties.xml"
+		keeproot="false"
+		collapseattributes="true"
+		semanticattributes="true"/>
+	
+	
+	<!-- Use module-specific properties -->
+	<!-- (We'll only need this if we validate the resulting SGML) -->
+	<xmlproperty
+		file="${modules}/${current-module}/${current-module}.properties.xml"
+		keeproot="false"
+		collapseattributes="true"
+		semanticattributes="true"/>
+	
+	<echo message="Current module spec: ${modules}/${current-module}/${current-module}.properties.xml"/>
+	
+	<taskdef file="${repos.xml2sgml}/ant/antlib.xml" uri="sgml"/>
+	
+	
+	<!-- Create dirs -->
+	<target name="mkdirs" description="Create target directories">
+		<mkdir dir="${base.tmp}"/>
+		<mkdir dir="${base.charmaps}"/>
+		<mkdir dir="${base.spam}"/>
+		<mkdir dir="${base.doctypes}"/>
+		<mkdir dir="${base.expand-empty}"/>
+		<mkdir dir="${base.out}"/>
+		<mkdir dir="${base.report}"/>
+		<mkdir dir="${base.debug}"/>
+	</target>
+
+
+	<target name="copy-graphics" description="Copy any input graphics to the output">
+		<mkdir dir="${base.out}"/>
+		<copy todir="${base.out}">
+			<fileset dir="${base.source}" excludes="*.xml"/>
+		</copy>
+	</target>
+	
+	
+	<target name="loop-empty" description="Loop the inputs, fix the XML for each">				
+		<foreach target="expand-empty" param="file" inheritall="true">
+			<path>
+				<fileset dir="${base.source}">
+					<include name="*.xml"/>
+					<exclude name="build*"/>
+				</fileset>
+			</path>
+		</foreach>
+	</target>
+	
+	
+	<target name="expand-empty" description="Expand EMPTY elements, tweak XML">		
+		<local name="local.source-filename"/>
+		<local name="local.output-filepath"/>
+			
+		<basename property="local.source-filename" file="${file}"/>		
+		<property name="local.output-filepath" value="${base.expand-empty}/${local.source-filename}"/>
+		
+		<sgml:expand-empty		 
+			source="${file}" 
+			result="${local.output-filepath}"/>				
+	</target>
+	
+	
+	<target name="loop-charmaps" description="Loop the inputs, ISO-encode each">
+		<foreach target="charmap-xslt" param="file" inheritall="true">
+			<path>
+				<fileset dir="${base.expand-empty}">
+					<include name="*.xml"/>
+				</fileset>
+			</path>
+		</foreach>
+	</target>
+	
+	
+	<target name="charmap-xslt" description="Generate DOCTYPE, ISO-encode the input XML">
+		<local name="local.source-filename"/>
+		<local name="local.output-filepath"/>
+		
+		<basename property="local.source-filename" file="${file}"/>		
+		<property name="local.output-filepath" value="${base.charmaps}/${local.source-filename}"/>
+		
+		<echo message="Copy ${file} to ${local.output-filepath}"/>
+		
+		<sgml:remove-doctype	 
+			source="${file}"
+			result="${local.output-filepath}"/>			
+		
+		<local name="local.output-doctype"/>
+		<property name="local.output-doctype" value="${base.doctypes}/${local.source-filename}"/>		
+		
+		<sgml:generate-doctype
+			source="${local.output-filepath}"
+			result="${local.output-doctype}"/>
+		
+		<sgml:iso-encode 
+			source="${local.output-filepath}"
+			result="${local.output-filepath}"/>
+	</target>
+	
+	
+	<target name="loop-spam" description="Loop the ISO-encoded files, run spam on each">
+		<foreach target="spam" param="file" inheritall="true">
+			<path>
+				<fileset dir="${base.charmaps}">
+					<include name="*.xml"/>
+				</fileset>
+			</path>
+		</foreach>
+	</target>
+	
+	
+	<target name="spam" description="Normalise the SGML using spam">
+		<local name="local.source-filename"/>
+		<local name="local.output-filepath"/>
+		
+		<basename property="local.source-filename-without-extension" file="${file}" suffix="xml"/>			
+		<property
+			name="local.doctype"
+			location="${base.doctypes}/${local.source-filename-without-extension}.xml"/>
+		<property
+			name="local.source-with-doctype-xml"
+			location="${base.spam}/${local.source-filename-without-extension}.xml"/>
+		<property
+			name="local.source-normalised"
+			location="${base.spam}/${local.source-filename-without-extension}.sgm"/>
+		
+		
+		<sgml:insert-doctype
+			source="${file}"
+			doctype="${local.doctype}"
+			result="${local.source-with-doctype-xml}"/>
+		
+		<sgml:normalise
+			source="${local.source-with-doctype-xml}" 
+			spam-report-dir="${base.report}"
+			fail-on-error="false"
+			result="${local.source-normalised}"/>
+		
+		<sgml:insert-doctype		 
+			source="${local.source-normalised}"
+			doctype="${local.doctype}"
+			result="${base.out}/${local.source-filename-without-extension}.sgm"/>
+	</target>
+	
+	
+	<target name="all" depends="mkdirs, copy-graphics, loop-empty, loop-charmaps, loop-spam"/>
+	
+</project>
