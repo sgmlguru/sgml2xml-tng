@@ -14,7 +14,7 @@
     <xsl:output method="text"/>
     
     <!-- DOCTYPE lookup for PUBLIC and SYSTEM IDs -->
-    <xsl:variable
+    <xsl:param
         name="doctype-lookup-uri"
         select="'./doctype-lookup.xml'"/>
     <xsl:variable

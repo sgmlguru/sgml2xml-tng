@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctypes>
+    <!-- doc example -->
+    <doctype root="doc">
+        <xslt-manifest>doc-xslt-manifest.xml</xslt-manifest>
+        <xspec-manifest>doc-xspec-manifest.xml</xspec-manifest>
+        <publicid>-//CWORD//DTD DOC TEST//EN</publicid>
+        <systemid>doc.dtd</systemid>
+    </doctype>
+    
+</doctypes>
