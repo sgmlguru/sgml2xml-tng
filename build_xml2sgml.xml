@@ -36,7 +36,7 @@
 		collapseattributes="true"
 		semanticattributes="true"/>
 	
-	<!-- Use module-specific properties -->
+	<!-- Module-specific properties -->
 	<xmlproperty
 		file="${modules}/${current-module}/${current-module}.properties.xml"
 		keeproot="false"
