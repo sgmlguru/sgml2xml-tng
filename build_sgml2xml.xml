@@ -228,59 +228,32 @@
         
         <echo message="Normalising (spam) ${file} (base.pre ${base.pre})"/>
         
-        <local name="local.diff"/>
-        <dirname file="${file}" property="local.diff"/>
-        <echo message="local diff is ${local.diff}"/>
-        
         <local name="local.filename"/>
         <basename file="${file}" property="local.filename"/>
-        <echo message="local filename is ${local.filename}"/>
         
+        <local name="local.diff"/>
+        <dirname file="${file}" property="local.diff"/>
+        
+        <!-- Convert the full directory path to a relative one by mapping out the base path -->
         <local name="local.target"/>
-        <loadresource property="local.target">
-            <propertyresource name="local.diff"/>
-            <filterchain>
-                <tokenfilter>
-                    <filetokenizer/>
-                    <replacestring from="${base.pre}" to=""/>
-                    <replacestring from="%20" to="_"/>
-                </tokenfilter>
-            </filterchain>
-        </loadresource>
+        <pathconvert property="local.target">
+            <path path="${local.diff}"/>
+            <map from="${base.pre}" to=""/>
+        </pathconvert>
         
-        <local name="spam.set"/>
-        
-        <condition property="spam.set" value="true" else="false">
-            <and>
-                <isset property="local.target"/>
-                <not>
-                    <equals arg1="${base.pre}" arg2="${local.target}"/>
-                </not>
-            </and>
-        </condition>
-        
+        <!-- Combine the target base with the relative subfolders -->
         <local name="local.spam"/>
+        <property name="local.spam" value="${base.spam}/${local.target}"/>
         
-        <if>
-            <equals arg1="${spam.set}" arg2="true"/>
-            <then>
-                <echo>Local target is set</echo>
-                <mkdir dir="${base.spam}/${local.target}"/>
-                <property name="local.spam" value="${base.spam}/${local.target}"/>
-            </then>
-            <else>
-                <echo>Local target is not set</echo>
-                <property name="local.spam" value="${base.spam}"/>
-            </else>
-        </if>
+        <echo message="Relative target path is: ${local.target}"/>
+        <echo message="Output directory path (spam) is: ${local.spam}"/>
         
-        <echo message="Local target is ${local.target}"/>
-        
-        <echo message="Output path (spam) is ${local.spam}"/>
+        <!-- Ensure the nested folder structure exists in the output directory -->
+        <mkdir dir="${local.spam}"/>
         
         <exec
             executable="${sp-loc.path.spam}"
-            output="${local.spam}\${local.filename}"
+            output="${local.spam}/${local.filename}"
             dir="."
             inputstring="&#10;">
             <arg value="-p"/>
