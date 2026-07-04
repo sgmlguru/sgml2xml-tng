@@ -12,7 +12,6 @@
 		<format property="current.time" pattern="yyyyMMddHHmmss"/>
 	</tstamp>
 	
-	
 	<property environment="env"/>
 	
 	<condition property="isWindows">
@@ -22,7 +21,6 @@
 	<condition property="isLinux">
 		<os family="unix" />
 	</condition>
-	
 	
 	<!-- Local properties -->
 	<xmlproperty
@@ -38,9 +36,7 @@
 		collapseattributes="true"
 		semanticattributes="true"/>
 	
-	
 	<!-- Use module-specific properties -->
-	<!-- (We'll only need this if we validate the resulting SGML) -->
 	<xmlproperty
 		file="${modules}/${current-module}/${current-module}.properties.xml"
 		keeproot="false"
@@ -50,7 +46,6 @@
 	<echo message="Current module spec: ${modules}/${current-module}/${current-module}.properties.xml"/>
 	
 	<taskdef file="${repos.xml2sgml}/ant/antlib.xml" uri="sgml"/>
-	
 	
 	<!-- Create dirs -->
 	<target name="mkdirs" description="Create target directories">
@@ -64,19 +59,18 @@
 		<mkdir dir="${base.debug}"/>
 	</target>
 
-
 	<target name="copy-graphics" description="Copy any input graphics to the output">
 		<mkdir dir="${base.out}"/>
+		<!-- Preserves subdirectory structures for non-XML graphic assets -->
 		<copy todir="${base.out}">
-			<fileset dir="${base.source}" excludes="*.xml"/>
+			<fileset dir="${base.source}" excludes="**/*.xml"/>
 		</copy>
 	</target>
 	
-	
+	<!-- Expand empty -->
 	<target name="loop-empty" description="Loop the inputs, fix the XML for each">				
 		<foreach target="expand-empty" param="file" inheritall="true">
 			<path>
-				<!-- **/*.xml catches subfolders -->
 				<fileset dir="${base.source}">
 					<include name="**/*.xml"/>
 					<exclude name="build*"/>
@@ -85,25 +79,21 @@
 		</foreach>
 	</target>
 	
-	
 	<target name="expand-empty" description="Expand EMPTY elements, tweak XML">		
 		<local name="local.relative-path"/>
 		<local name="local.output-filepath"/>
 		
-		<!-- Extract the relative path of the current file compared to the base source -->
 		<pathconvert property="local.relative-path" setonempty="false">
 			<path path="${file}"/>
 			<map from="${base.source}/" to=""/>
-			<map from="${base.source}\" to=""/> <!-- Handles Windows backslashes -->
+			<map from="${base.source}\" to=""/>
 		</pathconvert>
 		
-		<!-- Combine the base output dir with the relative path -->
 		<property name="local.output-filepath" value="${base.expand-empty}/${local.relative-path}"/>
 		
-		<!-- Ensure the target subfolder exists before Saxon runs -->
 		<dirname property="local.output-dir" file="${local.output-filepath}"/>
 		<mkdir dir="${local.output-dir}"/>
-		<local name="local.output-dir"/> <!-- Clear local property scope -->
+		<local name="local.output-dir"/>
 		
 		<echo message="Getting rid of XML constructs and expanding EMPTY tags in ${file}"/>
 		
@@ -124,27 +114,41 @@
 		<echo message="...saved as ${local.output-filepath}"/>
 	</target>
 	
-	
+	<!-- ISO-encode -->
 	<target name="loop-charmaps" description="Loop the inputs, ISO-encode each">
 		<foreach target="charmap-xslt" param="file" inheritall="true">
 			<path>
 				<fileset dir="${base.expand-empty}">
-					<include name="*.xml"/>
+					<include name="**/*.xml"/>
 				</fileset>
 			</path>
 		</foreach>
 	</target>
 	
-	
 	<target name="charmap-xslt" description="Generate DOCTYPE, ISO-encode the input XML">
-		<local name="local.source-filename"/>
+		<local name="local.relative-path"/>
 		<local name="local.output-filepath"/>
-		
-		<basename property="local.source-filename" file="${file}"/>		
-		<property name="local.output-filepath" value="${base.charmaps}/${local.source-filename}"/>
-		
 		<local name="local.output-doctype"/>
-		<property name="local.output-doctype" value="${base.doctypes}/${local.source-filename}"/>
+		<local name="local.dtds"/>
+		
+		<!-- Map relative path relative to the prior base directory -->
+		<pathconvert property="local.relative-path" setonempty="false">
+			<path path="${file}"/>
+			<map from="${base.expand-empty}/" to=""/>
+			<map from="${base.expand-empty}\" to=""/>
+		</pathconvert>
+		
+		<property name="local.output-filepath" value="${base.charmaps}/${local.relative-path}"/>
+		<property name="local.output-doctype" value="${base.doctypes}/${local.relative-path}"/>
+		
+		<!-- Ensure output directories exist for both staging paths -->
+		<dirname property="local.output-dir" file="${local.output-filepath}"/>
+		<mkdir dir="${local.output-dir}"/>
+		<local name="local.output-dir"/>
+
+		<dirname property="local.doctype-dir" file="${local.output-doctype}"/>
+		<mkdir dir="${local.doctype-dir}"/>
+		<local name="local.doctype-dir"/>
 		
 		<!-- Generate full DOCTYPE -->
 		<java classname="net.sf.saxon.Transform" fork="yes">
@@ -160,10 +164,8 @@
 		</java>              
 		
 		<echo message="...saved as ${local.output-doctype}"/>
-		
 		<echo message="Converting ${file} to ISO encoding"/>
 		
-		<local name="local.dtds"/>
 		<makeurl property="local.dtds" file="${modules}/${current-module}/schemas"/>
 		
 		<java
@@ -184,67 +186,74 @@
 		<echo message="...saved as ${local.output-filepath}"/>
 	</target>
 	
-	
+	<!-- Normalise using spam -->
 	<target name="loop-spam" description="Loop the ISO-encoded files, run spam on each">
 		<foreach target="spam" param="file" inheritall="true">
 			<path>
 				<fileset dir="${base.charmaps}">
-					<include name="*.xml"/>
+					<include name="**/*.xml"/>
 				</fileset>
 			</path>
 		</foreach>
 	</target>
 	
-	
 	<target name="spam" description="Normalise the SGML using spam">
-		<local name="local.source-filename"/>
-		<local name="local.output-filepath"/>
+		<local name="local.relative-path"/>
+		<local name="local.relative-path-without-extension"/>
 		
-		<basename property="local.source-filename-without-extension" file="${file}" suffix="xml"/>			
-		<property
-			name="local.doctype"
-			location="${base.doctypes}/${local.source-filename-without-extension}.xml"/>
-		<property
-			name="local.source-with-doctype-xml"
-			location="${base.spam}/${local.source-filename-without-extension}.xml"/>
-		<property
-			name="local.source-normalised"
-			location="${base.spam}/${local.source-filename-without-extension}.sgm"/>
+		<local name="local.doctype"/>
+		<local name="local.source-with-doctype-xml"/>
+		<local name="local.source-normalised"/>
+		<local name="local.final-output-sgml"/>
 		
+		<local name="local.spam-report"/>
+		<local name="local.output-dir"/>
+		<local name="sp-loc.path.spam"/>
+		
+		<!-- Extract the subfolder + filename syntax -->
+		<pathconvert property="local.relative-path" setonempty="false">
+			<path path="${file}"/>
+			<map from="${base.charmaps}/" to=""/>
+			<map from="${base.charmaps}\" to=""/>
+		</pathconvert>
+		
+		<!-- Strip the .xml extension manually to retain subfolders safely -->
+		<pathconvert property="local.relative-path-without-extension" setonempty="false">
+			<path path="${file}"/>
+			<map from="${base.charmaps}/" to=""/>
+			<map from="${base.charmaps}\" to=""/>
+			<mapper type="glob" from="*.xml" to="*"/>
+		</pathconvert>
+		
+		<!-- Map dynamic locations preserving subfolder branches -->
+		<property name="local.doctype" location="${base.doctypes}/${local.relative-path}"/>
+		<property name="local.source-with-doctype-xml" location="${base.spam}/${local.relative-path}"/>
+		<property name="local.source-normalised" location="${base.spam}/${local.relative-path-without-extension}.sgm"/>
+		<property name="local.final-output-sgml" location="${base.out}/${local.relative-path-without-extension}.sgm"/>
+		
+		<!-- Set up intermediate directory buffers -->
+		<dirname property="local.output-dir" file="${local.source-normalised}"/>
+		<mkdir dir="${local.output-dir}"/>
+		<local name="local.output-dir"/>
+		
+		<!-- Fixed: dynamically generating subfolders down inside the report output directory -->
+		<property name="local.spam-report" location="${base.report}/${local.relative-path-without-extension}.txt"/>
+		<dirname property="local.report-dir" file="${local.spam-report}"/>
+		<mkdir dir="${local.report-dir}"/>
+		<local name="local.report-dir"/>
+		
+		<!-- Make sure final base.out subfolder exists before writing SGML -->
+		<dirname property="local.final-out-dir" file="${local.final-output-sgml}"/>
+		<mkdir dir="${local.final-out-dir}"/>
+		<local name="local.final-out-dir"/>
 		
 		<sgml:insert-doctype
 			source="${file}"
 			doctype="${local.doctype}"
 			result="${local.source-with-doctype-xml}"/>
 		
-		<!-- Normalise follows... -->
-		
-		<echo message="Normalising @{source} using ${module.schemas.input}"/>
-		
-		<local name="local.source.filename"/>
-		<local name="local.source.basename-without-file-extension"/>
-		<local name="local.spam-report"/>
-		<local name="local.output-dir"/>
-		<local name="local.result-property"/>
-		
-		<basename
-			property="local.source.filename"
-			file="${local.source-with-doctype-xml}"/>
-		<basename
-			property="local.source.basename-without-file-extension"
-			file="${local.source-with-doctype-xml}"
-			suffix="xml"/>
-		<property
-			name="local.spam-report"
-			location="@{spam-report-dir}/${local.source.basename-without-file-extension}.txt"/>
-		<dirname
-			property="local.output-dir"
-			file="${local.source-normalised}"/>
-		
-		<mkdir dir="${local.spam-report}"/>
-		<mkdir dir="${local.output-dir}"/>
-		
-		<echo message="Spam report to @{spam-report-dir}/${local.source.basename-without-file-extension}.txt"/>
+		<echo message="Normalising ${file} using ${module.schemas.input}"/>
+		<echo message="Spam report to ${local.spam-report}"/>
 		
 		<!-- Set path to spam -->
 		<condition property="sp-loc.path.spam" value="${sp-loc.win-path.spam}">
@@ -261,7 +270,6 @@
 			inputstring="&#10;"
 			output="${local.source-normalised}"
 			failonerror="false">
-			
 			<arg value="-E0"/>
 			<arg value="-wno-empty"/>
 			<arg value="-wno-min-tag"/>
@@ -274,13 +282,14 @@
 		
 		<echo message="...saved as ${local.source-normalised}"/>
 		
-		<!-- Insert DOCTYPE again because it's not done by spam -->
-		<sgml:insert-doctype		 
+		<!-- Inserts DOCTYPE declaration and drops it in base.out, mirroring the nested path -->
+		<sgml:insert-doctype         
 			source="${local.source-normalised}"
 			doctype="${local.doctype}"
-			result="${base.out}/${local.source-filename-without-extension}.sgm"/>
+			result="${local.final-output-sgml}"/>
+			
+		<echo message="...final SGML saved as ${local.final-output-sgml}"/>
 	</target>
-	
 	
 	<target name="all" depends="mkdirs, copy-graphics, loop-empty, loop-charmaps, loop-spam"/>
 	
