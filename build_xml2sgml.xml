@@ -76,8 +76,9 @@
 	<target name="loop-empty" description="Loop the inputs, fix the XML for each">				
 		<foreach target="expand-empty" param="file" inheritall="true">
 			<path>
+				<!-- **/*.xml catches subfolders -->
 				<fileset dir="${base.source}">
-					<include name="*.xml"/>
+					<include name="**/*.xml"/>
 					<exclude name="build*"/>
 				</fileset>
 			</path>
@@ -86,11 +87,23 @@
 	
 	
 	<target name="expand-empty" description="Expand EMPTY elements, tweak XML">		
-		<local name="local.source-filename"/>
+		<local name="local.relative-path"/>
 		<local name="local.output-filepath"/>
-			
-		<basename property="local.source-filename" file="${file}"/>		
-		<property name="local.output-filepath" value="${base.expand-empty}/${local.source-filename}"/>
+		
+		<!-- Extract the relative path of the current file compared to the base source -->
+		<pathconvert property="local.relative-path" setonempty="false">
+			<path path="${file}"/>
+			<map from="${base.source}/" to=""/>
+			<map from="${base.source}\" to=""/> <!-- Handles Windows backslashes -->
+		</pathconvert>
+		
+		<!-- Combine the base output dir with the relative path -->
+		<property name="local.output-filepath" value="${base.expand-empty}/${local.relative-path}"/>
+		
+		<!-- Ensure the target subfolder exists before Saxon runs -->
+		<dirname property="local.output-dir" file="${local.output-filepath}"/>
+		<mkdir dir="${local.output-dir}"/>
+		<local name="local.output-dir"/> <!-- Clear local property scope -->
 		
 		<echo message="Getting rid of XML constructs and expanding EMPTY tags in ${file}"/>
 		
