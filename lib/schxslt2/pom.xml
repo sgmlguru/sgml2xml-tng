@@ -1,0 +1,220 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>name.dmaus.schxslt</groupId>
+  <artifactId>schxslt2</artifactId>
+  <version>1.8</version>
+
+  <name>SchXslt2</name>
+  <url>https://codeberg.org/schxslt/schxslt2</url>
+  <description>Schematron to XSLT 3.0 transpiler</description>
+
+  <licenses>
+    <license>
+      <name>MIT License</name>
+      <url>https://opensource.org/licenses/MIT</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+  <developers>
+    <developer>
+      <id>dmaus</id>
+      <name>David Maus</name>
+      <email>dmaus@dmaus.name</email>
+    </developer>
+  </developers>
+
+  <scm>
+    <url>https://codeberg.org/schxslt/schxslt2</url>
+    <connection>scm:git:https://codeberg.org/schxslt/schxslt2</connection>
+  </scm>
+
+  <issueManagement>
+    <url>https://scm:git:https://codeberg.org/schxslt/schxslt2/issues</url>
+    <system>SourceHut Issue Tracker</system>
+  </issueManagement>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <build>
+    <plugins>
+
+      <plugin>
+        <groupId>name.dmaus.schxslt.testsuite.harness</groupId>
+        <artifactId>harness-maven-plugin</artifactId>
+        <version>1.1</version>
+        <dependencies>
+          <!-- https://mvnrepository.com/artifact/net.sf.saxon/Saxon-HE -->
+          <dependency>
+            <groupId>net.sf.saxon</groupId>
+            <artifactId>Saxon-HE</artifactId>
+            <version>12.9</version>
+          </dependency>
+          <dependency>
+            <groupId>org.xmlresolver</groupId>
+            <artifactId>xmlresolver</artifactId>
+            <version>6.0.19</version>
+          </dependency>
+        </dependencies>
+        <configuration>
+          <executions>
+            <execution>
+              <label>ISO Schematron Conformance</label>
+              <factoryClassName>net.sf.saxon.TransformerFactoryImpl</factoryClassName>
+              <queryBinding>xslt3</queryBinding>
+              <stylesheets>
+                <param>src/main/resources/content/transpile.xsl</param>
+              </stylesheets>
+              <skip>
+                <param>rule-abstract-scope-error</param>
+                <param>extends-href-fragment-xml-id-preserve-ns</param>
+                <param>include-href-fragment-xml-id-preserve-ns</param>
+                <param>let-scope-pattern</param>
+                <param>schema-phase-when</param>
+                <param>pattern-abstract-param-undeclared</param>
+                <param>group-abstract-param-undeclared</param>
+              </skip>
+              <locations>
+                <filesystemLocation>
+                  <location>../schematron-conformance/src/main/resources/testsuites/2020.xml</location>
+                </filesystemLocation>
+                <filesystemLocation>
+                  <location>../schematron-conformance/src/main/resources/testsuites/2025.xml</location>
+                </filesystemLocation>
+              </locations>
+            </execution>
+
+            <execution>
+              <label>Bugs and Features</label>
+              <factoryClassName>net.sf.saxon.TransformerFactoryImpl</factoryClassName>
+              <queryBinding>xslt3</queryBinding>
+              <stylesheets>
+                <param>src/main/resources/content/transpile.xsl</param>
+              </stylesheets>
+              <locations>
+                <filesystemLocation>
+                  <location>src/test/bugs-and-features.xml</location>
+                </filesystemLocation>
+              </locations>
+            </execution>
+          </executions>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>test</phase>
+            <goals>
+              <goal>run-testsuites</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>3.3.0</version>
+        <executions>
+          <execution>
+            <id>prepare-zip</id>
+            <phase>validate</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.build.directory}/xslt-only</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>src/main/resources/content</directory>
+                  <filtering>true</filtering>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>3.4.2</version>
+        <configuration>
+          <appendAssemblyId>false</appendAssemblyId>
+        </configuration>
+        <executions>
+          <!-- Build a ZIP file with only the XSLT stylesheets -->
+          <execution>
+            <id>xslt-only</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <configuration>
+              <descriptors>
+                <descriptor>src/assembly/xslt-only.xml</descriptor>
+              </descriptors>
+              <finalName>${project.artifactId}-${project.version}</finalName>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.sonatype.central</groupId>
+        <artifactId>central-publishing-maven-plugin</artifactId>
+        <version>0.6.0</version>
+        <extensions>true</extensions>
+        <configuration>
+          <publishingServerId>central</publishingServerId>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <version>3.3.1</version>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <goals>
+              <goal>jar-no-fork</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>3.10.1</version>
+        <executions>
+          <execution>
+            <id>attach-javadocs</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-gpg-plugin</artifactId>
+        <version>3.2.7</version>
+        <executions>
+          <execution>
+            <id>sign-artifacts</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>sign</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+      </resource>
+    </resources>
+
+  </build>
+
+</project>

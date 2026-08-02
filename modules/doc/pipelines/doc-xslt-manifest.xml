@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="../../../../lib/xproc-batch/xproc-tools/schemas/manifest.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<manifest xmlns="http://www.corbas.co.uk/ns/transforms/manifest" xml:base=".">
+    
+    <group description="Preparation" xml:base="../xslt/">
+        <item href="idtransform.xsl" description="Just an ID transform so we can test"/>
+    </group>
+    
+</manifest>

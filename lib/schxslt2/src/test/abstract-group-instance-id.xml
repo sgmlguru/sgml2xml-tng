@@ -1,0 +1,23 @@
+<testcase expect="valid" xmlns="https://doi.org/10.5281/zenodo.5679629#">
+  <label>It is an error if the @id of an abstract group is copied to the instance</label>
+  <schemas>
+    <sch:schema xmlns:sch="http://purl.oclc.org/dsdl/schematron" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" queryBinding="xslt3">
+      <sch:group abstract="true" id="p">
+        <sch:rule context="root">
+          <sch:assert test="true()"/>
+        </sch:rule>
+      </sch:group>
+      <sch:group is-a="p"/>
+    </sch:schema>
+  </schemas>
+  <documents>
+    <document filename="document.xml">
+      <root xmlns="">
+        <child/>
+      </root>
+    </document>
+  </documents>
+  <assertions xmlns:svrl="http://purl.oclc.org/dsdl/svrl">
+    <assertion assert="count(svrl:schematron-output/svrl:active-group/@id) = 0"/>
+  </assertions>
+</testcase>

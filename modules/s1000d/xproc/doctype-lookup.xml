@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctypes>
+    
+    <!-- NOTE!
+         @root should contain a regex pattern to match root name() -->
+    
+    <!-- PLACEHOLDER -->
+    <doctype root="(dmodule)" include="true">
+        <xslt-manifest>s1000d-xslt-manifest.xml</xslt-manifest>
+        <xspec-manifest>s1000d-xspec-manifest.xml</xspec-manifest>
+        <xml-publicid></xml-publicid>
+        <xml-systemid></xml-systemid>
+    </doctype>
+    
+</doctypes>

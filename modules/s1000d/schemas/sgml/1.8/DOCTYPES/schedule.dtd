@@ -1,0 +1,18 @@
+<!--**********************************************************************
+    *                                                                    *
+    *                     AECMA 1000D Change 8                           *
+    *                   Document Type Definition                         *
+    *                                                                    *
+    *                     Release Version 1.8                            *
+    *                   Dated 31st January 1999                          *
+    *                                                                    *
+    * Amendment :-                                                       *
+    * 1. CPF 99-67UK Harmonize AGE & AVEE variants of the DTD.           *
+    *  a. New formal public identifier                                   *
+    *                                                                    *
+    ********************************************************************** -->
+
+<!DOCTYPE dmodule PUBLIC
+ "-//AECMA//DTD AECMA 1000D Schedule 19990131//EN"
+ [
+ ]>

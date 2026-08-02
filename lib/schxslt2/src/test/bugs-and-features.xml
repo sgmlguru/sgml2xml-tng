@@ -1,0 +1,20 @@
+<testsuite xmlns="https://doi.org/10.5281/zenodo.5679629#">
+  <label>SchXslt2 Bugs and Features</label>
+  <testcase href="bugs/namespace-prefix-collision.xml"/>
+  <testcase href="bugs/svrl-curly-bracket-in-assert-test.xml"/>
+  <testcase href="bugs/svrl-curly-bracket-in-report-test.xml"/>
+  <testcase href="bugs/svrl-curly-bracket-in-rule-context.xml"/>
+  <testcase href="bugs/multiple-accumulators.xml"/>
+  <testcase href="bugs/schema-param-let.xml"/>
+  <testcase href="features/avt-in-role-attribute.xml"/>
+  <testcase href="features/avt-in-flag-attribute.xml"/>
+  <testcase href="features/xsl-accumulators.xml"/>
+  <testcase href="features/svrl-failed-assert-rule-id.xml"/>
+  <testcase href="features/svrl-failed-assert-pattern-id.xml"/>
+  <testcase href="features/svrl-failed-assert-group-id.xml"/>
+  <testcase href="features/svrl-successful-report-assert-rule-id.xml"/>
+  <testcase href="features/svrl-successful-report-assert-group-id.xml"/>
+  <testcase href="features/svrl-successful-report-assert-pattern-id.xml"/>
+  <testcase href="abstract-pattern-instance-id.xml"/>
+  <testcase href="abstract-group-instance-id.xml"/>
+</testsuite>

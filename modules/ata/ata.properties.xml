@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<properties>
+    
+    <module location="${modules}/ata">
+        <schemas location="${module}/schemas">
+            <!-- SGML -->
+            <input location="${module.schemas}/sgml/catalog.txt"/>
+            <!-- SGML to XML conversion -->
+            <output location="${module.schemas}/sgml/catalog_sgml2xml.txt"/>
+            <!-- ATA resources -->
+            <resources>
+                <ent location="${module.schemas}/sgml/ISOent-declarations-xml.txt"/>
+            </resources>
+            <!-- SGML DOCTYPE lookup -->
+            <sgml-doctypes location="${module.schemas}/sgml/doctype-lookup.xml"/>
+        </schemas>
+        
+        <!-- Schematron -->
+        <sch location="${module}/sch/ata-checks.sch"/>
+        
+        <!-- XProc pipeline manifests and libs -->
+        <pipeline>
+            <manifest location="${module}/pipelines/ataxml-xslt-manifest.xml"/>
+            <xproc location="${module}/xproc/ata-migration.xpl"/>
+        </pipeline>
+    </module>
+    
+</properties>

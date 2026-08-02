@@ -9,7 +9,6 @@
     </repos>
     
     
-    <!-- Modules -->
     <modules location="${repos.sgml2xml}/modules">
         <common location="${modules}/common">
             <schemas location="${modules.common}/schemas">
@@ -23,37 +22,15 @@
                 </resources>
             </schemas>
             
+            <!-- Schematron -->
+            <sch location="${modules.common}/sch/test.sch"/>
+            
             <!-- Common XSLT -->
             <xslt location="${modules.common}/xslt">
                 <unparsed location="${modules.common.xslt}/map-unparsed-entities.xsl"/>
             </xslt>
-            <xproc/>
         </common>
         
-        <!-- ATA module -->
-        <ata location="${modules}/ata">
-            <schemas location="${modules.ata}/schemas">
-                <!-- SGML -->
-                <input location="${modules.ata.schemas}/sgml/catalog.txt"/>
-                <!-- SGML to XML conversion -->
-                <output location="${modules.ata.schemas}/sgml/catalog_sgml2xml.txt"/>
-                <!-- ATA resources -->
-                <resources>
-                    <ent location="${modules.ata.schemas}/sgml/ISOent-declarations-xml.txt"/>
-                </resources>
-            </schemas>
-            
-            <!-- Schematron -->
-            <sch location="${modules.ata}/sch/ata-checks.sch"/>
-            
-            <!-- XProc pipeline manifests and libs -->
-            <pipeline>
-                <manifest location="${repos.ata}/pipelines/ataxml-xslt-manifest.xml"/>
-                <ata-xml location="${repos.ata}/xproc/ata-migration.xpl"/>
-            </pipeline>
-        </ata>
-        
-        <!-- Other modules go here -->
     </modules>
     
     
@@ -79,22 +56,24 @@
     </catalogs>
     
     <!-- Morgana -->
-    <!--<morgana>
+    <morgana>
         <home location="${repos.lib}/MorganaXProc-IIIse-1.8.3"/>
         <lib location="${morgana.home}/MorganaXProc-IIIse_lib"/>
         <jar location="${morgana.home}/MorganaXProc-IIIse.jar"/>
         <config location="${morgana.home}/config.xml"/>
         <resolver location="${morgana.lib}/xmlresolver-6.0.21.jar"/>
-    </morgana>-->
+    </morgana>
     
     <!-- Saxon -->
     <saxon>
-        <jar location="${repos.lib}/saxon/Saxon-he-12.9.jar"/>
+        <jar location="${repos.lib}/saxon/saxon-he-12.9.jar"/>
     </saxon>
     
-    <!-- Debug and verbose -->
+    <!-- Set up current run and module -->
     <debug value="true"/>
     <verbose value="true"/>
+    <wellformed-only value="true"/>
+    <current-module value="doc"/>
     
     <!-- Run XSpecs -->
     <run-xspecs value="false"/>

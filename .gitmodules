@@ -1,0 +1,4 @@
+[submodule "lib/xproc-batch"]
+	path = lib/xproc-batch
+	url = https://github.com/sgmlguru/xproc-batch.git
+	branch = develop

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctypes>
+    
+    <!-- NOTE!
+         @root should contain a regex pattern to match root name() -->
+    
+    <!-- ATA XML EIPC -->
+    <doctype root="(eipc)" include="true">
+        <xslt-manifest>ataxml-xslt-manifest.xml</xslt-manifest>
+        <xspec-manifest>ataxml-xspec-manifest.xml</xspec-manifest>
+        <xml-publicid>-//ATA-TEXT//DTD XML EIPC-VER12-LEVEL2//EN</xml-publicid>
+        <xml-systemid>eipc.dtd</xml-systemid>
+    </doctype>
+    
+    <!-- ATA XML EM -->
+    <doctype root="(em|pgblk)" include="true">
+        <xslt-manifest>em-ataxml-xslt-manifest.xml</xslt-manifest>
+        <xspec-manifest>ataxml-xspec-manifest.xml</xspec-manifest>
+        <xml-publicid>-//ATA-TEXT//DTD XML EM-VER11-LEVEL2//EN</xml-publicid>
+        <xml-systemid>em.dtd</xml-systemid>
+    </doctype>
+    
+    <!-- Default -->
+    <doctype include="false">
+        <xslt-manifest>ataxml-xslt-manifest.xml</xslt-manifest>
+        <xspec-manifest>ataxml-xspec-manifest.xml</xspec-manifest>
+        <xml-publicid></xml-publicid>
+        <xml-systemid></xml-systemid>
+    </doctype>
+</doctypes>

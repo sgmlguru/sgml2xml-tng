@@ -4,19 +4,17 @@
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:math="http://www.w3.org/2005/xpath-functions/math"
     exclude-result-prefixes="xs math"
-    version="3.0"
-    default-mode="ENT">
+    version="3.0">
     
     <!-- This adds the URLs of unparsed entities to the respective elements -->
     
     <xsl:output method="xml" indent="yes" encoding="UTF-8"/>
     
     
-    <xsl:template match="/">
-        <xsl:apply-templates select="node()"/>
-    </xsl:template>
+    <xsl:mode on-no-match="shallow-copy" use-accumulators="#all"/>
     
     
+    <!-- ATA sheet -->
     <xsl:template match="sheet">
         <xsl:copy>
             <xsl:copy-of select="@*"/>
@@ -42,6 +40,7 @@
     </xsl:template>
     
     
+    <!-- ATA grsymbol -->
     <xsl:template match="grsymbol">
         <xsl:copy>
             <xsl:copy-of select="@*"/>
@@ -59,6 +58,7 @@
     </xsl:template>
     
     
+    <!-- ATA refmedia -->
     <xsl:template match="refmedia">
         <xsl:copy>
             <xsl:copy-of select="@*"/>
@@ -76,10 +76,22 @@
     </xsl:template>
     
     
-    <xsl:template match="node()">
+    <!-- DOC Example XML DTD -->
+    <xsl:template match="graphic[@name]">
         <xsl:copy>
             <xsl:copy-of select="@*"/>
+            
+            <xsl:attribute
+                name="href"
+                select="tokenize(unparsed-entity-uri(@name),'/')[last()]"/>
+            
+            <xsl:message expand-text="yes">
+                Element {name(.)}, name {@name}
+                href {tokenize(unparsed-entity-uri(@name),'/')[last()]}
+            </xsl:message>
+            
             <xsl:apply-templates select="node()"/>
+            
         </xsl:copy>
     </xsl:template>
     

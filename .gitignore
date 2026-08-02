@@ -1,6 +1,16 @@
 *.xpr
+*.mm
+build_xml2sgml.properties.local.xml
 build.properties.local.xml
+build_sgml2xml.properties.local.xml
 errspam.txt
 errsx.txt
 **/tmp
+modules/ata/schemas/sgml/dtd/*.dtd
+modules/ata/schemas/xml/dtd/*.dtd
+modules/ata/schemas/xml/rr/dtd/*.dtd
+modules/s1000d/schemas/sgml/1.8/dtd/*.dtd
+modules/s1000d/schemas/sgml/1.8/dtd/*.ENT
+modules/s1000d/schemas/sgml/1.8/dtd/*.ent
+modules/s1000d/schemas/sgml/1.8/dtd/*.CFG
 

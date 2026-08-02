@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<antlib
+    xmlns:if="ant:if"
+    xmlns:unless="ant:unless"
+    xmlns:sgml="sgml">
+    
+    
+    <macrodef
+        name="insert-doctype"
+        description="Loads previously generated DOCTYPE and inserts it">
+        
+        <attribute name="source"/>
+        <attribute name="doctype"/>
+        <attribute name="result"/>
+        
+        <sequential>
+       
+            <local name="local.source-as-string"/>                      
+            <loadfile property="local.source-as-string" srcfile="@{source}"/>
+                                   
+            <if>
+                <matches string="${local.source-as-string}" multiline="true">
+                    <regexp pattern="^&lt;\?xml([^&gt;]*)\?&gt;"/>
+                </matches>
+                
+                <then>
+                    <echo message="Loading @{doctype}"/>  
+                    
+                    <local name="local.doctype"/>
+                    <loadfile property="local.doctype" srcfile="@{doctype}"/>
+
+                    <copy file="@{source}" tofile="@{result}"/>  
+                    
+                    <echo message="Replacing XML declaration with DOCTYPE in @{result}"/>
+                    
+                    <!-- Insert the DOCTYPE as it is required by spam -->
+                    <replaceregexp file="@{result}" flags="m">
+                        <regexp pattern="^&lt;\?xml([^&gt;]*)\?&gt;"/>
+                        <substitution expression="${local.doctype}"/>
+                    </replaceregexp>               
+                </then>
+                
+                <else>
+                    <echo message="XML declaration not found in @{result}."/>                 
+                    <if>
+                        <matches string="${local.source-as-string}" multiline="false">
+                            <regexp pattern="^\W*(.)"/>
+                        </matches>
+                        
+                        <then>
+                            <echo message="Inserting DOCTYPE into @{result}"/>  
+                            
+                            <concat destfile="@{result}">
+                                <fileset file="@{doctype}"/>
+                                <fileset file="@{source}"/>
+                            </concat>
+                        </then>
+                        
+                        <else>
+                            <fail message="First character not found in @{result}"/>
+                        </else>
+                    </if>
+                </else>
+            </if>
+        </sequential>
+    </macrodef>
+    
+</antlib>

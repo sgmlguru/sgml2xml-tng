@@ -1,0 +1,10 @@
+-- Catalog for MIL-SPEC NAVSEA XML DTD --
+
+PUBLIC "-//USA-DOD//DTD IN XML FOR NAVY ETMs 050512//EN" "050512navy-etm.dtd"
+
+PUBLIC "ISO 8879:1986//ENTITIES Added Latin 1//EN" "ISOlat1.pen" 
+PUBLIC "ISO 8879:1986//ENTITIES Publishing//EN" "ISOpub.pen" 
+PUBLIC "ISO 8879:1986//ENTITIES Greek Letters//EN" "ISOgrk1.pen" 
+PUBLIC "ISO 8879:1986//ENTITIES Greek Symbols//EN" "ISOgrk3.pen" 
+PUBLIC "ISO 8879:1986//ENTITIES Numeric and Special Graphic//EN" "ISOnum.pen"
+PUBLIC "ISO 8879:1986//ENTITIES General Technical//EN" "ISOtech.pen" 

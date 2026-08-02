@@ -30,19 +30,27 @@
     
     <!-- Build properties -->
     <xmlproperty
-        file="build.properties.local.xml"
+        file="build_sgml2xml.properties.local.xml"
         keeproot="false"
         collapseattributes="true"
         semanticattributes="true"/>
     <xmlproperty
-        file="build.properties.xml"
+        file="build_sgml2xml.properties.xml"
+        keeproot="false"
+        collapseattributes="true"
+        semanticattributes="true"/>
+    
+    
+    <!-- Use module-specific properties -->
+    <xmlproperty
+        file="${modules}/${current-module}/${current-module}.properties.xml"
         keeproot="false"
         collapseattributes="true"
         semanticattributes="true"/>
     
     
     <!-- XProc macrodef -->
-    <include file="ant/xproc.xml"/>
+    <include file="${repos.sgm2xml}/ant/xproc.xml"/>
     
     
     <!-- Create dirs -->
@@ -122,14 +130,14 @@
         
         <record name="${base.reports}/02-loop-ngsmls.txt" action="start" append="true"/>
         
-        <echo message="Using catalog ${modules.common.schemas.input}"/>
+        <echo message="Using catalog ${module.schemas.input}"/>
         
         <foreach
             target="nsgmls"
             param="file"
             inheritall="true">
             <path>
-                <fileset dir="${base.source}">
+                <fileset dir="${base.source}" casesensitive="false">
                     <include name="**/*.sgm"/>
                     <include name="**/*.sgml"/>
                 </fileset>
@@ -155,7 +163,7 @@
             <arg value="-E0"/>
             <arg value="-ferrnsgmls.txt"/>
             <arg value="-c"/>
-            <arg value="${modules.common.schemas.input}"/>
+            <arg value="${module.schemas.input}"/>
             <arg value="${file}"/>
         </exec>
         
@@ -172,7 +180,7 @@
         name="preprocess-content"
         description="Preprocessing - replace line feeds splitting words with spaces">
         <copy todir="${base.pre}">
-            <fileset dir="${base.source}">
+            <fileset dir="${base.source}" casesensitive="false">
                 <include name="**/*.sgm"/>
             </fileset>
         </copy>
@@ -183,7 +191,7 @@
             match="([a-zA-Z])\n([a-zA-Z])"
             replace="\1 \2"
             flags="g">
-            <fileset dir="${base.pre}">
+            <fileset dir="${base.pre}" casesensitive="false">
                 <include name="**/*.sgm"/>
             </fileset>
         </replaceregexp>
@@ -198,11 +206,11 @@
         <record name="${base.reports}/03-loop-spam.txt" action="start" append="true"/>
         
         <echo message="base.source: ${base.pre}" />
-        <echo message="Using catalog ${modules.common.schemas.input}"/>
+        <echo message="Using catalog ${module.schemas.input}"/>
         
         <foreach target="spam" param="file" inheritall="true">
             <path>
-                <fileset dir="${base.pre}">
+                <fileset dir="${base.pre}" casesensitive="false">
                     <include name="**/*.sgm"/>
                     <include name="**/*.sgml"/>
                 </fileset>
@@ -220,59 +228,32 @@
         
         <echo message="Normalising (spam) ${file} (base.pre ${base.pre})"/>
         
-        <local name="local.diff"/>
-        <dirname file="${file}" property="local.diff"/>
-        <echo message="local diff is ${local.diff}"/>
-        
         <local name="local.filename"/>
         <basename file="${file}" property="local.filename"/>
-        <echo message="local filename is ${local.filename}"/>
         
+        <local name="local.diff"/>
+        <dirname file="${file}" property="local.diff"/>
+        
+        <!-- Convert the full directory path to a relative one by mapping out the base path -->
         <local name="local.target"/>
-        <loadresource property="local.target">
-            <propertyresource name="local.diff"/>
-            <filterchain>
-                <tokenfilter>
-                    <filetokenizer/>
-                    <replacestring from="${base.pre}" to=""/>
-                    <replacestring from="%20" to="_"/>
-                </tokenfilter>
-            </filterchain>
-        </loadresource>
+        <pathconvert property="local.target">
+            <path path="${local.diff}"/>
+            <map from="${base.pre}" to=""/>
+        </pathconvert>
         
-        <local name="spam.set"/>
-        
-        <condition property="spam.set" value="true" else="false">
-            <and>
-                <isset property="local.target"/>
-                <not>
-                    <equals arg1="${base.pre}" arg2="${local.target}"/>
-                </not>
-            </and>
-        </condition>
-        
+        <!-- Combine the target base with the relative subfolders -->
         <local name="local.spam"/>
+        <property name="local.spam" value="${base.spam}/${local.target}"/>
         
-        <if>
-            <equals arg1="${spam.set}" arg2="true"/>
-            <then>
-                <echo>Local target is set</echo>
-                <mkdir dir="${base.spam}/${local.target}"/>
-                <property name="local.spam" value="${base.spam}/${local.target}"/>
-            </then>
-            <else>
-                <echo>Local target is not set</echo>
-                <property name="local.spam" value="${base.spam}"/>
-            </else>
-        </if>
+        <echo message="Relative target path is: ${local.target}"/>
+        <echo message="Output directory path (spam) is: ${local.spam}"/>
         
-        <echo message="Local target is ${local.target}"/>
-        
-        <echo message="Output path (spam) is ${local.spam}"/>
+        <!-- Ensure the nested folder structure exists in the output directory -->
+        <mkdir dir="${local.spam}"/>
         
         <exec
             executable="${sp-loc.path.spam}"
-            output="${local.spam}\${local.filename}"
+            output="${local.spam}/${local.filename}"
             dir="."
             inputstring="&#10;">
             <arg value="-p"/>
@@ -284,7 +265,7 @@
             <arg value="-E0"/>
             <arg value="-ferrspam.txt"/>
             <arg value="-c"/>
-            <arg value="${modules.common.schemas.input}"/>
+            <arg value="${module.schemas.input}"/>
             <arg value="${file}"/>
         </exec>
         
@@ -308,7 +289,7 @@
             param="file"
             inheritall="true">
             <path>
-                <fileset dir="${base.spam}">
+                <fileset dir="${base.spam}" casesensitive="false">
                     <include name="**/*.sgm"/>
                     <include name="**/*.sgml"/>
                 </fileset>
@@ -374,8 +355,9 @@
         <local name="local.xml"/>
         <propertyregex
             property="local.xml"
+            casesensitive="false"
             input="${local.filename}"
-            regexp="^([\w\W]+)(\.sgm(l)?)$"
+            regexp="^([\w\W]+)\.sgml?$"
             replace="\1.xml"
             global="true"/>
         
@@ -383,7 +365,7 @@
             executable="${sp-loc.path.sx}"
             output="${local.sx}\${local.xml}">
             <arg value="-c"/>
-            <arg value="${modules.common.schemas.output}"/>
+            <arg value="${module.schemas.output}"/>
             <arg value="-xndata"/>
             <arg value="-xnotation"/>
             <arg value="-xlower"/>
@@ -412,7 +394,7 @@
         <!-- Load entity declarations from file -->
         <loadfile
             property="entities"
-            srcfile="${modules.common.schemas.resources.ent}"/>
+            srcfile="${module.schemas.resources.ent}"/>
         
         <!-- Add the entity declarations first in the internal subset -->
         <replaceregexp
@@ -542,50 +524,72 @@
         name="run-manifest"
         description="Run XSLT manifest to convert well-formed XML to valid XML">
         
-        <record name="${base.reports}/07-run-manifest.txt" action="start" append="true"/>
+        <echo message="Using ${modules}/${current-module}/${current-module}.properties.xml"/>
         
-        <echo message="Running XProc to produce valid XML"/>
-        <echo message="Catalog ${catalogs.catalog}"/>
+        <echoproperties>
+            <propertyset>
+                <propertyref prefix="module."/>
+            </propertyset>
+        </echoproperties>
         
-        <local name="local.in"/>
-        <local name="local.out"/>
-        <local name="local.tmp"/>
-        <local name="local.reports"/>
-        
-        <!-- URIs required as input -->
-        <makeurl property="local.in" file="${base.xml}"/>
-        <makeurl property="local.out" file="${base.out}"/>
-        <makeurl property="local.reports" file="${base.reports}"/>
-        <makeurl property="local.tmp" file="${base.tmp}"/>
-        
-        <echo message="Sources in ${local.in}, saving to ${local.out}, debug is ${debug}"/>
-        
-        <run-xproc>
-            <xproc-args>
-                <!-- Pipeline -->
-                <arg value="${pipeline.ata-xml}"/>
+        <if>
+            <equals arg1="${wellformed-only}" arg2="true"/>
+            <!-- Not running the pipeline, we are producing well-formed only -->
+            <then>
+                <echo message="Only producing well-formed XML..."/>
+                <copydir src="${base.sx}" dest="${base.out}" excludes=".sgm .sgml"/>
+            </then>
+            <!-- Run pipeline on well-formed XML -->
+            <else>
+                <record name="${base.reports}/07-run-manifest.txt" action="start" append="true"/>
                 
-                <!-- Catalog -->
-                <arg value="-catalogs=${catalogs.catalog}"/>
+                <echo message="Running XProc ${module.pipeline.xproc} to produce valid XML"/>
+                <echo message="Catalog ${catalogs.catalog}"/>
                 
-                <!-- Inputs -->
-                <arg value="-input:manifest="/>
-                <arg value="-input:sch=${sch}"/>
+                <local name="local.in"/>
+                <local name="local.out"/>
+                <local name="local.tmp"/>
+                <local name="local.reports"/>
                 
-                <!-- Options -->
-                <arg value="-option:input-base-uri=${local.in}"/>
-                <arg value="-option:output-base-uri=${local.out}"/>
-                <arg value="-option:reports-dir=${local.reports}"/>
-                <arg value="-option:tmp-dir=${local.tmp}"/>
-                <arg value="-option:debug=${debug}"/>
+                <!-- URIs required as input -->
+                <makeurl property="local.in" file="${base.xml}"/>
+                <makeurl property="local.out" file="${base.out}"/>
+                <makeurl property="local.reports" file="${base.reports}"/>
+                <makeurl property="local.tmp" file="${base.tmp}"/>
                 
-                <!-- Include file suffixes...
+                <echo message="Sources in ${local.in}, saving to ${local.out}, debug is ${debug}"/>
+                <echo message="CLASSPATH ${morgana.jar}:${morgana.lib}/*:${saxon.jar}"/>
+                
+                <echo message="URIs ${local.in} ${local.out} ${local.tmp} ${local.reports}"/>
+                
+                <run-xproc>
+                    <xproc-args>
+                        <!-- Pipeline -->
+                        <arg value="${module.pipeline.xproc}"/>
+                        
+                        <!-- Catalog -->
+                        <arg value="-catalogs=${catalogs.catalog}"/>
+                        
+                        <!-- Inputs -->
+                        <arg value="-input:manifest="/>
+                        <arg value="-input:sch=${module.sch}"/>
+                        
+                        <!-- Options -->
+                        <arg value="-option:input-base-uri=${local.in}"/>
+                        <arg value="-option:output-base-uri=${local.out}"/>
+                        <arg value="-option:reports-dir=${local.reports}"/>
+                        <arg value="-option:tmp-dir=${local.tmp}"/>
+                        <arg value="-option:debug=${debug}"/>
+                        
+                        <!-- Include file suffixes...
                  This is NOT a regex - the regex is constructed in the XProc -->
-                <arg value="-option:include=.xml"/>
-            </xproc-args>
-        </run-xproc>
-        
-        <record name="${base.reports}/07-run-manifest.txt" action="stop" append="true"/>
+                        <arg value="-option:include=.xml"/>
+                    </xproc-args>
+                </run-xproc>
+                
+                <record name="${base.reports}/07-run-manifest.txt" action="stop" append="true"/>
+            </else>
+        </if>
     </target>
     
     
@@ -599,7 +603,7 @@
     
     <target name="copy-graphics" description="Copy graphics to output">
         <copy todir="${base.out}">
-            <fileset dir="${base.source}">
+            <fileset dir="${base.source}" casesensitive="false">
                 <exclude name="**/*.sgm"/>
                 <exclude name="**/*.sgml"/>
                 <exclude name="**/*.zip"/>
@@ -643,17 +647,18 @@
     <target
         name="no-unzip"
         description="Run an end to end SGML to XML conversion without unzip"
-        depends="mkdirs, prepare, preprocess-content, loop-spam, loop-sx, add-entity-declarations, loop-unparsed"/>
-    <!-- , run-manifest, copy-graphics, housekeeping -->
+        depends="mkdirs, prepare, preprocess-content, loop-spam, loop-sx, add-entity-declarations, loop-unparsed, run-manifest, copy-graphics, housekeeping"/>
     
     <target
         name="run-nsgmls"
         description="Parse SGML only"
         depends="mkdirs, prepare, uncompress, loop-nsgmls"/>
+    
     <target
         name="run-spam"
         description="Normalise SGML only"
         depends="mkdirs, prepare, uncompress, preprocess-content, loop-spam"/>
+    
     <target
         name="run-sx"
         description="Convert normalised SGML to XML only"

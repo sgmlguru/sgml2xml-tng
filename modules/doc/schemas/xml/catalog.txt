@@ -1,0 +1,12 @@
+-- Catalog file for ATA 2200 DTDs (XML) --
+
+
+-- DTDs ATA 2200 September 2020 --
+
+PUBLIC "-//ATA-TEXT//DTD XML EIPC-VER11-LEVEL2//EN" "dtd/eipc.dtd"
+
+
+-- DTDs ATA RR versions --
+
+PUBLIC "-//ATA-TEXT//DTD XML EM-VER11-LEVEL2//EN" "rr/dtd/em.dtd"
+
