@@ -66,6 +66,7 @@ Valid XML (optional) is saved in `out`. Subfolder structures inside `data` are p
 
 There are multiple debug folders:
 
+* `pre` contains preprocessed SGML
 * `spam` contains the normalised SGML
 * `sx` contains the well-formed XML before UTF-8 serialisation
 * `xml` contains the well-formed XML serialised in UTF-8
@@ -287,6 +288,10 @@ Also keep in mind that the ATA module contains catalog files and SGML declaratio
 The S1000D module cannot contain the actual 1.8 DTDs or 4.1 XSDs, as those are owned by their respective copyright holders. You can get these from the [S1000D website](https://s1000d.org/) if you register and agree to their [Terms and Conditions](https://s1000d.org/?page_id=108).
 
 The 1.8 DTD files should go in `modules/s1000d/schemas/sgml/1.8/dtd/`. The 4.1 XSDs should go in `TBA`.
+
+I have not yet added a 4.1 BREX that mimics what's allowed in 1.8 to this repo, since the one I have is client-specific and owned by them. An open-source BREX will need to use the 4.1 BIKE examples as a base.
+
+Similarly, this repo currently doesn't include S1000D-specific pipelines or XSLT.
 
 
 ##### Identifying S1000D Module Types
