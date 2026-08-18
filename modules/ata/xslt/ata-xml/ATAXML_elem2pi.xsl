@@ -11,7 +11,7 @@
     <xsl:output method="xml" indent="yes"/>
     
     
-    <xsl:include href="../common/functions.xsl"/>
+    <xsl:include href="../../../common/xslt//functions.xsl"/>
     
     
     <xsl:variable

@@ -10,7 +10,7 @@
     <xsl:mode on-no-match="shallow-copy" use-accumulators="#all"/>
     
     
-    <xsl:include href="../common/functions.xsl"/>
+    <xsl:include href="../../../common/xslt//functions.xsl"/>
     
     
     <!-- Move effect elements first in model to before the start tag. 
