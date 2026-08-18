@@ -35,7 +35,7 @@
     
     <xsl:template match="entry[@spanname]">
         <xsl:variable name="spanname" select="@spanname" as="xs:string"/>
-        <xsl:variable name="spanrange" select="preceding::spanspec[@spanname = $spanname]/@*[name(.) != 'spanname']" as="attribute()+"/>
+        <xsl:variable name="spanrange" select="preceding::spanspec[@spanname = $spanname]/@*[name(.) != 'spanname']" as="attribute()*"/>
         <xsl:copy>
             <xsl:copy-of select="@* except @spanname"/>
             <xsl:copy-of select="$spanrange"/>
