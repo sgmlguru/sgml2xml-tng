@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <properties>
     
-    <module location="${modules}/doc">
+    <module location="${modules}/ata">
         <schemas location="${module}/schemas">
             <!-- SGML -->
             <input location="${module.schemas}/sgml/catalog.txt"/>
@@ -13,15 +13,20 @@
             </resources>
             <!-- SGML DOCTYPE lookup -->
             <sgml-doctypes location="${module.schemas}/sgml/doctype-lookup.xml"/>
+            <!-- Inclusion elements -->
+            <inclusions>
+                <!-- EMPTY elements, whitespace-separated -->
+                <empty value="revst revend cocst cocend hotlink"/>
+            </inclusions>
         </schemas>
         
         <!-- Schematron -->
-        <sch location="${module}/sch/test.sch"/>
+        <sch location="${module}/sch/ata-checks.sch"/>
         
         <!-- XProc pipeline manifests and libs -->
         <pipeline>
-            <manifest location="${module}/pipelines/doc-xslt-manifest.xml"/>
-            <xproc location="${module}/xproc/doc-migration.xpl"/>
+            <manifest location="${module}/pipelines/ataxml-xslt-manifest.xml"/>
+            <xproc location="${module}/xproc/ata-migration.xpl"/>
         </pipeline>
     </module>
     

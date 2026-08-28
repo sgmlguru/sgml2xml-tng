@@ -43,7 +43,7 @@
     
     <!-- Use module-specific properties -->
     <xmlproperty
-        file="${modules}/${current-module}/${current-module}.properties.xml"
+        file="${modules}/${current-module}/module.properties.xml"
         keeproot="false"
         collapseattributes="true"
         semanticattributes="true"/>
@@ -266,6 +266,7 @@
             <arg value="-ferrspam.txt"/>
             <arg value="-c"/>
             <arg value="${module.schemas.input}"/>
+            <arg value="-xempty"/>
             <arg value="${file}"/>
         </exec>
         
