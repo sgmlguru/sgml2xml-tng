@@ -14,7 +14,7 @@
     <xsl:include href="./functions.xsl"/>
     
     
-    <xsl:param name="inclusion-elements" select="('revst', 'revend', 'cocst', 'cocend', 'hotlink')"/>
+    <xsl:variable name="inclusion-elements" select="tokenize(doc('../../module-properties.xml')//inclusions/empty/@value, ' ')"/><!-- ('revst', 'revend', 'cocst', 'cocend', 'hotlink') -->
     
     
     <xsl:variable
