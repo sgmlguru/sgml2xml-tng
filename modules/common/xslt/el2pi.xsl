@@ -14,13 +14,35 @@
     <xsl:include href="./functions.xsl"/>
     
     
-    <xsl:variable name="inclusion-elements" select="tokenize(doc('../../module-properties.xml')//inclusions/empty/@value, ' ')"/><!-- ('revst', 'revend', 'cocst', 'cocend', 'hotlink') -->
+    <!-- Name of the module, e.g. 'ata' -->
+    <xsl:param name="module" as="xs:string?"/>
+    
+    
+    <xsl:variable name="path" select="'../../' || $module || '/'"/>
+    
+    <xsl:variable
+        name="path-with-filename"
+        select="if (doc-available($path || 'module.properties.local.xml'))
+                then ($path || 'module.properties.local.xml')
+                else ($path || 'module.properties.xml')"/>
+    
+    <xsl:variable
+        name="inclusion-elements"
+        select="tokenize(doc($path-with-filename)//inclusions/empty/@value, ' ')"
+        as="xs:string*"/>
     
     
     <xsl:variable
         name="non-nested"
         select="$inclusion-elements"
         as="xs:string*"/>
+    
+    <xsl:template match="/">
+        <xsl:message expand-text="yes">
+            Module {$module}
+        </xsl:message>
+        <xsl:next-match/>
+    </xsl:template>
     
     
     <!-- Non-nested -->
