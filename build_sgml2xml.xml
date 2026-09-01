@@ -583,7 +583,7 @@
                         <!-- Options -->
                         
                         <!-- XSLT pipeline parameters -->
-                        <arg value="-option:parameters=map{'module': 'ata'}"/>
+                        <arg value="-option:parameters=map{'module': '${current-module}'}"/>
                         
                         <arg value="-option:input-base-uri=${local.in}"/>
                         <arg value="-option:output-base-uri=${local.out}"/>
