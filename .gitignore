@@ -6,6 +6,7 @@ build_sgml2xml.properties.local.xml
 errspam.txt
 errsx.txt
 **/tmp
+modules/**/module.properties.local.xml
 modules/ata/schemas/sgml/**/*.dtd
 modules/ata/schemas/xml/**/*.dtd
 modules/s1000d/schemas/sgml/1.8/**/*.dtd

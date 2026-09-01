@@ -17,8 +17,29 @@
     <xsl:output method="xml" indent="false"/>
     
     
+    <!-- Include the properties file and feed the inclusion element sequence from there -->
+    
+    <!-- Name of the module, e.g. 'ata' -->
+    <xsl:param name="module" as="xs:string?"/>
+    
+    
+    <xsl:variable name="path" select="'../../' || $module || '/'"/>
+    
+    <xsl:variable
+        name="path-with-filename"
+        select="if (doc-available($path || 'module.properties.local.xml'))
+        then ($path || 'module.properties.local.xml')
+        else ($path || 'module.properties.xml')"/>
+    
+    <xsl:variable
+        name="inclusion-elements"
+        select="tokenize(doc($path-with-filename)//inclusions/empty/@value, ' ')"
+        as="xs:string*"/>
+    
+    
     <!-- SGML inclusion elements, expressed as PIs in the input XML -->
-    <xsl:variable name="sgml-inclusions" select="('revst','revend','effect','cocst','cocend','hotlink')"/>
+    <xsl:variable name="sgml-inclusions" select="$inclusion-elements"/>
+    <!-- ('revst','revend','effect','cocst','cocend','hotlink') -->
     
     
     <xsl:variable name="filename" select="tokenize(base-uri(/),'/')[last()]"/>

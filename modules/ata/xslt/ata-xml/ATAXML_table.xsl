@@ -10,7 +10,7 @@
     <xsl:mode on-no-match="shallow-copy" use-accumulators="#all"/>
     
     
-    <xsl:include href="../common/functions.xsl"/>
+    <xsl:include href="../../../common/xslt//functions.xsl"/>
     
     
     <xsl:template match="table">
@@ -35,7 +35,7 @@
     
     <xsl:template match="entry[@spanname]">
         <xsl:variable name="spanname" select="@spanname" as="xs:string"/>
-        <xsl:variable name="spanrange" select="preceding::spanspec[@spanname = $spanname]/@*[name(.) != 'spanname']" as="attribute()+"/>
+        <xsl:variable name="spanrange" select="preceding::spanspec[@spanname = $spanname]/@*[name(.) != 'spanname']" as="attribute()*"/>
         <xsl:copy>
             <xsl:copy-of select="@* except @spanname"/>
             <xsl:copy-of select="$spanrange"/>

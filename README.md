@@ -203,7 +203,7 @@ The XSLT pipelines use the [xproc-batch](https://github.com/sgmlguru/xproc-batch
 
 #### Module-specific Properties
 
-Each module *must* also have an Ant properties file named `MODULE_NAME.properties.xml`, where `MODULE_NAME` is the module's name. It needs to be directly inside the `MODULE_NAME` folder and should look something like this:
+Each module *must* also have an Ant properties file named `module.properties.xml`. It needs to be directly inside the `MODULE_NAME` folder and should look something like this:
 
 ```XML
 <properties>
@@ -245,7 +245,7 @@ The `modules/doc` folder is a very simple module that contains a perfectly trivi
 
 The ATA module transforms ATA iSpec 2200 SGML instances to an "ATA-like" XML format. Graphic entities in the SGML are handled using direct, `@href`-based references in the XML, and some SGML constructs introduced using SGML inclusions are represented using XML processing instructions. This is far from ideal, even though the SGML inclusion elements were all `EMPTY` elements. In an ideal world, those PIs would be modelled differently. This, however, is just a proof of concept.
 
-There is a `modules/ata/ata.properties.xml` file:
+There is a `modules/ata/module.properties.xml` file:
 
 ```XML
 <properties>
@@ -260,6 +260,13 @@ There is a `modules/ata/ata.properties.xml` file:
             <resources>
                 <ent location="${module.schemas}/sgml/ISOent-declarations-xml.txt"/>
             </resources>
+            <!-- SGML DOCTYPE lookup -->
+            <sgml-doctypes location="${module.schemas}/sgml/doctype-lookup.xml"/>
+            <!-- Inclusion elements -->
+            <inclusions>
+                <!-- EMPTY elements, whitespace-separated -->
+                <empty value="revst revend cocst cocend hotlink"/>
+            </inclusions>
         </schemas>
         
         <!-- Schematron -->

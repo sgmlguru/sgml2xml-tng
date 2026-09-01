@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-model href="../xproc-batch/xproc-tools/schemas/manifest.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="../../../lib/xproc-batch/xproc-tools/schemas/manifest.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
 <manifest xmlns="http://www.corbas.co.uk/ns/transforms/manifest" xml:base=".">
     
     <group description="Main structures" xml:base="../xslt/ata-xml/">
@@ -15,7 +15,12 @@
     
     <group description="Common effect handling" xml:base="../xslt/ata-xml/">
         <item href="ATAXML_move-effect.xsl" description="Move misplaced effect elements"/>
-        <item href="ATAXML_elem2pi.xsl" description="Handle non-nested inclusion elements"/>
+    </group>
+    
+    <group description="Common to all modules module" xml:base="../../common/xslt/">
+        <item href="el2pi.xsl" description="Convert non-nested inclusion elements to PIs">
+            <meta name="module" value=""/>
+        </item>
     </group>
     
     <group description="Common other" xml:base="../xslt/common/">

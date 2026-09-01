@@ -38,7 +38,12 @@
 	
 	<!-- Module-specific properties -->
 	<xmlproperty
-		file="${modules}/${current-module}/${current-module}.properties.xml"
+		file="${modules}/${current-module}/module.properties.local.xml"
+		keeproot="false"
+		collapseattributes="true"
+		semanticattributes="true"/>
+	<xmlproperty
+		file="${modules}/${current-module}/module.properties.xml"
 		keeproot="false"
 		collapseattributes="true"
 		semanticattributes="true"/>

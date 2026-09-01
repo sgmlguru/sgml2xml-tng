@@ -9,7 +9,7 @@
     <xsl:mode on-no-match="shallow-copy" use-accumulators="#all"/>
     
     
-    <xsl:include href="../common/functions.xsl"/>
+    <xsl:include href="../../../common/xslt//functions.xsl"/>
     
     
     <!-- A lone sbdata with an empty sbnbr must be replaced with isempty IF we have an EM or SDS -->
