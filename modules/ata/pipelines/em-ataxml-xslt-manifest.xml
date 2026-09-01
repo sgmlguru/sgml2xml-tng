@@ -18,7 +18,9 @@
     </group>
     
     <group description="Common to all modules module" xml:base="../../common/xslt/">
-        <item href="el2pi.xsl" description="Convert non-nested inclusion elements to PIs"/>
+        <item href="el2pi.xsl" description="Convert non-nested inclusion elements to PIs">
+            <meta name="module" value=""/>
+        </item>
     </group>
     
     <group description="Common other" xml:base="../xslt/common/">
