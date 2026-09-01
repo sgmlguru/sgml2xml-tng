@@ -43,6 +43,11 @@
     
     <!-- Use module-specific properties -->
     <xmlproperty
+        file="${modules}/${current-module}/module.properties.local.xml"
+        keeproot="false"
+        collapseattributes="true"
+        semanticattributes="true"/>
+    <xmlproperty
         file="${modules}/${current-module}/module.properties.xml"
         keeproot="false"
         collapseattributes="true"
@@ -525,7 +530,7 @@
         name="run-manifest"
         description="Run XSLT manifest to convert well-formed XML to valid XML">
         
-        <echo message="Using ${modules}/${current-module}/${current-module}.properties.xml"/>
+        <echo message="Using module ${modules}/${current-module}"/>
         
         <echoproperties>
             <propertyset>
@@ -576,6 +581,10 @@
                         <arg value="-input:sch=${module.sch}"/>
                         
                         <!-- Options -->
+                        
+                        <!-- XSLT pipeline parameters -->
+                        <arg value="-option:parameters=map{'module': 'ata'}"/>
+                        
                         <arg value="-option:input-base-uri=${local.in}"/>
                         <arg value="-option:output-base-uri=${local.out}"/>
                         <arg value="-option:reports-dir=${local.reports}"/>

@@ -38,6 +38,13 @@
     
     <p:option name="debug" required="true" as="xs:string"/>
     
+    <!-- Optional XSLT params -->
+    <p:option name="parameters" required="false" as="map(xs:string, xs:string)?">
+        <p:documentation>
+            <p>Optional parameters fed to the pipelined XSLT. The input is a map.</p>
+        </p:documentation>
+    </p:option>
+    
     
     <p:variable
         name="include-filter"
@@ -61,6 +68,7 @@
                 <p:document href="../pipelines/{$xslt-manifest}"/>
             </p:with-input>
             <p:with-input port="sch" pipe="sch@ata-migration"/>
+            <p:with-option name="parameters" select="$parameters"/>
             <p:with-option name="input-base-uri" select="$input-base-uri"/>
             <p:with-option name="output-base-uri" select="if ($output-base-uri != '') then $output-base-uri else concat($tmp-dir, '/out')" />
             <p:with-option name="reports-dir" select="if ($reports-dir != '') then $reports-dir else concat($tmp-dir, '/reports')" />
