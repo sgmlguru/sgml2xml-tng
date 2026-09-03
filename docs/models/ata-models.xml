@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<models>
+    
+    <model name="EM" description="This is the ATA EM document type">
+        
+        <!-- ATA XML EM -->
+        <doctype root="(em|pgblk)" include="true" target="xml">
+            <xslt-manifest>em-ataxml-xslt-manifest.xml</xslt-manifest>
+            <xspec-manifest>ataxml-xspec-manifest.xml</xspec-manifest>
+            
+            <publicid>-//ATA-TEXT//DTD XML EM-VER11-LEVEL2//EN</publicid>
+            <systemid>em.dtd</systemid>
+        </doctype>
+        
+        <!-- ATA SGML EM -->
+        <doctype root="(em|pgblk)" include="true" target="sgml">
+            <publicid>-//ATA-TEXT//DTD EM-VER11-LEVEL2//EN</publicid>
+            <systemid>em.dtd</systemid>
+        </doctype>
+        
+        <maps>
+            <map source="name" target="href" A="ent" B="attr" start="sgml"/>
+        </maps>
+        
+        <!-- SGML inclusion elements -->
+        <inclusions>
+            <!-- EMPTY elements, whitespace-separated -->
+            <empty value="revst revend cocst cocend hotlink" B="pi"/>
+        </inclusions>
+    </model>
+    
+    
+    <model name="EIPC" description="This is the ATA EIPC document type">
+        
+        <!-- ATA XML EIPC -->
+        <doctype root="(eipc)" include="true" target="xml">
+            <xslt-manifest>ataxml-xslt-manifest.xml</xslt-manifest>
+            <xspec-manifest>ataxml-xspec-manifest.xml</xspec-manifest>
+            
+            <publicid>-//ATA-TEXT//DTD XML EIPC-VER12-LEVEL2//EN</publicid>
+            <systemid>eipc.dtd</systemid>
+        </doctype>
+        
+        <!-- ATA SGML EIPC -->
+        <doctype root="(eipc)" include="true" target="sgml">
+            <publicid>-//ATA-TEXT//DTD EIPC-VER12-LEVEL2//EN</publicid>
+            <systemid>eipc.dtd</systemid>
+        </doctype>
+        
+        <maps>
+            <map source="name" target="href" A="ent" B="attr" start="sgml"/>
+        </maps>
+        
+        <!-- SGML inclusion elements -->
+        <inclusions>
+            <!-- EMPTY elements, whitespace-separated -->
+            <empty value="revst revend cocst cocend hotlink" B="pi"/>
+        </inclusions>
+    </model>
+    
+</models>

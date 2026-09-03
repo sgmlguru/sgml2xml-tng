@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<models>
+    
+    <model name="doc" description="This is the doc example document type">
+        
+        <!-- DOC XML DTD -->
+        <doctype root="(doc)" include="true" target="xml">
+            <xslt-manifest>doc-xslt-manifest.xml</xslt-manifest>
+            <xspec-manifest></xspec-manifest>
+            
+            <publicid>-//CWORD//DTD XML DOC TEST//EN</publicid>
+            <systemid>doc.dtd</systemid>
+        </doctype>
+        
+        <!-- DOC SGML DTD -->
+        <doctype root="(doc)" include="true" target="sgml">
+            
+            <publicid>-//CWORD//DTD DOC TEST//EN</publicid>
+            <systemid>doc.dtd</systemid>
+        </doctype>
+        
+        <!-- Maps (graphic entity to attr) -->
+        <maps>
+            <map source="name" target="href" A="ent" B="attr" start="sgml"/>
+        </maps>
+        
+    </model>
+    
+</models>
