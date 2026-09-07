@@ -167,3 +167,42 @@ Converting the `effect/sbeff` structure to PIs is mostly straight-forward; conve
 
 Note the pseudo-attributes and the lower-case tag naming. The latter is, of course, a choice you'll have to make when planning the SGML to XML conversion. I tend to go with lower-case.
 
+
+### Solutions
+
+I'm thinking that this XML model lookup might do the trick:
+
+```XML
+<!-- SGML inclusion elements -->
+<inclusions>
+    <!-- EMPTY elements, whitespace-separated -->
+    <empty
+        value="revst revend cocst cocend hotlink"
+        B="pi"/>
+    
+    <nested
+        value="effct sbeff coceff"
+        context="prclist1 prclist2 prclist3 prclist4 prclist5 prclist6
+        prclist7 prcitem prcitem1 prcitem2 prcitem3 prcitem4 prcitem5
+        prcitem6 prcitem7 subtask"
+        B="pi"/>
+</inclusions>
+```
+
+The `empty` structure already provides us with a list of the elements we need if we do
+
+```XML
+<xsl:variable
+    name="inclusion-elements"
+    select="tokenize(doc($path-with-filename)//inclusions/empty/@value, ' ')"
+    as="xs:string*"/>
+
+
+<xsl:variable
+    name="non-nested"
+    select="$inclusion-elements"
+    as="xs:string*"/>
+```
+
+The `nested` structure will give us elements to examine if looking at `nested/@value` but also provide a predicate for looking at the elements in a given context, in `nested/@context`.
+

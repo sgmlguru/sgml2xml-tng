@@ -26,6 +26,8 @@
         <inclusions>
             <!-- EMPTY elements, whitespace-separated -->
             <empty value="revst revend cocst cocend hotlink" B="pi"/>
+            
+            <nested value="effct sbeff coceff" context="prclist1 prclist2 prclist3 prclist4 prclist5 prclist6 prclist7 prcitem prcitem1 prcitem2 prcitem3 prcitem4 prcitem5 prcitem6 prcitem7 subtask" B="pi"/>
         </inclusions>
     </model>
     
