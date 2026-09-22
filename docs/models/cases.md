@@ -167,6 +167,15 @@ Converting the `effect/sbeff` structure to PIs is mostly straight-forward; conve
 
 Note the pseudo-attributes and the lower-case tag naming. The latter is, of course, a choice you'll have to make when planning the SGML to XML conversion. I tend to go with lower-case.
 
+Älso note that it could sometimes be worth it to link the parent and the child to each other:
+
+```XML
+<?effect child="id-sbeff" id="id-eff"?>
+<?sbeff parent="id-eff" id="id-sbeff" efftext="Old Oil Nozzle Design" sbnbr="72-0039" sbcond="PRE SB"?>
+```
+
+Or something equally unattractive, in the name of easier processing.
+
 
 ### Solutions
 
@@ -204,5 +213,7 @@ The `empty` structure already provides us with a list of the elements we need if
     as="xs:string*"/>
 ```
 
-The `nested` structure will give us elements to examine if looking at `nested/@value` but also provide a predicate for looking at the elements in a given context, in `nested/@context`.
+The `nested` structure will give us elements to examine if looking at `nested/@value` but also provide a predicate for looking at the elements in a given context, in `nested/@context`. `@value` is a mixed blessing, because we don't know if a value is going to be a parent or a child. Document order would have to decide.
+
+**Warning!** Again, I'd advice against attempting mixed content with PIs. It might work, in limited cases, but there are just so many things I can see going wrong with the approach.
 
