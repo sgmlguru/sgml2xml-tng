@@ -217,3 +217,9 @@ The `nested` structure will give us elements to examine if looking at `nested/@v
 
 **Warning!** Again, I'd advice against attempting mixed content with PIs. It might work, in limited cases, but there are just so many things I can see going wrong with the approach.
 
+
+#### Conventions in the Model XML
+
+In the above model XML file examples, the `@A` and `@B` attributes denote SGML and XML, respectively. I'd happily rename them accordingly, except the XML spec prohibits me from using the letters `x|X|m|M|l|L` in QNames.
+
+
