@@ -222,4 +222,6 @@ The `nested` structure will give us elements to examine if looking at `nested/@v
 
 In the above model XML file examples, the `@A` and `@B` attributes denote SGML and XML, respectively. I'd happily rename them accordingly, except the XML spec prohibits me from using the letters `x|X|m|M|l|L` in QNames.
 
+The model XML file should probably only be named `model.xml` rather than prepending the module name. There's only one per module anyway, which means that it's easy to call from the XSLT and XProc and that name clashes will not happen.
+
 
