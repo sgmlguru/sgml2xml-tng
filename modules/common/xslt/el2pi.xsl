@@ -18,6 +18,8 @@
     <xsl:param name="module" as="xs:string?"/>
     
     
+    <xsl:variable name="root" select="name(/*)"/>
+    
     <xsl:variable name="path" select="'../../' || $module || '/schemas/'"/>
     
     <xsl:variable
@@ -28,7 +30,7 @@
     
     <xsl:variable
         name="inclusion-elements"
-        select="tokenize(doc($path-with-filename)//inclusions/empty/@value, ' ')"
+        select="tokenize(doc($path-with-filename)//doctype[matches($root, @root) and @target='xml']/inclusions/empty/@value, ' ')"
         as="xs:string*"/>
     
     
@@ -40,6 +42,7 @@
     <xsl:template match="/">
         <xsl:message expand-text="yes">
             Module {$module}
+            Root name {$root}
         </xsl:message>
         <xsl:next-match/>
     </xsl:template>
