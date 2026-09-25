@@ -13,6 +13,20 @@
             
             <publicid>-//ATA-TEXT//DTD XML EM-VER11-LEVEL2//EN</publicid>
             <systemid>em.dtd</systemid>
+        	
+        	<maps>
+        		<map source="name" target="href" A="ent" B="attr"/>
+        	</maps>
+        	
+        	<!-- SGML inclusion elements -->
+        	<inclusions>
+        		<!-- EMPTY inclusion elements, whitespace-separated -->
+        		<empty value="revst revend cocst cocend hotlink" A="el" B="pi"/>
+        		
+        		<!-- Nested inclusion elements, whitespace-separated;
+        		 @context provides a whitespace-separated list of elements allowed as context -->
+        		<nested value="effct sbeff coceff" context="prclist1 prclist2 prclist3 prclist4 prclist5 prclist6 prclist7 prcitem prcitem1 prcitem2 prcitem3 prcitem4 prcitem5 prcitem6 prcitem7 subtask" A="el" B="pi"/>
+        	</inclusions>
         </doctype>
         
         <!-- ATA SGML EM -->
@@ -20,21 +34,22 @@
         <doctype root="(em|pgblk)" include="true" target="sgml">
             <publicid>-//ATA-TEXT//DTD EM-VER11-LEVEL2//EN</publicid>
             <systemid>em.dtd</systemid>
+        	
+        	<maps>
+        		<map source="name" target="href" A="ent" B="attr"/>
+        	</maps>
+        	
+        	<!-- SGML inclusion elements -->
+        	<inclusions>
+        		<!-- EMPTY inclusion elements, whitespace-separated -->
+        		<empty value="revst revend cocst cocend hotlink" A="el" B="pi"/>
+        		
+        		<!-- Nested inclusion elements, whitespace-separated;
+        		 @context provides a whitespace-separated list of elements allowed as context -->
+        		<nested value="effct sbeff coceff" context="prclist1 prclist2 prclist3 prclist4 prclist5 prclist6 prclist7 prcitem prcitem1 prcitem2 prcitem3 prcitem4 prcitem5 prcitem6 prcitem7 subtask" A="el" B="pi"/>
+        	</inclusions>
         </doctype>
         
-        <maps>
-            <map source="name" target="href" A="ent" B="attr" start="sgml"/>
-        </maps>
-        
-        <!-- SGML inclusion elements -->
-        <inclusions>
-            <!-- EMPTY inclusion elements, whitespace-separated -->
-            <empty value="revst revend cocst cocend hotlink" B="pi"/>
-            
-        	<!-- Nested inclusion elements, whitespace-separated;
-        		 @context provides a whitespace-separated list of elements allowed as context -->
-            <nested value="effct sbeff coceff" context="prclist1 prclist2 prclist3 prclist4 prclist5 prclist6 prclist7 prcitem prcitem1 prcitem2 prcitem3 prcitem4 prcitem5 prcitem6 prcitem7 subtask" B="pi"/>
-        </inclusions>
     </model>
     
     
@@ -48,6 +63,16 @@
             
             <publicid>-//ATA-TEXT//DTD XML EIPC-VER12-LEVEL2//EN</publicid>
             <systemid>eipc.dtd</systemid>
+        	
+        	<maps>
+        		<map source="name" target="href" A="ent" B="attr"/>
+        	</maps>
+        	
+        	<!-- SGML inclusion elements -->
+        	<inclusions>
+        		<!-- EMPTY elements, whitespace-separated -->
+        		<empty value="revst revend cocst cocend hotlink" A="el" B="pi"/>
+        	</inclusions>
         </doctype>
         
         <!-- ATA SGML EIPC -->
@@ -55,17 +80,18 @@
         <doctype root="(eipc)" include="true" target="sgml">
             <publicid>-//ATA-TEXT//DTD EIPC-VER12-LEVEL2//EN</publicid>
             <systemid>eipc.dtd</systemid>
+        	
+        	<maps>
+        		<map source="name" target="href" A="ent" B="attr"/>
+        	</maps>
+        	
+        	<!-- SGML inclusion elements -->
+        	<inclusions>
+        		<!-- EMPTY elements, whitespace-separated -->
+        		<empty value="revst revend cocst cocend hotlink" A="el" B="pi"/>
+        	</inclusions>
         </doctype>
         
-        <maps>
-            <map source="name" target="href" A="ent" B="attr" start="sgml"/>
-        </maps>
-        
-        <!-- SGML inclusion elements -->
-        <inclusions>
-            <!-- EMPTY elements, whitespace-separated -->
-            <empty value="revst revend cocst cocend hotlink" B="pi"/>
-        </inclusions>
     </model>
     
 </models>
