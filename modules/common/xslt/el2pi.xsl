@@ -18,13 +18,13 @@
     <xsl:param name="module" as="xs:string?"/>
     
     
-    <xsl:variable name="path" select="'../../' || $module || '/'"/>
+    <xsl:variable name="path" select="'../../' || $module || '/schemas/'"/>
     
     <xsl:variable
         name="path-with-filename"
-        select="if (doc-available($path || 'module.properties.local.xml'))
-                then ($path || 'module.properties.local.xml')
-                else ($path || 'module.properties.xml')"/>
+        select="if (doc-available($path || 'models.xml'))
+        		then ($path || 'models.xml')
+                else ()"/>
     
     <xsl:variable
         name="inclusion-elements"
