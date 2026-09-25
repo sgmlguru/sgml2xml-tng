@@ -2,19 +2,22 @@
 <!ENTITY bill SYSTEM "Bill_Murray.jpg" NDATA jpeg >
 ]>
 <doc>
-    <title>My Test SGML Document</title>
-    <chapter>
-        <title>Chapter 1 Title</title>
-        <para>Some content.</para>
-        <graphic href="Bill_Murray.jpg">
-    </chapter>
-    <chapter>
-        <title>Chapter 2 Title</title>
-        <para>More content.</para>
-        <section>
-            <title>Subsection 1 Title</title>
-            <para>Subsection content.</para>
-            <graphic name="bill">
-        </section>
-    </chapter>
+	<title>My Test SGML Document</title>
+	<chapter>
+		<title>Chapter 1 Title</title>
+		<para>Some content.</para>
+		<graphic href="Bill_Murray.jpg">
+	</chapter>
+	<chapter>
+		<title>Chapter 2 Title</title>
+		<para>More content.</para>
+		<revst>
+		<para>New text.</para>
+		<revend>
+		<section>
+			<title>Subsection 1 Title</title>
+			<para><revst>Subsection<revend> content.</para>
+			<graphic name="bill">
+		</section>
+	</chapter>
 </doc>
