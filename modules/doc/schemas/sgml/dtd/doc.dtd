@@ -34,8 +34,12 @@
 
 <!ENTITY % id.att   "id ID #IMPLIED" >
 
-<!ELEMENT doc   - - (title, chapter+) >
-<!ATTLIST doc   %id.att; >
+<!ELEMENT doc   	- - (title, chapter+) +(revst | revend) >
+<!ATTLIST doc   	%id.att; >
+
+<!ELEMENT revst     - O EMPTY >
+
+<!ELEMENT revend    - O EMPTY >
 
 <!ELEMENT title - - (#PCDATA) >
 
