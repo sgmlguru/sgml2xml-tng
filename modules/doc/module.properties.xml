@@ -12,12 +12,7 @@
                 <ent location="${module.schemas}/sgml/ISOent-declarations-xml.txt"/>
             </resources>
             <!-- SGML DOCTYPE lookup -->
-            <sgml-doctypes location="${module.schemas}/sgml/doctype-lookup.xml"/>
-            <!-- Inclusion elements -->
-            <inclusions>
-                <!-- EMPTY elements, whitespace-separated -->
-                <empty value=""/>
-            </inclusions>
+            <sgml-doctypes location="${module.schemas}/models.xml"/>
         </schemas>
         
         <!-- Schematron -->
