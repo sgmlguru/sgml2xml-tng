@@ -238,7 +238,7 @@ Some modules will have more than others; ATA, for example, includes a CALS XML t
 
 #### Doc Module
 
-The `modules/doc` folder is a very simple module that contains a perfectly trivial SGML DTD and associated examples that may prove to be helpful.
+The `modules/doc` folder is a very simple module that contains a perfectly trivial SGML DTD and associated examples that may prove to be helpful. The SGML DTD allows for the inclusion of `revst` and `revend` elements from the root (blame ATA for this example), which serves as an example of converting any such elements to processing instructions in the XML version.
 
 
 #### ATA Module
@@ -261,12 +261,7 @@ There is a `modules/ata/module.properties.xml` file:
                 <ent location="${module.schemas}/sgml/ISOent-declarations-xml.txt"/>
             </resources>
             <!-- SGML DOCTYPE lookup -->
-            <sgml-doctypes location="${module.schemas}/sgml/doctype-lookup.xml"/>
-            <!-- Inclusion elements -->
-            <inclusions>
-                <!-- EMPTY elements, whitespace-separated -->
-                <empty value="revst revend cocst cocend hotlink"/>
-            </inclusions>
+            <sgml-doctypes location="${module.schemas}/models.xml"/>
         </schemas>
         
         <!-- Schematron -->
