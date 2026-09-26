@@ -155,6 +155,8 @@
 		<mkdir dir="${local.doctype-dir}"/>
 		<local name="local.doctype-dir"/>
 		
+		<echo message="DOCTYPE lookup is ${module.schemas.sgml-doctypes}"/>
+		
 		<!-- Generate full DOCTYPE -->
 		<java classname="net.sf.saxon.Transform" fork="yes">
 			<classpath>
