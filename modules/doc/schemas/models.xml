@@ -6,27 +6,44 @@
     <model name="doc" description="This is the doc example document type">
         
         <!-- DOC XML DTD -->
-    	<!-- @target idenmtifies the syntax -->
+    	<!-- @target identifies the syntax -->
         <doctype root="(doc)" include="true" target="xml">
             <xslt-manifest>doc-xslt-manifest.xml</xslt-manifest>
             <xspec-manifest></xspec-manifest>
             
             <publicid>-//CWORD//DTD XML DOC TEST//EN</publicid>
             <systemid>doc.dtd</systemid>
+        	
+        	<!-- Maps (graphic entity to attr) -->
+        	<maps>
+        		<map source="name" target="href" A="ent" B="attr"/>
+        	</maps>
+        	
+        	<!-- SGML inclusion elements -->
+        	<inclusions>
+        		<!-- EMPTY inclusion elements, whitespace-separated -->
+        		<empty value="revst revend" A="el" B="pi"/>
+        	</inclusions>
         </doctype>
-        
+        s
         <!-- DOC SGML DTD -->
-    	<!-- @target idenmtifies the syntax -->
+    	<!-- @target identifies the syntax -->
         <doctype root="(doc)" include="true" target="sgml">
             
             <publicid>-//CWORD//DTD DOC TEST//EN</publicid>
             <systemid>doc.dtd</systemid>
+        	
+        	<!-- Maps (graphic entity to attr) -->
+        	<maps>
+        		<map source="name" target="href" A="ent" B="attr"/>
+        	</maps>
+        	
+        	<!-- SGML inclusion elements -->
+        	<inclusions>
+        		<!-- EMPTY inclusion elements, whitespace-separated -->
+        		<empty value="revst revend" A="el" B="pi"/>
+        	</inclusions>
         </doctype>
-        
-        <!-- Maps (graphic entity to attr) -->
-        <maps>
-            <map source="name" target="href" A="ent" B="attr" start="sgml"/>
-        </maps>
         
     </model>
     

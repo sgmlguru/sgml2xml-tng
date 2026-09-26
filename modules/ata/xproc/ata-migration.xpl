@@ -20,7 +20,7 @@
     
     <p:input port="sch" select="'../sch/ata-checks.sch'"/>
     
-    <p:input port="doctypes" href="./doctype-lookup.xml"/>
+    <p:input port="doctypes" href="../schemas/models.xml"/>
     
     <p:output port="result" serialization="map{'indent' : true()}" sequence="true"/>
     
@@ -52,14 +52,14 @@
     
     
     <p:for-each name="loop-doctypes">
-        <p:with-input select="//doctype[@root!='' and @include='true']" pipe="doctypes@ata-migration"/>
+        <p:with-input select="//doctype[@root!='' and @include='true' and @target='xml']" pipe="doctypes@ata-migration"/>
         
         <!-- Get DOCTYPE properties for conversion -->
         <p:variable name="root" select="string(/doctype/@root)" as="xs:string"/>
         <p:variable name="xslt-manifest" select="/doctype/xslt-manifest" as="xs:string"/>
         <p:variable name="xspec-manifest" select="/doctype/xspec-manifest" as="xs:string"/>
-        <p:variable name="xml-publicid" select="/doctype/xml-publicid" as="xs:string"/>
-        <p:variable name="xml-systemid" select="/doctype/xml-systemid" as="xs:string"/>
+        <p:variable name="xml-publicid" select="/doctype/publicid" as="xs:string"/>
+        <p:variable name="xml-systemid" select="/doctype/systemid" as="xs:string"/>
         
         
         <!-- Convert based on DOCTYPE properties -->

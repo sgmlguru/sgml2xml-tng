@@ -18,17 +18,19 @@
     <xsl:param name="module" as="xs:string?"/>
     
     
-    <xsl:variable name="path" select="'../../' || $module || '/'"/>
+    <xsl:variable name="root" select="name(/*)"/>
+    
+    <xsl:variable name="path" select="'../../' || $module || '/schemas/'"/>
     
     <xsl:variable
         name="path-with-filename"
-        select="if (doc-available($path || 'module.properties.local.xml'))
-                then ($path || 'module.properties.local.xml')
-                else ($path || 'module.properties.xml')"/>
+        select="if (doc-available($path || 'models.xml'))
+        		then ($path || 'models.xml')
+                else ()"/>
     
     <xsl:variable
         name="inclusion-elements"
-        select="tokenize(doc($path-with-filename)//inclusions/empty/@value, ' ')"
+        select="tokenize(doc($path-with-filename)//doctype[matches($root, @root) and @target='xml']/inclusions/empty/@value, ' ')"
         as="xs:string*"/>
     
     
@@ -40,6 +42,7 @@
     <xsl:template match="/">
         <xsl:message expand-text="yes">
             Module {$module}
+            Root name {$root}
         </xsl:message>
         <xsl:next-match/>
     </xsl:template>

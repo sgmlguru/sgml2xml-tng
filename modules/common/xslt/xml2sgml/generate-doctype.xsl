@@ -55,7 +55,7 @@
         <xsl:variable
             name="doctype"
             select="'&lt;!DOCTYPE ' || $root || ' PUBLIC &quot;' ||
-                        ($doctype-lookup//doctype[@root=$root])/publicid ||
+            ($doctype-lookup//doctype[matches($root, @root) and @target='sgml'])/publicid ||
                         '&quot; [&#x0a;'"/>
         
         <xsl:message expand-text="yes">
