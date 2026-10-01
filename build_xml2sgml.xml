@@ -114,6 +114,7 @@
 			<arg value="-s:${file}"/>
 			<arg value="-xsl:${modules.common.xslt.xml2sgml.expand-empty}"/>
 			<arg value="-o:${local.output-filepath}"/>
+			<arg value="module=${current-module}"/>
 		</java>
 		
 		<echo message="...saved as ${local.output-filepath}"/>

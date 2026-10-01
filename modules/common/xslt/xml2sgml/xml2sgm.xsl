@@ -26,7 +26,7 @@
 	<xsl:variable name="root" select="name(/*)"/>
     
     
-    <xsl:variable name="path" select="'../../' || $module || '/schemas/'"/>
+    <xsl:variable name="path" select="'../../../' || $module || '/schemas/'"/>
     
     <xsl:variable
         name="path-with-filename"
@@ -47,6 +47,12 @@
     
     <xsl:variable name="filename" select="tokenize(base-uri(/),'/')[last()]"/>
     <xsl:variable name="base-uri" select="substring-before(base-uri(/),$filename)"/>
+    
+    
+    <xsl:template match="/">
+        <xsl:message expand-text="yes">Module is {$module}, inclusion elements to be processed are  {string-join($inclusion-elements, ', ')}</xsl:message>
+        <xsl:next-match/>
+    </xsl:template>
     
     
     <!-- Convert any listed PIs in $sgml-inclusions to elements -->

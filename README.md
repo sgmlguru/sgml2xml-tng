@@ -319,3 +319,14 @@ Set up the sources as described above. Then run `build_sgml2xml.xml` without arg
 
 Set up the sources as described above. Then run `build_xml2sgml.xml` without arguments.
 
+
+## Troubleshooting
+
+
+### My XML to SGML Conversion Adds an End Tag to an EMPTY Element
+
+Problem: You've converted your XML to SGML, and your SGML DTD says that element `XYZ` is an `EMPTY` element, and that the end tag is omitted.
+
+Solution: Your SGML DTD wasn't found, so `spam` doesn't know about your `OMITTAG` preferences and inserts (well, keeps; the XML tags are kept as-is) an end tag. Make sure that your module's SGML catalog points to existing DTDs.
+
+
