@@ -168,7 +168,7 @@
 			<arg value="-s:${file}"/>
 			<arg value="-xsl:${modules.common.xslt.xml2sgml.generate-doctype}"/>
 			<arg value="-o:${local.output-doctype}"/>
-			<arg value="doctype-lookup-uri=${module.schemas.sgml-doctypes}"/>
+			<arg value="module=${current-module}"/>
 		</java>              
 		
 		<echo message="...saved as ${local.output-doctype}"/>
