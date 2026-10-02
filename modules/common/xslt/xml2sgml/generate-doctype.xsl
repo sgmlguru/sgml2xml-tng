@@ -13,14 +13,21 @@
     
     <xsl:output method="text"/>
     
+    
+    <!-- Name of the module, e.g. 'ata' -->
+    <xsl:param name="module" as="xs:string?"/>
+    
+    <xsl:variable name="path" select="'../../../' || $module || '/schemas/'"/>
+    <xsl:variable
+        name="path-with-filename"
+        select="if (doc-available($path || 'models.xml'))
+        then ($path || 'models.xml')
+        else ()"/>
+    
     <!-- DOCTYPE lookup for PUBLIC and SYSTEM IDs -->
-    <!-- TBA replace with models.xml -->
-    <xsl:param
-        name="doctype-lookup-uri"
-        select="'./doctype-lookup.xml'"/>
     <xsl:variable
         name="doctype-lookup"
-        select="doc($doctype-lookup-uri)"/>
+        select="doc($path-with-filename)"/>
     
     <!-- NOTATION lookup for internal subset -->
     <!-- TBA move to an external lookup -->
@@ -64,6 +71,7 @@
                         '&quot; [&#x0a;'"/>
         
         <xsl:message expand-text="yes">
+            Module {$module}
             Root {$root}
             Doctype {$doctype}
         </xsl:message>
