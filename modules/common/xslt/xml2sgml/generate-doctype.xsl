@@ -17,6 +17,9 @@
     <!-- Name of the module, e.g. 'ata' -->
     <xsl:param name="module" as="xs:string?"/>
     
+    <xsl:variable
+        name="root"
+        select="name(/*)"/>
     <xsl:variable name="path" select="'../../../' || $module || '/schemas/'"/>
     <xsl:variable
         name="path-with-filename"
@@ -28,6 +31,11 @@
     <xsl:variable
         name="doctype-lookup"
         select="doc($path-with-filename)"/>
+    
+    <!-- Elements using entity-type attrs -->
+    <xsl:variable
+        name="ent-elements"
+        select="$doctype-lookup//doctype[matches($root, @root) and @target='sgml']/maps/map/@context => distinct-values()"/>
     
     <!-- NOTATION lookup for internal subset -->
     <!-- TBA move to an external lookup -->
@@ -60,9 +68,7 @@
     
     
     <xsl:template match="/">
-        <xsl:variable
-            name="root"
-            select="name(/*)"/>
+        
         <!-- Output only PUBLIC ID so receiver won't try to map the SYSTEM ID -->
         <xsl:variable
             name="doctype"
@@ -74,18 +80,25 @@
             Module {$module}
             Root {$root}
             Doctype {$doctype}
+            Elements {$ent-elements => string-join(', ')}
         </xsl:message>
         
+        <!-- This is the initial DOCTYPE, ending with the left square bracket and a space -->
         <xsl:value-of select="$doctype"/>
         
-        <!-- TBA Get elements from models.xml -->
+        <!-- Filter the required elements only once -->
+        <xsl:variable
+            name="target-nodes"
+            select=".//*[name() = $ent-elements]"/>
+        
+        <!-- Entities -->
         <xsl:variable name="entities">
-            <xsl:apply-templates select=".//(sheet | grsymbol | refmedia)" mode="entities"/>
+            <xsl:apply-templates select="$target-nodes" mode="entities"/>
         </xsl:variable>
         
-        <!-- TBA Get elements from models.xml -->
+        <!-- Notations -->
         <xsl:variable name="notations">
-            <xsl:apply-templates select=".//(sheet | grsymbol | refmedia)" mode="notations"/>
+            <xsl:apply-templates select="$target-nodes" mode="notations"/>
         </xsl:variable>
         
         <xsl:value-of
@@ -97,9 +110,8 @@
     </xsl:template>
     
     
-    <!-- TBA Rewrite to handle external list of elements -->
-    <!-- TBA Get elements from models.xml -->
-    <xsl:template match="sheet | grsymbol | refmedia" mode="entities">
+    <!-- Entity generation -->
+    <xsl:template match="*" mode="entities">
         <xsl:variable
             name="href"
             select="processing-instruction('href')"/>
@@ -152,8 +164,8 @@
     </xsl:template>
     
     
-    <!-- TBA Get elements from models.xml -->
-    <xsl:template match="sheet | grsymbol | refmedia" mode="notations">
+    <!-- Notation generation -->
+    <xsl:template match="*" mode="notations">
         
         <!-- TBA needs to be rewritten to handle template context and models.xml -->
         <xsl:variable
