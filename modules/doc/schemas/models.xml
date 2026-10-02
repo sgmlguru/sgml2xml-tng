@@ -16,7 +16,7 @@
         	
         	<!-- Maps (graphic entity to attr) -->
         	<maps>
-        		<map source="name" target="href" A="ent" B="attr"/>
+        		<map context="graphic" source="name" target="href" A="ent" B="attr"/>
         	</maps>
         	
         	<!-- SGML inclusion elements -->
@@ -35,7 +35,7 @@
         	
         	<!-- Maps (graphic entity to attr) -->
         	<maps>
-        		<map source="name" target="href" A="ent" B="attr"/>
+        		<map context="graphic" source="name" target="href" A="ent" B="attr"/>
         	</maps>
         	
         	<!-- SGML inclusion elements -->
