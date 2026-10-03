@@ -130,60 +130,6 @@
     </xsl:template>
     
     
-    <!-- Remove @href, @cfhref but keep them as PIs
-         Keep @gbnbr, @mednbr, @cfnbr as-is if they exist, 
-         otherwise base them on the @href/@cfhref but remove
-         revision and $ separator as the $ is disallowed in the SGML -->
-    <xsl:template match="sheet | grsymbol | refmedia" exclude-result-prefixes="#all">
-        <xsl:variable name="gnbr" select="@gnbr"/>
-        <xsl:variable name="cfnbr" select="@cfnbr"/>
-        <xsl:variable name="mednbr" select="@mednbr"/>
-        
-        <xsl:element name="{name(.)}">
-            <xsl:apply-templates select="@* except (@href, @cfhref,@gnbr, @mednbr, @cfnbr)"/>
-            
-            <xsl:attribute
-                name="{if (self::refmedia) then ('mednbr') else ('gnbr')}">
-                <xsl:choose>
-                    <xsl:when test="@mednbr">
-                        <xsl:value-of select="$mednbr"/>
-                    </xsl:when>
-                    <xsl:when test="@gnbr">
-                        <xsl:value-of select="$gnbr"/>
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <xsl:value-of select="replace(@href,'^([a-zA-Z0-9]*\$)?(.+)\.[a-zA-Z]+$','$2')"/>
-                    </xsl:otherwise>
-                </xsl:choose>
-                
-            </xsl:attribute>
-            
-            <xsl:if test="@cfhref">
-                <xsl:attribute
-                    name="cfnbr">
-                    <xsl:choose>
-                        <xsl:when test="exists(@cfnbr)">
-                            <xsl:value-of select="$cfnbr"/>
-                        </xsl:when>
-                        <xsl:otherwise>
-                            <xsl:value-of select="replace(@cfhref,'^([a-zA-Z0-9]*\$)?(.+)\.[a-zA-Z]+$','$2')"/>
-                        </xsl:otherwise>
-                    </xsl:choose>
-                    
-                </xsl:attribute>
-                <xsl:processing-instruction name="cfhref" select="@cfhref"/>
-            </xsl:if>
-            
-            <!-- Occurs in sheet, grsymbol, refmedia -->
-            <xsl:if test="@href">
-                <xsl:processing-instruction name="href" select="@href"/>
-            </xsl:if>
-            
-            <xsl:apply-templates select="node()" exclude-result-prefixes="#all"/>
-        </xsl:element>
-    </xsl:template>
-    
-    
     <xsl:template match="@licensed | @smmlevel | @bookcase-rev | @bookcase-nbr"/>
     
     
