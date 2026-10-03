@@ -32,10 +32,17 @@
         name="doctype-lookup"
         select="doc($path-with-filename)"/>
     
+    <!-- Mapped elements -->
+    <xsl:variable
+        name="maps"
+        select="$doctype-lookup//doctype[matches($root, @root) and @target='sgml']/maps/map"
+        as="element()*"/>
+    
     <!-- Elements using entity-type attrs -->
     <xsl:variable
         name="ent-elements"
-        select="$doctype-lookup//doctype[matches($root, @root) and @target='sgml']/maps/map/@context => distinct-values()"/>
+        select="$maps/@context => distinct-values()"
+        as="xs:string*"/>
     
     <!-- NOTATION lookup for internal subset -->
     <!-- TBA move to an external lookup -->
@@ -112,25 +119,23 @@
     
     <!-- Entity generation -->
     <xsl:template match="*" mode="entities">
-        <xsl:variable
-            name="href"
-            select="processing-instruction('href')"/>
-        <xsl:variable
-            name="cfhref"
-            select="processing-instruction('cfhref')"/>
+        <xsl:variable name="current-element" select="name(.)"/>
         
-        <!-- TBA Get attribute names from models.xml; the attr to be used here depends on the template context -->
+        <!-- Generate internal subset by iterating through applicable attrs -->
         <xsl:variable name="internal-subset">
-            <xsl:iterate select="@gnbr, @cfnbr">
+            <xsl:iterate select="@*[name() = $maps[@context = $current-element]/@target]">
                 
-                <!-- TBA Needs to be generalised (or pulled from models.xml entry) -->
+                <!-- Get suffix -->
+                <xsl:variable
+                    name="name"
+                    select="replace(., '^(.*)\.([a-zA-Z0-9]+)$','$1')"/>
+                
+                <!-- Get name sans suffix -->
                 <xsl:variable
                     name="suffix"
-                    select="if (name(.) = 'gnbr')
-                    then (replace($href,'^(.*)\.([a-zA-Z0-9]+)$','$2'))
-                    else (replace($cfhref,'^(.*)\.([a-zA-Z0-9]+)$','$2'))"/>
+                    select="replace(., '^(.*)\.([a-zA-Z0-9]+)$','$2')"/>
                 
-                <!-- TBA models.xml and notations dependency; should be generalised -->
+                <!-- Notation -->
                 <xsl:variable
                     name="current-notation">
                     <xsl:choose>
@@ -150,9 +155,9 @@
                 </xsl:variable>
                 
                 <xsl:text>&lt;!ENTITY </xsl:text>
-                <xsl:value-of select="."/>
+                <xsl:value-of select="$name"/>
                 <xsl:text> SYSTEM &quot;</xsl:text>
-                <xsl:value-of select="if (name(.) = 'gnbr') then ($href) else ($cfhref)"/>
+                <xsl:value-of select="."/>
                 <xsl:text>&quot; NDATA </xsl:text>
                 <xsl:value-of select="$current-notation"/>
                 <xsl:text>&gt;&#x0a;</xsl:text>
@@ -166,26 +171,21 @@
     
     <!-- Notation generation -->
     <xsl:template match="*" mode="notations">
+        <xsl:variable name="current-element" select="name(.)"/>
         
-        <!-- TBA needs to be rewritten to handle template context and models.xml -->
-        <xsl:variable
-            name="href"
-            select="processing-instruction('href')"/>
-        
-        <!-- TBA needs to be rewritten to handle template context and models.xml -->
-        <xsl:variable
-            name="cfhref"
-            select="processing-instruction('cfhref')"/>
-        
-        <!-- TBA needs to be rewritten to handle template context and models.xml -->
-        <!-- TBA Get attr names from models.xml and template context -->
+        <!-- Generate internal subset by iterating through applicable attrs -->
         <xsl:variable name="internal-subset">
-            <xsl:iterate select="@gnbr, @cfnbr">
+            <xsl:iterate select="@*[name() = $maps[@context = $current-element]/@target]">
+                <!-- Get name -->
+                <xsl:variable
+                    name="name"
+                    select="replace(., '^(.*)\.([a-zA-Z0-9]+)$','$1')"/>
+                
+                <!-- Get suffix -->
                 <xsl:variable
                     name="suffix"
-                    select="if (name(.) = 'gnbr')
-                    then (replace($href,'^(.*)\.([a-zA-Z0-9]+)$','$2'))
-                    else (replace($cfhref,'^(.*)\.([a-zA-Z0-9]+)$','$2'))"/>
+                    select="replace(., '^(.*)\.([a-zA-Z0-9]+)$','$2')"/>
+                
                 <xsl:variable
                     name="current-notation">
                     <xsl:choose>
@@ -205,7 +205,6 @@
                 </xsl:variable>
                 
                 <!-- Output a NOTATION declaration, if the SGML does not have one -->
-                <!-- TBA need logic, additions to models.xml or a common NOTATION lookup -->
                 <xsl:if test="not(exists(map:get($notations, $suffix)))">
                     <xsl:text>&lt;!NOTATION </xsl:text>
                     <xsl:value-of select="$current-notation"/>
