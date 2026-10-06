@@ -40,12 +40,4 @@
         <xsl:apply-templates select="node()" mode="pi"/>
     </xsl:template>
     
-    
-    <xsl:template match="node()" mode="pi">
-        <xsl:copy>
-            <xsl:copy-of select="@*"/>
-            <xsl:apply-templates select="node()"/>
-        </xsl:copy>
-    </xsl:template>
-    
 </xsl:stylesheet>
