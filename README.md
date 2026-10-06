@@ -330,3 +330,9 @@ Problem: You've converted your XML to SGML, and your SGML DTD says that element 
 Solution: Your SGML DTD wasn't found, so `spam` doesn't know about your `OMITTAG` preferences and inserts (well, keeps; the XML tags are kept as-is) an end tag. Make sure that your module's SGML catalog points to existing DTDs.
 
 
+### The XML to SGML Conversion Should Add a NOTATION Declaration in the Internal Subset
+
+Problem: You can see an `ENTITY` declaration for your graphic in the internal SGML DTD subset, but there's no matching `NOTATION` declaration for the graphic format.
+
+Solution: Your DTD contains the `NOTATION` declaration, so there was no need to add a `NOTATION` lookup entry in `schemas/models.xml`. Alternatively, the DTD does NOT contain a `NOTATION` declaration, but you forgot to add a `NOTATION` lookup entry in `schemas/models.xml`.
+
