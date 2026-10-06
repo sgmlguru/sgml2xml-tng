@@ -9,7 +9,7 @@
     default-mode="doctype"
     version="3.0">
     
-    <!-- This XSLT generates an SGML DOCTYPE declaration for ATA GEA DTDs -->
+    <!-- This XSLT generates an SGML DOCTYPE declaration for the DTD defined in schemas/models.xml -->
     
     <xsl:output method="text"/>
     
@@ -45,33 +45,33 @@
         as="xs:string*"/>
     
     <!-- NOTATION lookup for internal subset -->
-    <!-- TBA move to an external lookup -->
+    <!-- Note that the lookup should contain full notation entries for every NOTATION declaration that isn't in the DTD -->
     <xsl:variable
         name="notations"
         as="map(*)"
-        select="map {'tif' : 'ccitt4',
-        'cgm' : 'cgm',
-        'pdf' : 'pdf',
-        'png' : 'png',
-        'jpg' : 'jpeg',
-        'wrl' : 'vrml',
-        'mpg' : 'mpeg',
-        'mp3' : 'mp3'}"/>
+        select="map:merge((
+        for $entry in $doctype-lookup//doctype[matches($root, @root) and @target='sgml']/notations/notation[@suffix != '' and @name != '']
+        return map:entry($entry/@suffix, $entry/@name) 
+        ))"/>
     
-    <!-- Internal-subset NOTATIONs -->
-    <!-- TBA move to an external lookup -->
+    <!-- Internal subset-only NOTATION names -->
     <xsl:variable
         name="internal-subset-notations"
         as="map(*)"
-        select="map {'cortona3d' : 'CORTONA3D'}"/>
+        select="map:merge(( 
+        for $entry in $doctype-lookup//doctype[matches($root, @root) and @target='sgml']/notations/notation[@suffix != '' and @name != '']
+        return map:entry($entry/@suffix, $entry/@name) 
+        ))"/>
     
-    <!-- Known internal subset-only NOTATION declarations -->
-    <!-- TBA move to an external lookup -->
+    <!-- Internal subset-only NOTATION declarations lookup -->
+    <!-- Note that the lookup should contain full notation entries for every NOTATION declaration that isn't in the DTD -->
     <xsl:variable
         name="notation-declarations"
         as="map(*)"
-        select="map {
-        'cortona3d' : '-//CORTONA3D//NOTATION C3D Packages Encoding//EN'}"/>
+        select="map:merge(( 
+        for $entry in $doctype-lookup//doctype[matches($root, @root) and @target='sgml']/notations/notation[@suffix != '' and @public != '']
+        return map:entry($entry/@suffix, $entry/@public)
+        ))"/>
     
     
     <xsl:template match="/">
@@ -139,13 +139,13 @@
                 <xsl:variable
                     name="current-notation">
                     <xsl:choose>
-                        <!-- The NOTATION is in the SGML DTD -->
-                        <xsl:when test="exists(map:get($notations, $suffix))">
-                            <xsl:value-of select="map:get($notations, $suffix)"/>
-                        </xsl:when>
                         <!-- The NOTATION is not in the SGML DTD but there is a known declaration -->
-                        <xsl:when test="exists(map:get($internal-subset-notations, $suffix))">
+                        <xsl:when test="map:contains($internal-subset-notations, $suffix)">
                             <xsl:value-of select="map:get($internal-subset-notations, $suffix)"/>
+                        </xsl:when>
+                        <!-- The NOTATION is in the SGML DTD -->
+                        <xsl:when test="map:contains($notations, $suffix)">
+                            <xsl:value-of select="map:get($notations, $suffix)"/>
                         </xsl:when>
                         <!-- No known NOTATION declaration so we use an upper-case NDATA value -->
                         <xsl:otherwise>
@@ -189,13 +189,13 @@
                 <xsl:variable
                     name="current-notation">
                     <xsl:choose>
-                        <!-- The NOTATION is in the SGML DTD -->
-                        <xsl:when test="exists(map:get($notations, $suffix))">
-                            <xsl:value-of select="map:get($notations, $suffix)"/>
-                        </xsl:when>
                         <!-- The NOTATION is not in the SGML DTD but there is a known declaration -->
-                        <xsl:when test="exists(map:get($internal-subset-notations, $suffix))">
+                        <xsl:when test="map:contains($internal-subset-notations, $suffix)">
                             <xsl:value-of select="map:get($internal-subset-notations, $suffix)"/>
+                        </xsl:when>
+                        <!-- The NOTATION is in the SGML DTD -->
+                        <xsl:when test="map:contains($notations, $suffix)">
+                            <xsl:value-of select="map:get($notations, $suffix)"/>
                         </xsl:when>
                         <!-- No known NOTATION declaration so we use an upper-case NDATA value -->
                         <xsl:otherwise>
@@ -205,28 +205,13 @@
                 </xsl:variable>
                 
                 <!-- Output a NOTATION declaration, if the SGML does not have one -->
-                <xsl:if test="not(exists(map:get($notations, $suffix)))">
+                <!-- The lookup should only have one if the DTD doesn't -->
+                <xsl:if test="exists(map:get($notation-declarations, $suffix))">
                     <xsl:text>&lt;!NOTATION </xsl:text>
                     <xsl:value-of select="$current-notation"/>
-                    
-                    <xsl:choose>
-                        <!-- The NOTATION declaration is known -->
-                        <xsl:when test="exists(map:get($internal-subset-notations, $suffix))">
-                            <xsl:text> PUBLIC &quot;</xsl:text>
-                            <xsl:value-of select="map:get($notation-declarations, $suffix)"/>
-                            <xsl:text>&quot;</xsl:text>
-                        </xsl:when>
-                        <!-- There is no known NOTATION declaration, so we just make one up -->
-                        <!-- TBA or we add standardised NOTATION declarations to a common lookup -->
-                        <xsl:otherwise>
-                            <xsl:text> PUBLIC &quot;</xsl:text>
-                            <xsl:value-of select="upper-case($suffix)"/>
-                            <xsl:text>&quot; SYSTEM &quot;</xsl:text>
-                            <xsl:value-of select="$suffix"/>
-                            <xsl:text>&quot;</xsl:text>
-                        </xsl:otherwise>
-                    </xsl:choose>
-                    
+                    <xsl:text> PUBLIC &quot;</xsl:text>
+                    <xsl:value-of select="map:get($notation-declarations, $suffix)"/>
+                    <xsl:text>&quot;</xsl:text>
                     <xsl:text>&gt;&#x0a;</xsl:text>
                 </xsl:if>
             </xsl:iterate>
