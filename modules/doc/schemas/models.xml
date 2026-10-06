@@ -43,6 +43,55 @@
         		<!-- EMPTY inclusion elements, whitespace-separated -->
         		<empty value="revst revend" A="el" B="pi"/>
         	</inclusions>
+            
+            <!-- Notations -->
+            <notations>
+                <notation
+                    name="ccitt4"
+                    system=""
+                    public="-//CCITT//NOTATION Group 4 Facsimile//EN"
+                    suffix="tif"/>
+                <notation
+                    name="cgm"
+                    system=""
+                    public="-//USA-DOD//NOTATION Computer Graphics Metafile//EN"
+                    suffix="cgm"/>
+                <notation
+                    name="pdf"
+                    system=""
+                    public="-//Adobe Inc.//NOTATION Portable Document Format//EN"
+                    suffix="pdf"/>
+                <notation
+                    name="png"
+                    system=""
+                    public="-//W3C//NOTATION Portable Network Graphics//EN"
+                    suffix="png"/>
+                <notation
+                    name="jpeg"
+                    system=""
+                    public="+//ISBN 0-7923-9432-1::Graphic Notation//NOTATION Joint Photographic Experts Group Raster//EN"
+                    suffix="jpg"/>
+                <notation
+                    name="wrl"
+                    system=""
+                    public="-//ATA-TEXT//NOTATION Virtual Reality Modeling Language//EN"
+                    suffix="wrl"/>
+                <notation
+                    name="mpg"
+                    system=""
+                    public="-//ATA-TEXT//NOTATION Motion Pictures Expert Group//EN"
+                    suffix="mpg"/>
+                <notation
+                    name="mp3"
+                    system=""
+                    public="-//ATA-TEXT//NOTATION Motion Pictures Expert Group, Audio Layer 3//EN"
+                    suffix="mp3"/>
+                <notation
+                    name="CORTONA3D"
+                    system=""
+                    public="-//CORTONA3D//NOTATION C3D Packages Encoding//EN"
+                    suffix="cortona3d"/>
+            </notations>
         </doctype>
         
     </model>
