@@ -195,6 +195,7 @@ The module (i.e. the folder in `modules`) should be named descriptively, so `ata
 * `schemas`
 	* `sgml` - SGML DTDs, catalogs, SGML declarations; `modules/common` contains some common entities
 	* `xml` - XML DTDs, schemas, modules, catalogs; the XML requires OASIS XML catalogs
+    * `models.xml` - XML lookup file for module-specific identifiers, mapping and declarations
 * `xproc` - XProc pipelines; importantly, you'll need an initial pipeline that will iterate through your well-formed XML to determine the XML schema
 * `xslt` - the XSLT files used by the manifest in `pipelines`
 
