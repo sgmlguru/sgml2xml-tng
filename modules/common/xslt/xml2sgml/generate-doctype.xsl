@@ -9,48 +9,73 @@
     default-mode="doctype"
     version="3.0">
     
-    <!-- This XSLT generates an SGML DOCTYPE declaration for ATA GEA DTDs -->
+    <!-- This XSLT generates an SGML DOCTYPE declaration for the DTD defined in schemas/models.xml -->
     
     <xsl:output method="text"/>
     
+    
+    <!-- Name of the module, e.g. 'ata' -->
+    <xsl:param name="module" as="xs:string?"/>
+    
+    <xsl:variable
+        name="root"
+        select="name(/*)"/>
+    <xsl:variable name="path" select="'../../../' || $module || '/schemas/'"/>
+    <xsl:variable
+        name="path-with-filename"
+        select="if (doc-available($path || 'models.xml'))
+        then ($path || 'models.xml')
+        else ()"/>
+    
     <!-- DOCTYPE lookup for PUBLIC and SYSTEM IDs -->
-    <xsl:param
-        name="doctype-lookup-uri"
-        select="'./doctype-lookup.xml'"/>
     <xsl:variable
         name="doctype-lookup"
-        select="doc($doctype-lookup-uri)"/>
+        select="doc($path-with-filename)"/>
+    
+    <!-- Mapped elements -->
+    <xsl:variable
+        name="maps"
+        select="$doctype-lookup//doctype[matches($root, @root) and @target='sgml']/maps/map"
+        as="element()*"/>
+    
+    <!-- Elements using entity-type attrs -->
+    <xsl:variable
+        name="ent-elements"
+        select="$maps/@context => distinct-values()"
+        as="xs:string*"/>
     
     <!-- NOTATION lookup for internal subset -->
+    <!-- Note that the lookup should contain full notation entries for every NOTATION declaration that isn't in the DTD -->
     <xsl:variable
         name="notations"
         as="map(*)"
-        select="map {'tif' : 'ccitt4',
-        'cgm' : 'cgm',
-        'pdf' : 'pdf',
-        'png' : 'png',
-        'jpg' : 'jpeg',
-        'wrl' : 'vrml',
-        'mpg' : 'mpeg',
-        'mp3' : 'mp3'}"/>
+        select="map:merge((
+        for $entry in $doctype-lookup//doctype[matches($root, @root) and @target='sgml']/notations/notation[@suffix != '' and @name != '']
+        return map:entry($entry/@suffix, $entry/@name) 
+        ))"/>
     
-    <!-- Internal-subset NOTATIONs -->
+    <!-- Internal subset-only NOTATION names -->
     <xsl:variable
         name="internal-subset-notations"
         as="map(*)"
-        select="map {'cortona3d' : 'CORTONA3D'}"/>
+        select="map:merge(( 
+        for $entry in $doctype-lookup//doctype[matches($root, @root) and @target='sgml']/notations/notation[@suffix != '' and @name != '']
+        return map:entry($entry/@suffix, $entry/@name) 
+        ))"/>
     
-    <!-- Known internal subset-only NOTATION declarations -->
+    <!-- Internal subset-only NOTATION declarations lookup -->
+    <!-- Note that the lookup should contain full notation entries for every NOTATION declaration that isn't in the DTD -->
     <xsl:variable
         name="notation-declarations"
         as="map(*)"
-        select="map {
-        'cortona3d' : '-//CORTONA3D//NOTATION C3D Packages Encoding//EN'}"/>
+        select="map:merge(( 
+        for $entry in $doctype-lookup//doctype[matches($root, @root) and @target='sgml']/notations/notation[@suffix != '' and @public != '']
+        return map:entry($entry/@suffix, $entry/@public)
+        ))"/>
+    
     
     <xsl:template match="/">
-        <xsl:variable
-            name="root"
-            select="name(/*)"/>
+        
         <!-- Output only PUBLIC ID so receiver won't try to map the SYSTEM ID -->
         <xsl:variable
             name="doctype"
@@ -59,18 +84,28 @@
                         '&quot; [&#x0a;'"/>
         
         <xsl:message expand-text="yes">
+            Module {$module}
             Root {$root}
             Doctype {$doctype}
+            Elements {$ent-elements => string-join(', ')}
         </xsl:message>
         
+        <!-- This is the initial DOCTYPE, ending with the left square bracket and a space -->
         <xsl:value-of select="$doctype"/>
         
+        <!-- Filter the required elements only once -->
+        <xsl:variable
+            name="target-nodes"
+            select=".//*[name() = $ent-elements]"/>
+        
+        <!-- Entities -->
         <xsl:variable name="entities">
-            <xsl:apply-templates select=".//(sheet | grsymbol | refmedia)" mode="entities"/>
+            <xsl:apply-templates select="$target-nodes" mode="entities"/>
         </xsl:variable>
         
+        <!-- Notations -->
         <xsl:variable name="notations">
-            <xsl:apply-templates select=".//(sheet | grsymbol | refmedia)" mode="notations"/>
+            <xsl:apply-templates select="$target-nodes" mode="notations"/>
         </xsl:variable>
         
         <xsl:value-of
@@ -82,31 +117,35 @@
     </xsl:template>
     
     
-    <xsl:template match="sheet | grsymbol | refmedia" mode="entities">
-        <xsl:variable
-            name="href"
-            select="processing-instruction('href')"/>
-        <xsl:variable
-            name="cfhref"
-            select="processing-instruction('cfhref')"/>
+    <!-- Entity generation -->
+    <xsl:template match="*" mode="entities">
+        <xsl:variable name="current-element" select="name(.)"/>
         
+        <!-- Generate internal subset by iterating through applicable attrs -->
         <xsl:variable name="internal-subset">
-            <xsl:iterate select="@gnbr, @cfnbr">
+            <xsl:iterate select="@*[name() = $maps[@context = $current-element]/@target]">
+                
+                <!-- Get suffix -->
+                <xsl:variable
+                    name="name"
+                    select="replace(., '^(.*)\.([a-zA-Z0-9]+)$','$1')"/>
+                
+                <!-- Get name sans suffix -->
                 <xsl:variable
                     name="suffix"
-                    select="if (name(.) = 'gnbr')
-                    then (replace($href,'^(.*)\.([a-zA-Z0-9]+)$','$2'))
-                    else (replace($cfhref,'^(.*)\.([a-zA-Z0-9]+)$','$2'))"/>
+                    select="replace(., '^(.*)\.([a-zA-Z0-9]+)$','$2')"/>
+                
+                <!-- Notation -->
                 <xsl:variable
                     name="current-notation">
                     <xsl:choose>
-                        <!-- The NOTATION is in the SGML DTD -->
-                        <xsl:when test="exists(map:get($notations, $suffix))">
-                            <xsl:value-of select="map:get($notations, $suffix)"/>
-                        </xsl:when>
                         <!-- The NOTATION is not in the SGML DTD but there is a known declaration -->
-                        <xsl:when test="exists(map:get($internal-subset-notations, $suffix))">
+                        <xsl:when test="map:contains($internal-subset-notations, $suffix)">
                             <xsl:value-of select="map:get($internal-subset-notations, $suffix)"/>
+                        </xsl:when>
+                        <!-- The NOTATION is in the SGML DTD -->
+                        <xsl:when test="map:contains($notations, $suffix)">
+                            <xsl:value-of select="map:get($notations, $suffix)"/>
                         </xsl:when>
                         <!-- No known NOTATION declaration so we use an upper-case NDATA value -->
                         <xsl:otherwise>
@@ -116,9 +155,9 @@
                 </xsl:variable>
                 
                 <xsl:text>&lt;!ENTITY </xsl:text>
-                <xsl:value-of select="."/>
+                <xsl:value-of select="$name"/>
                 <xsl:text> SYSTEM &quot;</xsl:text>
-                <xsl:value-of select="if (name(.) = 'gnbr') then ($href) else ($cfhref)"/>
+                <xsl:value-of select="."/>
                 <xsl:text>&quot; NDATA </xsl:text>
                 <xsl:value-of select="$current-notation"/>
                 <xsl:text>&gt;&#x0a;</xsl:text>
@@ -130,31 +169,33 @@
     </xsl:template>
     
     
-    <xsl:template match="sheet | grsymbol | refmedia" mode="notations">
-        <xsl:variable
-            name="href"
-            select="processing-instruction('href')"/>
-        <xsl:variable
-            name="cfhref"
-            select="processing-instruction('cfhref')"/>
+    <!-- Notation generation -->
+    <xsl:template match="*" mode="notations">
+        <xsl:variable name="current-element" select="name(.)"/>
         
+        <!-- Generate internal subset by iterating through applicable attrs -->
         <xsl:variable name="internal-subset">
-            <xsl:iterate select="@gnbr, @cfnbr">
+            <xsl:iterate select="@*[name() = $maps[@context = $current-element]/@target]">
+                <!-- Get name -->
+                <xsl:variable
+                    name="name"
+                    select="replace(., '^(.*)\.([a-zA-Z0-9]+)$','$1')"/>
+                
+                <!-- Get suffix -->
                 <xsl:variable
                     name="suffix"
-                    select="if (name(.) = 'gnbr')
-                    then (replace($href,'^(.*)\.([a-zA-Z0-9]+)$','$2'))
-                    else (replace($cfhref,'^(.*)\.([a-zA-Z0-9]+)$','$2'))"/>
+                    select="replace(., '^(.*)\.([a-zA-Z0-9]+)$','$2')"/>
+                
                 <xsl:variable
                     name="current-notation">
                     <xsl:choose>
-                        <!-- The NOTATION is in the SGML DTD -->
-                        <xsl:when test="exists(map:get($notations, $suffix))">
-                            <xsl:value-of select="map:get($notations, $suffix)"/>
-                        </xsl:when>
                         <!-- The NOTATION is not in the SGML DTD but there is a known declaration -->
-                        <xsl:when test="exists(map:get($internal-subset-notations, $suffix))">
+                        <xsl:when test="map:contains($internal-subset-notations, $suffix)">
                             <xsl:value-of select="map:get($internal-subset-notations, $suffix)"/>
+                        </xsl:when>
+                        <!-- The NOTATION is in the SGML DTD -->
+                        <xsl:when test="map:contains($notations, $suffix)">
+                            <xsl:value-of select="map:get($notations, $suffix)"/>
                         </xsl:when>
                         <!-- No known NOTATION declaration so we use an upper-case NDATA value -->
                         <xsl:otherwise>
@@ -164,27 +205,13 @@
                 </xsl:variable>
                 
                 <!-- Output a NOTATION declaration, if the SGML does not have one -->
-                <xsl:if test="not(exists(map:get($notations, $suffix)))">
+                <!-- The lookup should only have one if the DTD doesn't -->
+                <xsl:if test="exists(map:get($notation-declarations, $suffix))">
                     <xsl:text>&lt;!NOTATION </xsl:text>
                     <xsl:value-of select="$current-notation"/>
-                    
-                    <xsl:choose>
-                        <!-- The NOTATION declaration is known -->
-                        <xsl:when test="exists(map:get($internal-subset-notations, $suffix))">
-                            <xsl:text> PUBLIC &quot;</xsl:text>
-                            <xsl:value-of select="map:get($notation-declarations, $suffix)"/>
-                            <xsl:text>&quot;</xsl:text>
-                        </xsl:when>
-                        <!-- There is no known NOTATION declaration, so we just make one up -->
-                        <xsl:otherwise>
-                            <xsl:text> PUBLIC &quot;</xsl:text>
-                            <xsl:value-of select="upper-case($suffix)"/>
-                            <xsl:text>&quot; SYSTEM &quot;</xsl:text>
-                            <xsl:value-of select="$suffix"/>
-                            <xsl:text>&quot;</xsl:text>
-                        </xsl:otherwise>
-                    </xsl:choose>
-                    
+                    <xsl:text> PUBLIC &quot;</xsl:text>
+                    <xsl:value-of select="map:get($notation-declarations, $suffix)"/>
+                    <xsl:text>&quot;</xsl:text>
                     <xsl:text>&gt;&#x0a;</xsl:text>
                 </xsl:if>
             </xsl:iterate>
