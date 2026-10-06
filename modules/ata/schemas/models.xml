@@ -54,6 +54,23 @@
         		 @context provides a whitespace-separated list of elements allowed as context -->
         		<nested value="effct sbeff coceff" context="prclist1 prclist2 prclist3 prclist4 prclist5 prclist6 prclist7 prcitem prcitem1 prcitem2 prcitem3 prcitem4 prcitem5 prcitem6 prcitem7 subtask" A="el" B="pi"/>
         	</inclusions>
+            
+            <!-- Notations -->
+            <notations>
+                <notation name="ccitt4" system="" public="" suffix="tif"/>
+                <notation name="cgm" system="" public="" suffix="cgm"/>
+                <notation name="pdf" system="" public="" suffix="pdf"/>
+                <notation name="png" system="" public="" suffix="png"/>
+                <notation name="jpg" system="" public="" suffix="jpg"/>
+                <notation name="wrl" system="" public="" suffix="wrl"/>
+                <notation name="mpg" system="" public="" suffix="mpg"/>
+                <notation name="mp3" system="" public="" suffix="mp3"/>
+                <notation
+                    name="CORTONA3D"
+                    system=""
+                    public="-//CORTONA3D//NOTATION C3D Packages Encoding//EN"
+                    suffix="cortona3d"/>
+            </notations>
         </doctype>
         
     </model>
@@ -102,6 +119,23 @@
         		<!-- EMPTY elements, whitespace-separated -->
         		<empty value="revst revend cocst cocend hotlink" A="el" B="pi"/>
         	</inclusions>
+            
+            <!-- Notations -->
+            <notations>
+                <notation name="ccitt4" system="" public="" suffix="tif"/>
+                <notation name="cgm" system="" public="" suffix="cgm"/>
+                <notation name="pdf" system="" public="" suffix="pdf"/>
+                <notation name="png" system="" public="" suffix="png"/>
+                <notation name="jpg" system="" public="" suffix="jpg"/>
+                <notation name="wrl" system="" public="" suffix="wrl"/>
+                <notation name="mpg" system="" public="" suffix="mpg"/>
+                <notation name="mp3" system="" public="" suffix="mp3"/>
+                <notation
+                    name="CORTONA3D"
+                    system=""
+                    public="-//CORTONA3D//NOTATION C3D Packages Encoding//EN"
+                    suffix="cortona3d"/>
+            </notations>
         </doctype>
         
     </model>
